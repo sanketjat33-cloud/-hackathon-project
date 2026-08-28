@@ -4,7 +4,7 @@ import LanguagePage from './pages/LanguagePage';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import OTPPage from './pages/OTPPage';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/Dashboard.jsx';
 
 function App() {
   return (

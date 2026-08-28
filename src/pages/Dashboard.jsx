@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import agrovaLogo from '../assets/agrova-logo.png';
+import farmerHero from '../assets/farmer-hero.png';
+import marketplaceImage from '../assets/marketplace-image.png';
+import chatgptImage from '../assets/ChatGPT Image Aug 25, 2026, 01_30_15 PM.png';
 import { AIButton } from '../components/AIButton';
 import { languages } from '../data/languages';
 import {
@@ -13,21 +16,65 @@ import {
   Camera,
   Calendar,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Bell,
   User,
   CheckCircle,
+  CheckCircle2,
   ArrowRight,
   ShieldAlert,
   MapPin,
   Check,
   Award,
-  Layers
+  Layers,
+  Menu,
+  X,
+  Send,
+  Sparkles,
+  Info,
+  Upload,
+  Clock,
+  FlaskConical,
+  Landmark,
+  Mic,
+  FileText,
+  PlusCircle,
+  CheckCircle as CheckMark
 } from 'lucide-react';
+
+const heroImages = [
+  {
+    src: farmerHero,
+    alt: 'Smart crop and farm management in green wheat field'
+  },
+  {
+    src: '/farmer.jpg',
+    alt: 'Farmer working in agricultural fields under golden sunset'
+  },
+  {
+    src: chatgptImage,
+    alt: 'Modern farming technology and crop advisory'
+  },
+  {
+    src: marketplaceImage,
+    alt: 'Crop harvesting and agricultural marketplace'
+  }
+];
 
 /**
  * DashboardPage component for AGROVA Farmer Platform.
- * Built with AGROVA design system: #173f31 primary dark green, #f8faf9 background,
- * white cards, subtle gray borders, emerald accents, and responsive layout.
+ * Target UI Design:
+ * - Color Palette: Primary dark green #173f31, Secondary dark green #113126, Background #f8faf9, White cards #ffffff.
+ * - Header: 80px sticky navbar with AGROVA brand, 7 nav items, language selector, notification bell, vertical divider, Welcome back Rajesh & avatar.
+ * - Greeting: Large white rounded summary card for Sangrur PB.
+ * - Hero + 3 Cards: Farmer hero card (2/3 width) with Explore Guidance button + 3 vertically stacked summary cards (Active Crops, Weather Alert in pink, Active Bids).
+ * - Action Required Alert: Horizontal alert with Acknowledge (dismiss) & Adjust Schedule buttons.
+ * - Farming Toolkit: 6-column desktop cards grid (Crop Health, Weather, Soil Health, Testing, Schemes, Market).
+ * - Crop Progress: Wheat (PBW 343) 6-stage lifecycle timeline (Sowing, Irrigation, Fertilizer, Growth Day 42 Active, Protection, Harvest).
+ * - AGROVA Market Banner: Dark green promotional section with 7 New Bids & Review Bids & Sell button.
+ * - Footer: 4-column modern footer & 2024 Agrova Technologies copyright.
+ * - Floating AI Button: Fixed pill with Ask Agrova AI.
  */
 export function DashboardPage() {
   // Selected Language State
@@ -36,11 +83,39 @@ export function DashboardPage() {
   });
   const [isLangOpen, setIsLangOpen] = useState(false);
 
-  // Active Navigation Tab
-  const [activeTab, setActiveTab] = useState('Overview');
+  // Active Navigation Tab State
+  const [activeTab, setActiveTab] = useState('Home');
 
-  // Alert Dismiss State
+  // Mobile Menu Drawer Toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Notification Popover Toggle
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+
+  // Action Required Alert Visibility State
   const [showAlert, setShowAlert] = useState(true);
+
+  // Active Modal State for Functional Buttons
+  const [activeModal, setActiveModal] = useState(null);
+
+  // Hero Section 4-Image Carousel State & Autoplay Effect
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
+  // AI Assistant Chat History & Input
+  const [aiInput, setAiInput] = useState('');
+  const [aiMessages, setAiMessages] = useState([
+    {
+      sender: 'ai',
+      text: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?'
+    }
+  ]);
 
   const currentLanguage = languages.find((lang) => lang.id === selectedLanguage);
 
@@ -50,14 +125,35 @@ export function DashboardPage() {
     setIsLangOpen(false);
   };
 
+  const handleSendMessage = (textToSend) => {
+    const text = textToSend || aiInput;
+    if (!text.trim()) return;
+
+    const newMsgs = [...aiMessages, { sender: 'user', text }];
+    setAiMessages(newMsgs);
+    setAiInput('');
+
+    setTimeout(() => {
+      let aiReply = "For Wheat (PBW 343) at Day 42, maintain soil moisture at 40%. Avoid heavy watering today as rain is expected tomorrow.";
+      if (text.toLowerCase().includes('bid') || text.toLowerCase().includes('price') || text.toLowerCase().includes('sell')) {
+        aiReply = "Highest bid for your Wheat produce in Sangrur today is ₹2,550/q by AgriCorp Traders. 7 buyers are currently bidding!";
+      } else if (text.toLowerCase().includes('scheme') || text.toLowerCase().includes('gov')) {
+        aiReply = "You qualify for PM-Kisan 17th Installment and Sub-Mission on Agricultural Mechanization (SMAM) with 50% tractor subsidy.";
+      }
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: aiReply }]);
+    }, 600);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative pb-20">
-      {/* 1. TOP NAVIGATION */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Left — AGROVA Brand */}
-          <div className="flex items-center gap-3.5">
-            <div className="w-[50px] h-[50px] rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1 flex-shrink-0 overflow-hidden shadow-xs">
+    <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative pb-20 font-sans selection:bg-emerald-100">
+      
+      {/* ==================== 1. HEADER / NAVBAR ==================== */}
+      <header className="w-full bg-white border-b border-gray-200/80 h-[80px] flex items-center sticky top-0 z-40 shadow-2xs">
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
+          
+          {/* Left — AGROVA Logo & Wordmark */}
+          <div className="flex items-center gap-3.5 flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
               <img
                 src={agrovaLogo}
                 alt="Agrova logo"
@@ -65,46 +161,58 @@ export function DashboardPage() {
               />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-[22px] sm:text-[24px] font-extrabold tracking-wider text-[#173f31] uppercase leading-tight">
+              <span className="text-2xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
                 AGROVA
               </span>
-              <span className="text-[11px] font-medium text-gray-500 leading-tight">
+              <span className="hidden xl:inline text-[11px] font-medium text-gray-500 leading-tight mt-1">
                 Grow better. Sell smarter. Earn more.
               </span>
             </div>
           </div>
 
-          {/* Center — Navigation Tabs (Desktop) */}
-          <nav className="hidden md:flex items-center gap-1 bg-gray-100/80 p-1 rounded-xl border border-gray-200/60">
-            {['Overview', 'My Crops', 'Marketplace', 'Advisory'].map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === tab
-                    ? 'bg-white text-[#173f31] shadow-xs'
-                    : 'text-gray-600 hover:text-[#173f31] hover:bg-white/50'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+          {/* Center — Navigation Links (7 exact items in exact order) */}
+          <nav className="hidden lg:flex items-center gap-3 xl:gap-5 h-full">
+            {[
+              'Home',
+              'My Crops',
+              'Crop Roadmap',
+              'Sell Crop',
+              'Bids',
+              'Market',
+              'Government Schemes'
+            ].map((item) => {
+              const isActive = activeTab === item;
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setActiveTab(item)}
+                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
+                    isActive
+                      ? 'border-[#173f31] text-[#173f31] font-bold'
+                      : 'border-transparent text-gray-600 hover:text-[#173f31] hover:border-gray-300'
+                  }`}
+                >
+                  {item}
+                </button>
+              );
+            })}
           </nav>
 
-          {/* Right — Language Selector, Notifications & User Badge */}
-          <div className="flex items-center gap-3">
-            {/* Language Dropdown */}
-            <div className="relative">
+          {/* Right — Language Selector, Notification Bell, Vertical Divider & User Profile */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5 flex-shrink-0">
+            
+            {/* Language Selector */}
+            <div className="relative hidden sm:block">
               <button
                 type="button"
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-100 transition cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 text-xs font-medium hover:bg-gray-100 transition cursor-pointer"
               >
                 <span>🌐</span>
-                <span>{currentLanguage?.native || 'हिन्दी'}</span>
+                <span className="hidden md:inline">{currentLanguage?.native || 'हिन्दी'}</span>
                 <ChevronDown
-                  size={12}
+                  size={14}
                   className={`text-gray-400 transition-transform duration-200 ${
                     isLangOpen ? 'rotate-180' : ''
                   }`}
@@ -135,427 +243,818 @@ export function DashboardPage() {
             </div>
 
             {/* Notification Bell */}
+            <div className="relative">
+              <button
+                type="button"
+                aria-label="Notifications"
+                onClick={() => setIsNotifOpen(!isNotifOpen)}
+                className="relative p-2.5 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
+              >
+                <Bell size={20} />
+                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white animate-pulse"></span>
+              </button>
+
+              {isNotifOpen && (
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-3">
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                    <h4 className="text-sm font-bold text-[#173f31] flex items-center gap-1.5">
+                      <Bell size={16} className="text-emerald-600" />
+                      Notifications (3)
+                    </h4>
+                    <button
+                      onClick={() => setIsNotifOpen(false)}
+                      className="text-xs text-gray-400 hover:text-gray-600"
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs">
+                      <p className="font-semibold text-amber-900">🌧️ Weather Warning: Rain expected in 2 days</p>
+                      <p className="text-amber-800 mt-0.5">Postpone irrigation for Wheat (PBW 343).</p>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+                      <p className="font-semibold text-emerald-900">💰 New High Bid: ₹2,550/q</p>
+                      <p className="text-emerald-800 mt-0.5">AgriCorp Traders placed a new bid on your wheat crop.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Vertical Divider */}
+            <div className="h-7 w-px bg-gray-200"></div>
+
+            {/* User Section (Far Right: Welcome back, Rajesh) */}
+            <div className="flex items-center gap-2.5">
+              <div className="flex flex-col text-right leading-tight">
+                <span className="text-[11px] font-medium text-gray-500">
+                  Welcome back,
+                </span>
+                <span className="text-sm font-bold text-[#173f31]">
+                  Rajesh
+                </span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-sm shadow-xs ring-2 ring-emerald-100/80 overflow-hidden">
+                <span>RJ</span>
+              </div>
+            </div>
+
+            {/* Mobile Hamburger Toggle */}
             <button
               type="button"
-              aria-label="Notifications"
-              className="relative p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
+              aria-label="Toggle mobile menu"
             >
-              <Bell size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white"></span>
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-
-            {/* Farmer Profile Badge */}
-            <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-sm shadow-xs">
-                RS
-              </div>
-              <div className="hidden lg:flex flex-col text-left">
-                <span className="text-xs font-bold text-[#173f31]">Ram Singh</span>
-                <span className="text-[10px] text-gray-500 font-medium">Sangrur, PB</span>
-              </div>
-            </div>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden absolute top-[80px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
+            {[
+              'Home',
+              'My Crops',
+              'Crop Roadmap',
+              'Sell Crop',
+              'Bids',
+              'Market',
+              'Government Schemes'
+            ].map((item) => {
+              const isActive = activeTab === item;
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => {
+                    setActiveTab(item);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
+                    isActive
+                      ? 'bg-[#173f31] text-white font-bold'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </header>
 
-      {/* MAIN CONTENT WRAPPER */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-7">
-        {/* 2. GREETING / HEADER */}
-        <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-gray-200/80 shadow-xs">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-[#173f31] tracking-tight">
+      {/* ==================== MAIN CONTENT ==================== */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-7 space-y-7">
+        
+        {/* ==================== 2. GREETING / FARM SUMMARY ==================== */}
+        <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1 px-1">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#173f31] tracking-tight">
                 Namaste, Ram Singh! 🌾
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+              <span className="px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-800 text-xs font-bold border border-emerald-200/80 flex items-center gap-1">
+                <CheckCircle2 size={13} className="text-emerald-700" />
                 Verified Farmer
               </span>
+              <button
+                type="button"
+                onClick={() => setActiveModal('new-crop')}
+                className="px-3.5 py-1 rounded-full bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <PlusCircle size={14} className="text-emerald-300" />
+                <span>New Crop</span>
+              </button>
             </div>
-            <p className="mt-1 text-sm text-gray-600 font-medium">
+            <p className="text-xs sm:text-sm text-gray-600 font-medium pt-0.5">
               Here is your farm summary for Sangrur, Punjab • Kharif Season 2026
             </p>
           </div>
 
-          <div className="flex items-center gap-2 bg-[#f8faf9] px-4 py-2.5 rounded-xl border border-gray-200/60 text-xs text-gray-600 font-semibold self-start sm:self-auto">
-            <MapPin size={16} className="text-emerald-600" />
+          <div className="flex items-center gap-2 bg-white/80 backdrop-blur-xs px-4 py-2 rounded-xl border border-gray-200/70 text-xs font-bold text-gray-700 shadow-2xs self-start md:self-auto">
+            <MapPin size={15} className="text-emerald-700" />
             <span>Sangrur • 28 Aug 2026</span>
           </div>
         </section>
 
-        {/* 3. HERO + SUMMARY CARDS */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {/* Card 1: Active Crops */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Active Crops
-                </span>
-                <h3 className="text-xl font-bold text-[#173f31] mt-1">
-                  Wheat & Paddy
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                <Sprout size={22} />
-              </div>
-            </div>
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-              <span className="text-gray-600 font-medium">12 Acres Cultivated</span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold">
-                +15% Est. Yield
+        {/* ==================== 3. HERO + SUMMARY CARDS ==================== */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          
+          {/* Left Large Hero Card (7 cols / ~58% width) with 4-Image Carousel */}
+          <div className="lg:col-span-7 relative min-h-[380px] sm:min-h-[440px] rounded-3xl overflow-hidden shadow-md group flex flex-col justify-end border border-gray-200">
+            
+            {/* 4-Slide Background Image Carousel */}
+            {heroImages.map((img, idx) => (
+              <img
+                key={idx}
+                src={img.src}
+                alt={img.alt}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${
+                  idx === currentHeroSlide
+                    ? 'opacity-100 scale-100 z-0'
+                    : 'opacity-0 scale-105 pointer-events-none'
+                }`}
+              />
+            ))}
+
+            {/* Gradient Overlay for Text Legibility (Fixed & Static) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#173f31]/95 via-[#173f31]/50 to-transparent z-10 pointer-events-none" />
+
+            {/* Hero Text Content Overlay (Fixed & Static) */}
+            <div className="relative z-20 p-6 sm:p-8 space-y-3 max-w-xl">
+              <span className="inline-block px-3 py-1 rounded-full bg-emerald-400 text-[#173f31] text-xs font-extrabold uppercase tracking-wider shadow-xs">
+                CROP MANAGEMENT
               </span>
+
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                Grow Smarter with Agrova
+              </h2>
+
+              <p className="text-xs sm:text-sm text-white/95 font-medium leading-relaxed">
+                Get personalized crop guidance based on your specific crop type, location, and real-time weather data.
+              </p>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveModal('guidance')}
+                  className="px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition shadow-md cursor-pointer border border-emerald-500/30"
+                >
+                  <span>Explore Guidance</span>
+                  <ArrowRight size={16} />
+                </button>
+              </div>
             </div>
+
+            {/* Carousel Dot Indicators */}
+            <div className="absolute bottom-4 right-6 z-20 flex items-center gap-1.5 bg-black/35 backdrop-blur-xs px-3 py-1.5 rounded-full border border-white/10">
+              {heroImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setCurrentHeroSlide(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
+                    idx === currentHeroSlide
+                      ? 'w-6 bg-emerald-400'
+                      : 'w-2 bg-white/50 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* Carousel Previous & Next Arrow Controls (Visible on hover) */}
+            <button
+              type="button"
+              onClick={() => setCurrentHeroSlide((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1))}
+              aria-label="Previous Hero Image"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/30 hover:bg-black/60 text-white/80 hover:text-white transition opacity-0 group-hover:opacity-100 cursor-pointer border border-white/10 backdrop-blur-xs"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setCurrentHeroSlide((prev) => (prev + 1) % heroImages.length)}
+              aria-label="Next Hero Image"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-black/30 hover:bg-black/60 text-white/80 hover:text-white transition opacity-0 group-hover:opacity-100 cursor-pointer border border-white/10 backdrop-blur-xs"
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
 
-          {/* Card 2: Today's Weather */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Weather Advisory
-                </span>
-                <h3 className="text-xl font-bold text-[#173f31] mt-1">
-                  28°C • Partly Cloudy
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <Sun size={22} />
+          {/* Right Stat Cards Container (5 cols / ~42% width: 2x2 grid rendering ALL 4 cards) */}
+          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            {/* Card 1: ACTIVE CROPS */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    ACTIVE CROPS
+                  </p>
+                  <p className="text-2xl font-extrabold text-[#173f31] mt-1">
+                    3
+                  </p>
+                  <p className="text-xs text-emerald-700 font-bold mt-1">
+                    ↗ All healthy
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
+                  <Sprout size={20} />
+                </div>
               </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-              <span className="text-gray-600 font-medium">Humidity 65% • Rain 10%</span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold">
-                Good Spraying Day
-              </span>
-            </div>
-          </div>
 
-          {/* Card 3: Live Mandi Price */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Live Mandi Rate (Wheat)
-                </span>
-                <h3 className="text-xl font-bold text-[#173f31] mt-1">
-                  ₹2,275 <span className="text-xs font-normal text-gray-500">/ Qtl</span>
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                <TrendingUp size={22} />
+            {/* Card 2: WEATHER ALERT */}
+            <div className="bg-red-50/90 rounded-2xl border border-red-100 p-5 shadow-2xs transition flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-red-700 uppercase tracking-wider">
+                    WEATHER ALERT
+                  </p>
+                  <p className="text-base sm:text-lg font-extrabold text-red-900 mt-1">
+                    Heavy Rain Exp.
+                  </p>
+                  <p className="text-xs text-red-700 font-semibold mt-1">
+                    ◷ In 2 Days
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs">
+                  <CloudSun size={20} />
+                </div>
               </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-              <span className="text-emerald-600 font-bold">▲ +₹45 Today</span>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold">
-                Peak Rate Week
-              </span>
-            </div>
-          </div>
 
-          {/* Card 4: Soil Health */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between">
-            <div className="flex items-start justify-between">
-              <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Soil Health Status
-                </span>
-                <h3 className="text-xl font-bold text-[#173f31] mt-1">
-                  Optimal (pH 6.8)
-                </h3>
-              </div>
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                <Layers size={22} />
+            {/* Card 3: ACTIVE BIDS */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    ACTIVE BIDS
+                  </p>
+                  <p className="text-2xl font-extrabold text-[#173f31] mt-1">
+                    5
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium mt-1">
+                    Highest: <span className="font-bold text-[#173f31]">₹2,550/q</span>
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
+                  <TrendingUp size={20} />
+                </div>
               </div>
             </div>
-            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-              <span className="text-gray-600 font-medium">Moisture 42% • NPK Good</span>
-              <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold">
-                Fertilizer Due in 4 Days
-              </span>
+
+            {/* Card 4: SOIL HEALTH */}
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-xs transition flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    SOIL HEALTH
+                  </p>
+                  <p className="text-base sm:text-lg font-extrabold text-[#173f31] mt-1">
+                    Optimal (pH 6.8)
+                  </p>
+                  <p className="text-xs text-amber-700 font-semibold mt-1">
+                    Urea Due in 3 Days
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
+                  <Layers size={20} />
+                </div>
+              </div>
             </div>
+
           </div>
         </section>
 
-        {/* 4. ACTION REQUIRED ALERT */}
+        {/* ==================== 4. ACTION REQUIRED ALERT ==================== */}
         {showAlert && (
-          <section className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
-            <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5 sm:mt-0">
-                <AlertTriangle size={20} />
+          <section className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-2xs">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs mt-0.5">
+                <AlertTriangle size={22} />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h4 className="text-base font-bold text-amber-950">
-                    Action Required: Pest Outbreak Alert for Wheat Crop
-                  </h4>
-                  <span className="px-2 py-0.5 rounded bg-amber-200/70 text-amber-900 text-[10px] font-extrabold uppercase">
-                    High Priority
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-amber-900/90 mt-1 leading-relaxed font-medium">
-                  High humidity detected in Sangrur block. Recommended spray of Neem Oil solution within 48 hours to protect early-stage leaves.
+              <div className="space-y-1">
+                <h4 className="text-base font-extrabold text-amber-950">
+                  Action Required Today
+                </h4>
+                <p className="text-xs sm:text-sm text-amber-900/90 font-medium leading-relaxed">
+                  Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
-              <button
-                type="button"
-                className="px-4 py-2 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-semibold transition cursor-pointer shadow-xs"
-              >
-                View Spray Guide
-              </button>
+            <div className="flex items-center gap-2.5 self-end md:self-center flex-shrink-0">
               <button
                 type="button"
                 onClick={() => setShowAlert(false)}
-                className="px-3 py-2 rounded-xl bg-white border border-amber-300 text-amber-900 hover:bg-amber-100 text-xs font-semibold transition cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-white border border-amber-300 text-amber-950 hover:bg-amber-100 text-xs font-bold transition cursor-pointer"
               >
-                Dismiss
+                Acknowledge
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveModal('adjust-schedule')}
+                className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
+              >
+                Adjust Schedule
               </button>
             </div>
           </section>
         )}
 
-        {/* 5. FARMING TOOLKIT */}
+        {/* ==================== 5. FARMING TOOLKIT ==================== */}
         <section className="space-y-4">
-          <div>
-            <h2 className="text-xl font-bold text-[#173f31] tracking-tight flex items-center gap-2">
-              <span>Farming Toolkit</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                AI Powered
-              </span>
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
-              Smart tools to manage your crops, soil, weather, and mandi rates
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            {/* Tool 1 */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100/70 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Camera size={24} />
-                </div>
-                <h3 className="text-base font-bold text-[#173f31] mt-4">
-                  Crop Disease Scanner
-                </h3>
-                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                  Snap a photo of leaf damage to instantly diagnose pests & get remedies.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mt-5 w-full py-2.5 px-4 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-[#173f31] hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Scan Crop</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-
-            {/* Tool 2 */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100/70 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Droplets size={24} />
-                </div>
-                <h3 className="text-base font-bold text-[#173f31] mt-4">
-                  Irrigation & Fertilizer
-                </h3>
-                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                  Calculate precise water requirement and NPK dosage based on field area.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mt-5 w-full py-2.5 px-4 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-[#173f31] hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Calculate Dosage</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-
-            {/* Tool 3 */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100/70 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <TrendingUp size={24} />
-                </div>
-                <h3 className="text-base font-bold text-[#173f31] mt-4">
-                  Mandi Price Tracker
-                </h3>
-                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                  Compare real-time market prices across 50+ APMC mandis in Punjab.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mt-5 w-full py-2.5 px-4 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-[#173f31] hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Check Mandi Rates</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-
-            {/* Tool 4 */}
-            <div className="bg-white p-5 rounded-2xl border border-gray-200/80 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-              <div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-100/70 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <CloudSun size={24} />
-                </div>
-                <h3 className="text-base font-bold text-[#173f31] mt-4">
-                  Weather Advisory
-                </h3>
-                <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-                  Get 7-day hyperlocal weather updates and rain prediction alerts.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="mt-5 w-full py-2.5 px-4 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-[#173f31] hover:text-white text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>7-Day Forecast</span>
-                <ArrowRight size={14} />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* 6. CROP PROGRESS */}
-        <section className="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200/80 shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-[#173f31] tracking-tight">
-                Crop Progress & Field Timeline
+              <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
+                Farming Toolkit
               </h2>
-              <p className="text-xs sm:text-sm text-gray-500 font-medium mt-0.5">
-                Track growth stages, irrigation schedules, and harvest milestones
+              <p className="text-xs text-gray-500 font-medium mt-0.5">
+                Quick diagnostic and management tools for your field
               </p>
             </div>
-            <span className="text-xs font-semibold text-[#173f31] bg-emerald-50 px-3 py-1 rounded-lg self-start sm:self-auto">
-              2 Active Fields
-            </span>
+            <button
+              onClick={() => setActiveModal('guidance')}
+              className="text-xs font-bold text-[#173f31] hover:text-emerald-700 flex items-center gap-1 cursor-pointer"
+            >
+              <span>View All</span>
+              <ArrowRight size={14} />
+            </button>
           </div>
 
-          <div className="space-y-5">
-            {/* Crop 1 */}
-            <div className="p-4 rounded-xl border border-gray-200/70 bg-[#f8faf9]/50 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#173f31] flex items-center justify-center font-bold">
-                    🌾
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-[#173f31]">
-                      Wheat (HD-3086) • Field #1 (8 Acres)
-                    </h3>
-                    <p className="text-xs text-gray-500 font-medium">
-                      Tillering & Vegetative Stage • Day 45 of 120
-                    </p>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full self-start sm:self-auto">
-                  38% Completed
-                </span>
+          {/* 6 Desktop Cards in Desktop Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            
+            {/* 1. Crop Health */}
+            <div
+              onClick={() => setActiveModal('toolkit-health')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform border border-emerald-200">
+                <Sprout size={24} />
               </div>
-
-              {/* Progress Bar */}
-              <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
-                <div className="bg-emerald-600 h-full rounded-full w-[38%] transition-all"></div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-600 gap-1 pt-1">
-                <span>Next Activity: Second Irrigation & Urea Spray</span>
-                <span className="font-semibold text-[#173f31]">Due in 3 Days (01 Sep)</span>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Crop Health</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Looking good</p>
               </div>
             </div>
 
-            {/* Crop 2 */}
-            <div className="p-4 rounded-xl border border-gray-200/70 bg-[#f8faf9]/50 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-[#173f31] flex items-center justify-center font-bold">
-                    🌱
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-[#173f31]">
-                      Paddy (PR-126) • Field #2 (4 Acres)
-                    </h3>
-                    <p className="text-xs text-gray-500 font-medium">
-                      Grain Ripening Stage • Day 110 of 120
-                    </p>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full self-start sm:self-auto">
-                  91% Completed
+            {/* 2. Weather */}
+            <div
+              onClick={() => setActiveModal('toolkit-weather')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-amber-100/80 text-amber-800 flex items-center justify-center group-hover:scale-105 transition-transform border border-amber-200">
+                <CloudSun size={24} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Weather</h3>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Alert Active</p>
+              </div>
+            </div>
+
+            {/* 3. Soil Health */}
+            <div
+              onClick={() => setActiveModal('toolkit-soil')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform border border-emerald-200">
+                <Layers size={24} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Soil Health</h3>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Update needed</p>
+              </div>
+            </div>
+
+            {/* 4. Testing */}
+            <div
+              onClick={() => setActiveModal('toolkit-testing')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform border border-emerald-200">
+                <FlaskConical size={24} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Testing</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Verified</p>
+              </div>
+            </div>
+
+            {/* 5. Schemes */}
+            <div
+              onClick={() => setActiveModal('toolkit-schemes')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform border border-emerald-200">
+                <Landmark size={24} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Schemes</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">2 matches</p>
+              </div>
+            </div>
+
+            {/* 6. Market */}
+            <div
+              onClick={() => setActiveModal('toolkit-market')}
+              className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-2xs hover:shadow-xs transition text-center flex flex-col items-center justify-center space-y-2 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-[#173f31] flex items-center justify-center group-hover:scale-105 transition-transform border border-emerald-200">
+                <Store size={24} />
+              </div>
+              <div>
+                <h3 className="text-xs font-bold text-[#173f31]">Market</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Prices up</p>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==================== 6. CROP PROGRESS / FIELD TIMELINE ==================== */}
+        <section className="bg-white p-6 sm:p-7 rounded-2xl border border-gray-200/80 shadow-2xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
+                  Wheat (PBW 343)
+                </h2>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
+                  Quality Verified Grade A
                 </span>
               </div>
+              <p className="text-xs text-gray-500 font-medium mt-1">
+                Planted on Oct 15 • 3 Acres
+              </p>
+            </div>
 
-              {/* Progress Bar */}
-              <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
-                <div className="bg-emerald-600 h-full rounded-full w-[91%] transition-all"></div>
+            <button
+              type="button"
+              onClick={() => setActiveModal('update-progress')}
+              className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
+            >
+              Update Progress
+            </button>
+          </div>
+
+          {/* Horizontal Timeline Stages */}
+          <div className="overflow-x-auto pb-2">
+            <div className="min-w-[650px] grid grid-cols-6 gap-2 relative">
+              
+              {/* Connecting Line Behind Nodes */}
+              <div className="absolute top-5 left-[8%] right-[8%] h-0.5 bg-gray-200 -z-0"></div>
+
+              {/* Stage 1: Sowing */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#173f31]">Sowing</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-600 gap-1 pt-1">
-                <span>Next Activity: Harvesting & Mandi Transport</span>
-                <span className="font-semibold text-[#173f31]">Due Tomorrow (29 Aug)</span>
+              {/* Stage 2: Irrigation */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#173f31]">Irrigation</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                </div>
               </div>
+
+              {/* Stage 3: Fertilizer */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                  ✓
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#173f31]">Fertilizer</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                </div>
+              </div>
+
+              {/* Stage 4: Growth (Active Highlighted) */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-11 h-11 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-md ring-4 ring-emerald-100 animate-pulse">
+                  42
+                </div>
+                <div>
+                  <p className="text-xs font-extrabold text-[#173f31]">Growth</p>
+                  <span className="inline-block px-2 py-0.5 bg-[#173f31] text-white text-[10px] font-bold rounded-full mt-0.5">
+                    ACTIVE
+                  </span>
+                </div>
+              </div>
+
+              {/* Stage 5: Protection */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 rounded-full bg-gray-100 border-2 border-gray-300 text-gray-400 flex items-center justify-center font-bold text-xs">
+                  ○
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-600">Protection</p>
+                  <p className="text-[11px] text-gray-400 font-medium">Upcoming</p>
+                </div>
+              </div>
+
+              {/* Stage 6: Harvest */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+                <div className="w-10 h-10 rounded-full bg-gray-100 border-2 border-gray-300 text-gray-400 flex items-center justify-center font-bold text-xs">
+                  🌾
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-600">Harvest</p>
+                  <p className="text-[11px] text-gray-400 font-medium">Expected Mar</p>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
 
-        {/* 7. AGROVA MARKET PROMOTIONAL BANNER */}
-        <section className="bg-gradient-to-r from-[#173f31] to-[#113126] text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-md">
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="max-w-2xl space-y-2">
-              <span className="inline-block px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-bold uppercase tracking-wider">
-                AGROVA DIRECT MARKETPLACE
+        {/* ==================== 7. AGROVA MARKET BANNER ==================== */}
+        <section className="bg-[#173f31] text-white rounded-[28px] p-6 sm:p-8 lg:p-10 relative overflow-hidden shadow-lg border border-[#173f31]/40 min-h-[380px] flex flex-col justify-center">
+          
+          {/* Absolutely Positioned Right-Side Market Image with Soft Horizontal Blending Gradient */}
+          <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[60%] h-full pointer-events-none overflow-hidden">
+            <img
+              src={marketplaceImage}
+              alt="Farmer selling produce directly to a buyer"
+              className="w-full h-full object-cover object-[center_center] opacity-90 lg:opacity-100"
+            />
+            {/* Desktop Left-to-Right Dissolve Gradient Overlay matching exact #173f31 color */}
+            <div 
+              className="absolute inset-0 hidden lg:block" 
+              style={{
+                background: 'linear-gradient(to right, #173f31 0%, #173f31 12%, rgba(23,63,49,0.92) 28%, rgba(23,63,49,0.55) 45%, rgba(23,63,49,0.12) 65%, transparent 100%)'
+              }}
+            />
+            {/* Mobile Top-to-Bottom Dissolve Gradient Overlay */}
+            <div 
+              className="absolute inset-0 lg:hidden"
+              style={{
+                background: 'linear-gradient(to bottom, #173f31 0%, rgba(23,63,49,0.85) 30%, transparent 100%)'
+              }}
+            />
+          </div>
+
+          {/* Left Text Content & Controls */}
+          <div className="relative z-10 max-w-xl lg:max-w-2xl space-y-6">
+            <div className="space-y-3">
+              <span className="inline-block px-3.5 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-bold uppercase tracking-wider border border-emerald-400/30">
+                AGROVA MARKET
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">
-                Sell Harvest Directly to Verified Buyers & Cut Out Middlemen
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                Ready to Sell?
               </h2>
-              <p className="text-sm text-emerald-100/90 leading-relaxed font-medium pt-1">
-                Get guaranteed instant digital payments, free farm doorstep pickup, and up to 12% higher profit margins for your produce.
+              <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed font-medium max-w-lg">
+                Connect directly with verified wholesale buyers. Skip the middlemen, secure the best price, and arrange hassle-free pickup.
               </p>
             </div>
 
-            <div className="flex-shrink-0">
+            {/* Stat Pills & Action Button */}
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
+                  <span>New Bids: </span>
+                  <span className="font-bold text-white">7</span>
+                </div>
+                <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
+                  <span>Highest Bid: </span>
+                  <span className="font-bold text-white">₹2,550/q</span>
+                </div>
+              </div>
+
               <button
                 type="button"
-                className="px-6 py-3.5 rounded-xl bg-white text-[#173f31] hover:bg-emerald-50 font-bold text-sm shadow-md transition-all duration-200 cursor-pointer flex items-center gap-2"
+                onClick={() => setActiveModal('review-bids')}
+                className="px-6 py-3.5 rounded-xl bg-white text-[#173f31] hover:bg-emerald-50 font-bold text-xs sm:text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex-shrink-0"
               >
-                <span>List Produce for Sale</span>
-                <ArrowRight size={16} />
+                <span>Review Bids & Sell</span>
+                <ArrowRight size={18} />
               </button>
             </div>
           </div>
-
-          {/* Decorative Glow Circle */}
-          <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
         </section>
+
       </main>
 
-      {/* 8. FOOTER */}
+      {/* ==================== 8. FOOTER ==================== */}
       <footer className="border-t border-gray-200 bg-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>© 2026 AGROVA Ecosystems. Resilient Agriculture Platform.</p>
-            <div className="flex items-center gap-6 font-medium">
-              <button type="button" className="hover:text-[#173f31] transition-colors cursor-pointer">
-                Privacy Policy
-              </button>
-              <button type="button" className="hover:text-[#173f31] transition-colors cursor-pointer">
-                Terms of Service
-              </button>
-              <span className="text-emerald-700 font-bold">Helpline: 1800-AGROVA</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            
+            {/* Column 1: Brand */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#173f31] text-white flex items-center justify-center p-1 font-bold">
+                  <img src={agrovaLogo} alt="Logo" className="w-full h-full object-contain" />
+                </div>
+                <span className="text-lg font-extrabold text-[#173f31]">AGROVA</span>
+              </div>
+              <p className="text-xs text-gray-500 leading-relaxed font-medium">
+                Powering the New Green Revolution.
+              </p>
             </div>
+
+            {/* Column 2: Platform */}
+            <div className="space-y-2 text-xs">
+              <p className="font-bold text-[#173f31] uppercase tracking-wider">PLATFORM</p>
+              <ul className="space-y-1.5 text-gray-600 font-medium">
+                <li><a href="#marketplace" className="hover:text-[#173f31] transition">Marketplace</a></li>
+                <li><a href="#insights" className="hover:text-[#173f31] transition">Crop Insights</a></li>
+                <li><a href="#community" className="hover:text-[#173f31] transition">Farmer Community</a></li>
+              </ul>
+            </div>
+
+            {/* Column 3: Support */}
+            <div className="space-y-2 text-xs">
+              <p className="font-bold text-[#173f31] uppercase tracking-wider">SUPPORT</p>
+              <ul className="space-y-1.5 text-gray-600 font-medium">
+                <li><a href="#help" className="hover:text-[#173f31] transition">Help Center</a></li>
+                <li><a href="#schemes" className="hover:text-[#173f31] transition">Schemes Guide</a></li>
+                <li><a href="#contact" className="hover:text-[#173f31] transition">Contact Us</a></li>
+              </ul>
+            </div>
+
+            {/* Column 4: Legal */}
+            <div className="space-y-2 text-xs">
+              <p className="font-bold text-[#173f31] uppercase tracking-wider">LEGAL</p>
+              <ul className="space-y-1.5 text-gray-600 font-medium">
+                <li><a href="#privacy" className="hover:text-[#173f31] transition">Privacy Policy</a></li>
+                <li><a href="#terms" className="hover:text-[#173f31] transition">Terms of Service</a></li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-2 font-medium">
+            <p>© 2024 Agrova Technologies. All rights reserved.</p>
+            <p className="text-emerald-800 font-bold">Kisan Helpline: 1800-AGROVA</p>
           </div>
         </div>
       </footer>
 
-      {/* 9. FLOATING AI BUTTON */}
-      <AIButton />
+      {/* ==================== 9. FLOATING AI BUTTON ==================== */}
+      <AIButton onClick={() => setActiveModal('ai')} />
+
+      {/* ==================== INTERACTIVE ACTION MODALS ==================== */}
+      
+      {/* AI Assistant Chat Modal */}
+      {activeModal === 'ai' && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[560px] border border-gray-200">
+            <div className="bg-[#173f31] text-white p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+                  ✨
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm">AGROVA AI Assistant</h3>
+                  <p className="text-[10px] text-emerald-200">Sangrur Punjab Context Active</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveModal(null)} className="p-1 text-emerald-200 hover:text-white">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#f8faf9]">
+              {aiMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-xs leading-relaxed ${msg.sender === 'user' ? 'bg-[#173f31] text-white rounded-br-none font-medium' : 'bg-white text-gray-800 border border-gray-200 shadow-2xs rounded-bl-none font-medium'}`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-3 bg-white border-t border-gray-200 flex items-center gap-2">
+              <input
+                type="text"
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Ask about Wheat PBW 343, weather, bids..."
+                className="flex-1 px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#173f31]"
+              />
+              <button onClick={() => handleSendMessage()} className="p-2.5 rounded-xl bg-[#173f31] text-white hover:bg-[#113126]">
+                <Send size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Explore Guidance / New Crop / Generic Action Modal */}
+      {(activeModal === 'guidance' || activeModal === 'new-crop' || activeModal === 'adjust-schedule' || activeModal === 'update-progress' || activeModal === 'review-bids' || activeModal?.startsWith('toolkit-')) && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-6 border border-gray-200 space-y-4">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h3 className="font-bold text-base text-[#173f31] capitalize">
+                {activeModal === 'guidance' && 'Personalized Crop Guidance'}
+                {activeModal === 'new-crop' && 'Register New Crop'}
+                {activeModal === 'adjust-schedule' && 'Adjust Field Schedule'}
+                {activeModal === 'update-progress' && 'Update Crop Lifecycle'}
+                {activeModal === 'review-bids' && 'Review Active Wholesale Bids'}
+                {activeModal?.startsWith('toolkit-') && `Toolkit: ${activeModal.replace('toolkit-', '')}`}
+              </h3>
+              <button onClick={() => setActiveModal(null)} className="text-gray-400 hover:text-gray-600">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs text-gray-700 font-medium">
+              {activeModal === 'new-crop' && (
+                <div className="space-y-2.5">
+                  <p>Add a new crop or field to your Sangrur dashboard:</p>
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1">Crop Type</label>
+                    <select className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs font-medium">
+                      <option>Mustard (Pusa-30)</option>
+                      <option>Cotton (Bt Cotton)</option>
+                      <option>Sugarcane (Co-0238)</option>
+                      <option>Potato (Kufri Pukhraj)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1">Field Size (Acres)</label>
+                    <input type="number" defaultValue="4" className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs font-medium" />
+                  </div>
+                </div>
+              )}
+              {activeModal === 'guidance' && (
+                <div className="space-y-2">
+                  <p>Based on Sangrur weather data (Rain expected in 2 days):</p>
+                  <ul className="list-disc list-inside space-y-1 text-emerald-900 bg-emerald-50 p-3 rounded-xl">
+                    <li>Postpone irrigation scheduled for today.</li>
+                    <li>Apply Zinc Sulphate after rain subsides on 30 Aug.</li>
+                  </ul>
+                </div>
+              )}
+              {activeModal === 'adjust-schedule' && (
+                <div className="space-y-2">
+                  <p>Shifted Irrigation schedule from 28 Aug to 31 Aug.</p>
+                  <div className="p-3 bg-amber-50 rounded-xl text-amber-900 font-semibold">
+                    ✓ Irrigation postponed by 3 days automatically.
+                  </div>
+                </div>
+              )}
+              {activeModal === 'review-bids' && (
+                <div className="space-y-2">
+                  <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                    <p className="font-bold text-emerald-900">Highest Bid: ₹2,550/q</p>
+                    <p className="text-[11px] text-emerald-800">Buyer: AgriCorp WholeSalers Sangrur</p>
+                  </div>
+                  <p className="text-gray-500">Free doorstep transport included.</p>
+                </div>
+              )}
+              {activeModal?.startsWith('toolkit-') && (
+                <p>Opening diagnostic suite for {activeModal.replace('toolkit-', '')}...</p>
+              )}
+            </div>
+
+            <button
+              onClick={() => setActiveModal(null)}
+              className="w-full py-2.5 bg-[#173f31] text-white font-bold text-xs rounded-xl cursor-pointer"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
