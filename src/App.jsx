@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LanguagePage from './pages/LanguagePage';
 import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
+import OTPPage from './pages/OTPPage';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -18,6 +20,11 @@ function App() {
         {/* Auth / Login Page */}
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/login" element={<AuthPage />} />
+        {/* OTP Verification Page */}
+        <Route path="/auth/otp" element={<OTPPage />} />
+
+        {/* Dashboard Page */}
+        <Route path="/dashboard" element={<Dashboard />} />
 
       </Routes>
     </BrowserRouter>

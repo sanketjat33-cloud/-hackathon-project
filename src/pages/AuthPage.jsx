@@ -4,6 +4,7 @@ import farmerHero from '../assets/farmer-hero.png';
 import { languages } from '../data/languages';
 import { AIButton } from '../components/AIButton';
 import { ChevronDown, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * AuthPage component for AGROVA platform.
@@ -11,6 +12,7 @@ import { ChevronDown, Check } from 'lucide-react';
  * farmer/wholesaler role selection, OTP/Password login modes, and registration options.
  */
 export function AuthPage() {
+  const navigate = useNavigate();
   // Selected Language State (syncs with localStorage if available)
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     return localStorage.getItem('selectedLanguage') || 'hi';
@@ -67,6 +69,13 @@ export function AuthPage() {
       console.log('Sending OTP to:', {
         mobileNumber: `+91 ${trimmedMobile}`,
         role,
+      });
+
+      navigate('/auth/otp', {
+        state: {
+          mobileNumber: trimmedMobile,
+          role: role,
+        },
       });
     }
   };
@@ -136,9 +145,8 @@ export function AuthPage() {
               <span>{currentLanguage?.native || 'हिन्दी'}</span>
               <ChevronDown
                 size={14}
-                className={`text-gray-400 transition-transform duration-200 ${
-                  isLangOpen ? 'rotate-180' : ''
-                }`}
+                className={`text-gray-400 transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''
+                  }`}
               />
             </button>
 
@@ -150,11 +158,10 @@ export function AuthPage() {
                     key={lang.id}
                     type="button"
                     onClick={() => handleLanguageSelect(lang.id)}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition flex items-center justify-between hover:bg-emerald-50/60 cursor-pointer ${
-                      selectedLanguage === lang.id
-                        ? 'text-[#173f31] font-semibold bg-emerald-50/80'
-                        : 'text-gray-700'
-                    }`}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition flex items-center justify-between hover:bg-emerald-50/60 cursor-pointer ${selectedLanguage === lang.id
+                      ? 'text-[#173f31] font-semibold bg-emerald-50/80'
+                      : 'text-gray-700'
+                      }`}
                   >
                     <span>{lang.native}</span>
                     {selectedLanguage === lang.id && (
@@ -187,11 +194,10 @@ export function AuthPage() {
                 <button
                   type="button"
                   onClick={() => setRole('Farmer')}
-                  className={`py-3 px-4 rounded-xl text-sm font-semibold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                    role === 'Farmer'
-                      ? 'border-2 border-[#173f31] bg-emerald-50/70 text-[#173f31] shadow-2xs'
-                      : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                  }`}
+                  className={`py-3 px-4 rounded-xl text-sm font-semibold border transition-all cursor-pointer flex items-center justify-center gap-2 ${role === 'Farmer'
+                    ? 'border-2 border-[#173f31] bg-emerald-50/70 text-[#173f31] shadow-2xs'
+                    : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                    }`}
                 >
                   <span className="text-base">🌾</span>
                   <span>Farmer</span>
@@ -199,11 +205,10 @@ export function AuthPage() {
                 <button
                   type="button"
                   onClick={() => setRole('Wholesaler')}
-                  className={`py-3 px-4 rounded-xl text-sm font-semibold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                    role === 'Wholesaler'
-                      ? 'border-2 border-[#173f31] bg-emerald-50/70 text-[#173f31] shadow-2xs'
-                      : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300'
-                  }`}
+                  className={`py-3 px-4 rounded-xl text-sm font-semibold border transition-all cursor-pointer flex items-center justify-center gap-2 ${role === 'Wholesaler'
+                    ? 'border-2 border-[#173f31] bg-emerald-50/70 text-[#173f31] shadow-2xs'
+                    : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                    }`}
                 >
                   <span className="text-base">🏢</span>
                   <span>Wholesaler</span>
