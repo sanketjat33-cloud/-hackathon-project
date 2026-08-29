@@ -143,18 +143,23 @@ const buildAiReply = (message = '', language = 'en') => {
 };
 
 const askAi = async (message, language) => {
-  if (!process.env.OPENAI_API_KEY) {
+  const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
+  if (!apiKey) {
     return buildAiReply(message, language);
   }
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const response = await fetch(process.env.XAI_API_KEY
+    ? 'https://api.x.ai/v1/chat/completions'
+    : 'https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      model: process.env.XAI_API_KEY
+        ? (process.env.XAI_MODEL || 'grok-3-mini')
+        : (process.env.OPENAI_MODEL || 'gpt-4o-mini'),
       temperature: 0.4,
       messages: [
         {
@@ -305,7 +310,7 @@ app.post('/api/ai/chat', async (req, res) => {
     return res.json({
       ok: true,
       reply: await askAi(message, language),
-      source: process.env.OPENAI_API_KEY ? 'model' : 'local',
+      source: apiKey ? 'model' : 'local',
     });
   } catch (error) {
     console.warn('AI provider unavailable, using local fallback:', error.message);
