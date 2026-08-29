@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview --host",
-    "server": "node backend/server.js",
-    "dev:backend": "node backend/server.js",
+    "server": "node --env-file=.env backend/server.js",
+    "dev:backend": "node --env-file=.env backend/server.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
