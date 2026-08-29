@@ -418,6 +418,21 @@ const otpTranslations = {
   as: { title: 'আপোনাৰ মোবাইল নম্বৰ পৰীক্ষা কৰক', subtitle: 'আমি ৬ সংখ্যাৰ ক’ড পঠিয়াইছোঁ', demoOtp: 'ডেমো OTP', resend: 'OTP পুনৰ পঠিয়াওক', resendIn: 'OTP পুনৰ পঠিয়াবলৈ', changeMobile: 'মোবাইল নম্বৰ সলনি কৰক', secureText: 'আপোনাৰ মোবাইল নম্বৰ সুৰক্ষিতভাৱে পৰীক্ষা কৰা হৈছে।', invalidOtp: 'সম্পূৰ্ণ ৬ সংখ্যাৰ OTP লিখক।' },
 };
 
+const navTranslations = {
+  en: { home: 'Home', myCrops: 'My Crops', cropRoadmap: 'Crop Roadmap', sellCrop: 'Sell Crop', bids: 'Bids', market: 'Market', governmentSchemes: 'Government Schemes' },
+  hi: { home: 'होम', myCrops: 'मेरी फसलें', cropRoadmap: 'फसल रोडमैप', sellCrop: 'फसल बेचें', bids: 'बोलियां', market: 'बाज़ार', governmentSchemes: 'सरकारी योजनाएं' },
+  pa: { home: 'ਘਰ', myCrops: 'ਮੇਰੀਆਂ ਫਸਲਾਂ', cropRoadmap: 'ਫਸਲ ਰੋਡਮੈਪ', sellCrop: 'ਫਸਲ ਵੇਚੋ', bids: 'ਬੋਲੀਆਂ', market: 'ਬਾਜ਼ਾਰ', governmentSchemes: 'ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ' },
+  mr: { home: 'मुख्यपृष्ठ', myCrops: 'माझी पिके', cropRoadmap: 'पीक रोडमॅप', sellCrop: 'पीक विका', bids: 'बोली', market: 'बाजार', governmentSchemes: 'सरकारी योजना' },
+  gu: { home: 'હોમ', myCrops: 'મારા પાક', cropRoadmap: 'પાક રોડમેપ', sellCrop: 'પાક વેચો', bids: 'બોલીઓ', market: 'બજાર', governmentSchemes: 'સરકારી યોજનાઓ' },
+  bn: { home: 'হোম', myCrops: 'আমার ফসল', cropRoadmap: 'ফসল রোডম্যাপ', sellCrop: 'ফসল বিক্রি করুন', bids: 'দর', market: 'বাজার', governmentSchemes: 'সরকারি প্রকল্প' },
+  ta: { home: 'முகப்பு', myCrops: 'என் பயிர்கள்', cropRoadmap: 'பயிர் வழித்தடம்', sellCrop: 'பயிரை விற்கவும்', bids: 'ஏலங்கள்', market: 'சந்தை', governmentSchemes: 'அரசுத் திட்டங்கள்' },
+  te: { home: 'హోమ్', myCrops: 'నా పంటలు', cropRoadmap: 'పంట రోడ్‌మ్యాప్', sellCrop: 'పంటను అమ్మండి', bids: 'బిడ్లు', market: 'మార్కెట్', governmentSchemes: 'ప్రభుత్వ పథకాలు' },
+  kn: { home: 'ಮುಖಪುಟ', myCrops: 'ನನ್ನ ಬೆಳೆಗಳು', cropRoadmap: 'ಬೆಳೆ ಮಾರ್ಗನಕ್ಷೆ', sellCrop: 'ಬೆಳೆ ಮಾರಾಟ', bids: 'ಬಿಡ್‌ಗಳು', market: 'ಮಾರುಕಟ್ಟೆ', governmentSchemes: 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು' },
+  ml: { home: 'ഹോം', myCrops: 'എന്റെ വിളകൾ', cropRoadmap: 'വിള റോഡ്മാപ്പ്', sellCrop: 'വിള വിൽക്കുക', bids: 'ബിഡുകൾ', market: 'വിപണി', governmentSchemes: 'സർക്കാർ പദ്ധതികൾ' },
+  or: { home: 'ହୋମ', myCrops: 'ମୋ ଫସଲ', cropRoadmap: 'ଫସଲ ରୋଡମ୍ୟାପ', sellCrop: 'ଫସଲ ବିକ୍ରି କରନ୍ତୁ', bids: 'ବିଡ୍', market: 'ବଜାର', governmentSchemes: 'ସରକାରୀ ଯୋଜନା' },
+  as: { home: 'হোম', myCrops: 'মোৰ শস্য', cropRoadmap: 'শস্য ৰোডমেপ', sellCrop: 'শস্য বিক্ৰী কৰক', bids: 'নিবিদা', market: 'বজাৰ', governmentSchemes: 'চৰকাৰী আঁচনি' },
+};
+
 const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   ...base,
   ...overrides,
@@ -425,6 +440,7 @@ const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   landing: { ...base.landing, ...overrides.landing },
   auth: { ...base.auth, ...(authTranslations[languageId] || {}), ...overrides.auth },
   otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
+  nav: { ...(navTranslations.en || {}), ...(navTranslations[languageId] || {}), ...overrides.nav },
   dashboard: { ...base.dashboard, ...overrides.dashboard },
   ai: { ...base.ai, ...overrides.ai },
   language: { ...base.language, ...(languageTranslations[languageId] || {}) },

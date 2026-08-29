@@ -94,7 +94,7 @@ export function DashboardPage() {
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   // Active Navigation Tab State
-  const [activeTab, setActiveTab] = useState('Home');
+  const [activeTab, setActiveTab] = useState('home');
 
   // Mobile Menu Drawer Toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -154,6 +154,15 @@ export function DashboardPage() {
   }, [selectedLanguage]);
 
   const currentLanguage = languages.find((lang) => lang.id === selectedLanguage);
+  const navItems = [
+    { key: 'home', label: t.nav.home },
+    { key: 'myCrops', label: t.nav.myCrops },
+    { key: 'cropRoadmap', label: t.nav.cropRoadmap },
+    { key: 'sellCrop', label: t.nav.sellCrop },
+    { key: 'bids', label: t.nav.bids },
+    { key: 'market', label: t.nav.market },
+    { key: 'governmentSchemes', label: t.nav.governmentSchemes },
+  ];
 
   const handleLanguageSelect = (langId) => {
     setLanguage(langId);
@@ -205,26 +214,18 @@ export function DashboardPage() {
 
           {/* Center — Navigation Links (7 exact items in exact order) */}
           <nav className="hidden lg:flex items-center gap-3 xl:gap-5 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
                   onClick={() => {
-                    setActiveTab(item);
-                    if (item === 'Home') {
+                    setActiveTab(item.key);
+                    if (item.key === 'home') {
                       navigate('/dashboard');
                     }
-                    if (item === 'My Crops') {
+                    if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
                   }}
@@ -234,7 +235,7 @@ export function DashboardPage() {
                       : 'border-transparent text-gray-600 hover:text-[#173f31] hover:border-gray-300'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -356,27 +357,19 @@ export function DashboardPage() {
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-[80px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
                   onClick={() => {
-                    setActiveTab(item);
+                    setActiveTab(item.key);
                     setIsMobileMenuOpen(false);
-                    if (item === 'Home') {
+                    if (item.key === 'home') {
                       navigate('/dashboard');
                     }
-                    if (item === 'My Crops') {
+                    if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
                   }}
@@ -386,7 +379,7 @@ export function DashboardPage() {
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -402,15 +395,15 @@ export function DashboardPage() {
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#173f31] tracking-tight">
-                Namaste, Ram Singh! 🌾
+                {t.dashboard.greeting}
               </h1>
               <span className="px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-800 text-xs font-bold border border-emerald-200/80 flex items-center gap-1">
                 <CheckCircle2 size={13} className="text-emerald-700" />
-                Verified Farmer
+                {t.dashboard.verified}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-gray-600 font-medium pt-0.5">
-              Here is your farm summary for Sangrur, Punjab • Kharif Season 2026
+              {t.dashboard.summary}
             </p>
           </div>
 
@@ -426,7 +419,7 @@ export function DashboardPage() {
               className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />
-              <span>New Crop</span>
+              <span>{t.dashboard.newCrop}</span>
             </button>
           </div>
         </section>
@@ -457,15 +450,15 @@ export function DashboardPage() {
             {/* Hero Text Content Overlay (Fixed & Static) */}
             <div className="relative z-20 p-6 sm:p-8 space-y-3 max-w-xl">
               <span className="inline-block px-3 py-1 rounded-full bg-emerald-400 text-[#173f31] text-xs font-extrabold uppercase tracking-wider shadow-xs">
-                CROP MANAGEMENT
+                {t.dashboard.cropManagement}
               </span>
 
               <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Grow Smarter with Agrova
+                {t.dashboard.heroTitle}
               </h2>
 
               <p className="text-xs sm:text-sm text-white/95 font-medium leading-relaxed">
-                Get personalized crop guidance based on your specific crop type, location, and real-time weather data.
+                {t.dashboard.heroText}
               </p>
 
               <div className="pt-2">
@@ -474,7 +467,7 @@ export function DashboardPage() {
                   onClick={() => setActiveModal('guidance')}
                   className="px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition shadow-md cursor-pointer border border-emerald-500/30"
                 >
-                  <span>Explore Guidance</span>
+                  <span>{t.dashboard.explore}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -614,7 +607,7 @@ export function DashboardPage() {
                   {t.dashboard.actionRequired}
                 </h4>
                 <p className="text-xs sm:text-sm text-amber-900/90 font-medium leading-relaxed">
-                  Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.
+                  {t.dashboard.actionText}
                 </p>
               </div>
             </div>
