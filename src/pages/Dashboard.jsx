@@ -618,14 +618,14 @@ export function DashboardPage() {
                 onClick={() => setShowAlert(false)}
                 className="px-4 py-2.5 rounded-xl bg-white border border-amber-300 text-amber-950 hover:bg-amber-100 text-xs font-bold transition cursor-pointer"
               >
-                Acknowledge
+                {t.dashboard.acknowledge}
               </button>
               <button
                 type="button"
                 onClick={() => setActiveModal('adjust-schedule')}
                 className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
               >
-                Adjust Schedule
+                {t.dashboard.adjustSchedule}
               </button>
             </div>
           </section>

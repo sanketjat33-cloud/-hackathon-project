@@ -142,6 +142,41 @@ const buildAiReply = (message = '', language = 'en') => {
   return selected.default;
 };
 
+const askAi = async (message, language) => {
+  if (!process.env.OPENAI_API_KEY) {
+    return buildAiReply(message, language);
+  }
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      temperature: 0.4,
+      messages: [
+        {
+          role: 'system',
+          content: `You are Agrova AI, a concise and practical farming assistant. Answer the user's question in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. If a question is unrelated to farming, answer helpfully but keep the response concise.`,
+        },
+        { role: 'user', content: String(message).trim() },
+      ],
+    }),
+    signal: AbortSignal.timeout(15000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`AI provider returned ${response.status}`);
+  }
+
+  const payload = await response.json();
+  const reply = payload.choices?.[0]?.message?.content?.trim();
+  if (!reply) throw new Error('AI provider returned an empty response');
+  return reply;
+};
+
 app.get('/api/health', (req, res) => {
   res.json({
     ok: true,
@@ -256,7 +291,7 @@ app.get('/api/dashboard/:userId?', (req, res) => {
   });
 });
 
-app.post('/api/ai/chat', (req, res) => {
+app.post('/api/ai/chat', async (req, res) => {
   const { message = '', language = 'en' } = req.body || {};
 
   if (!String(message).trim()) {
@@ -266,10 +301,20 @@ app.post('/api/ai/chat', (req, res) => {
     });
   }
 
-  return res.json({
-    ok: true,
-    reply: buildAiReply(message, language),
-  });
+  try {
+    return res.json({
+      ok: true,
+      reply: await askAi(message, language),
+      source: process.env.OPENAI_API_KEY ? 'model' : 'local',
+    });
+  } catch (error) {
+    console.warn('AI provider unavailable, using local fallback:', error.message);
+    return res.json({
+      ok: true,
+      reply: buildAiReply(message, language),
+      source: 'local-fallback',
+    });
+  }
 });
 
 app.listen(port, () => {

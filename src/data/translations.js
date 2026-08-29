@@ -493,6 +493,21 @@ const dashboardGreetingTranslations = {
   as: { greeting: 'নমস্কাৰ, ৰাম সিং! 🌾', summary: 'চাংগ্ৰুৰ, পঞ্জাব • খৰিফ ঋতু ২০২৬ৰ বাবে আপোনাৰ পথাৰৰ সাৰাংশ', verified: 'পৰীক্ষিত কৃষক', newCrop: 'নতুন শস্য', cropManagement: 'শস্য ব্যৱস্থাপনা', heroTitle: 'Agrova-ৰ সৈতে স্মাৰ্ট কৃষি', heroText: 'আপোনাৰ শস্যৰ বাবে ব্যক্তিগত পৰামৰ্শ লাভ কৰক।', explore: 'পৰামৰ্শ চাওক', actionRequired: 'আজি ব্যৱস্থা প্ৰয়োজন', actionText: 'কাইলৈ বৰষুণৰ সম্ভাৱনা আছে। ঘেঁহুত পানী জমা নহ’বলৈ আজি জলসিঞ্চন নকৰিব।' },
 };
 
+const dashboardActionTranslations = {
+  en: { acknowledge: 'Acknowledge', adjustSchedule: 'Adjust Schedule' },
+  hi: { acknowledge: 'स्वीकार करें', adjustSchedule: 'अनुसूची समायोजित करें' },
+  pa: { acknowledge: 'ਸਵੀਕਾਰ ਕਰੋ', adjustSchedule: 'ਸਮਾਂ-ਸਾਰਣੀ ਬਦਲੋ' },
+  mr: { acknowledge: 'मान्य करा', adjustSchedule: 'वेळापत्रक बदला' },
+  gu: { acknowledge: 'સ્વીકારો', adjustSchedule: 'સમયપત્રક બદલો' },
+  bn: { acknowledge: 'স্বীকার করুন', adjustSchedule: 'সময়সূচি বদলান' },
+  ta: { acknowledge: 'ஏற்கவும்', adjustSchedule: 'அட்டவணையை மாற்றவும்' },
+  te: { acknowledge: 'అంగీకరించండి', adjustSchedule: 'షెడ్యూల్ మార్చండి' },
+  kn: { acknowledge: 'ಸ್ವೀಕರಿಸಿ', adjustSchedule: 'ವೇಳಾಪಟ್ಟಿ ಬದಲಾಯಿಸಿ' },
+  ml: { acknowledge: 'അംഗീകരിക്കുക', adjustSchedule: 'ക്രമീകരണം മാറ്റുക' },
+  or: { acknowledge: 'ସ୍ୱୀକାର କରନ୍ତୁ', adjustSchedule: 'ସମୟସୂଚୀ ବଦଳାନ୍ତୁ' },
+  as: { acknowledge: 'স্বীকাৰ কৰক', adjustSchedule: 'সময়সূচী সলনি কৰক' },
+};
+
 const toolkitStatusTranslations = {
   en: { lookingGood: 'Looking good', alertActive: 'Alert Active', updateNeeded: 'Update needed', verified: 'Verified', matches: '2 matches', pricesUp: 'Prices up' },
   hi: { lookingGood: 'सब अच्छा है', alertActive: 'अलर्ट सक्रिय', updateNeeded: 'अपडेट आवश्यक', verified: 'सत्यापित', matches: '2 मिलान', pricesUp: 'कीमतें बढ़ीं' },
@@ -517,7 +532,7 @@ const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
   nav: { ...(navTranslations.en || {}), ...(navTranslations[languageId] || {}), ...overrides.nav },
   status: { ...(dashboardStatusTranslations.en || {}), ...(dashboardStatusTranslations[languageId] || {}), ...(cropStageTranslations[languageId] || {}), ...(toolkitStatusTranslations[languageId] || {}), ...overrides.status },
-  dashboard: { ...base.dashboard, ...(dashboardGreetingTranslations[languageId] || {}), ...overrides.dashboard },
+  dashboard: { ...base.dashboard, ...(dashboardGreetingTranslations[languageId] || {}), ...(dashboardActionTranslations[languageId] || {}), ...overrides.dashboard },
   ai: { ...base.ai, ...overrides.ai },
   language: { ...base.language, ...(languageTranslations[languageId] || {}) },
 });
