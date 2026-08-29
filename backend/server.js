@@ -146,7 +146,7 @@ const askAi = async (message, language) => {
   const geminiKey = process.env.GEMINI_API_KEY;
   const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
   if (geminiKey) {
-    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
       {
