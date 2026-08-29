@@ -143,8 +143,39 @@ const buildAiReply = (message = '', language = 'en') => {
 };
 
 const askAi = async (message, language) => {
+  const groqKey = process.env.GROQ_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
   const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
+  if (groqKey) {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${groqKey}`,
+      },
+      body: JSON.stringify({
+        model: process.env.GROQ_MODEL || 'qwen/qwen3.6-27b',
+        temperature: 0.4,
+        messages: [
+          {
+            role: 'system',
+            content: `You are Agrova AI, a concise and practical farming assistant. Answer in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.`,
+          },
+          { role: 'user', content: String(message).trim() },
+        ],
+      }),
+      signal: AbortSignal.timeout(15000),
+    });
+
+    if (!response.ok) throw new Error(`Groq provider returned ${response.status}`);
+    const payload = await response.json();
+    const reply = payload.choices?.[0]?.message?.content
+      ?.replace(/<think>[\s\S]*?<\/think>/gi, '')
+      .trim();
+    if (!reply) throw new Error('Groq provider returned an empty response');
+    return reply;
+  }
+
   if (geminiKey) {
     const model = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
     const response = await fetch(
@@ -336,7 +367,9 @@ app.post('/api/ai/chat', async (req, res) => {
     return res.json({
       ok: true,
       reply: await askAi(message, language),
-      source: process.env.GEMINI_API_KEY || apiKey ? 'model' : 'local',
+      source: process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY || process.env.XAI_API_KEY || process.env.OPENAI_API_KEY
+        ? 'model'
+        : 'local',
     });
   } catch (error) {
     console.warn('AI provider unavailable, using local fallback:', error.message);
