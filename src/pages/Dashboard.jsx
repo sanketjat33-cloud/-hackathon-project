@@ -301,13 +301,13 @@ export function DashboardPage() {
                   <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                     <h4 className="text-sm font-bold text-[#173f31] flex items-center gap-1.5">
                       <Bell size={16} className="text-emerald-600" />
-                      Notifications (3)
+                      {t.common.notifications} (3)
                     </h4>
                     <button
                       onClick={() => setIsNotifOpen(false)}
                       className="text-xs text-gray-400 hover:text-gray-600"
                     >
-                      Close
+                      {t.common.close}
                     </button>
                   </div>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -331,7 +331,7 @@ export function DashboardPage() {
             <div className="flex items-center gap-2.5">
               <div className="flex flex-col text-right leading-tight">
                 <span className="text-[11px] font-medium text-gray-500">
-                  Welcome back,
+                  {t.common.welcomeBack},
                 </span>
                 <span className="text-sm font-bold text-[#173f31]">
                   Rajesh

@@ -433,6 +433,21 @@ const navTranslations = {
   as: { home: 'হোম', myCrops: 'মোৰ শস্য', cropRoadmap: 'শস্য ৰোডমেপ', sellCrop: 'শস্য বিক্ৰী কৰক', bids: 'নিবিদা', market: 'বজাৰ', governmentSchemes: 'চৰকাৰী আঁচনি' },
 };
 
+const commonUiTranslations = {
+  en: { welcomeBack: 'Welcome back', notifications: 'Notifications', close: 'Close' },
+  hi: { welcomeBack: 'वापसी पर स्वागत है', notifications: 'सूचनाएं', close: 'बंद करें' },
+  pa: { welcomeBack: 'ਵਾਪਸੀ ਤੇ ਜੀ ਆਇਆਂ ਨੂੰ', notifications: 'ਸੂਚਨਾਵਾਂ', close: 'ਬੰਦ ਕਰੋ' },
+  mr: { welcomeBack: 'पुन्हा स्वागत आहे', notifications: 'सूचना', close: 'बंद करा' },
+  gu: { welcomeBack: 'ફરી સ્વાગત છે', notifications: 'સૂચનાઓ', close: 'બંધ કરો' },
+  bn: { welcomeBack: 'আবার স্বাগতম', notifications: 'বিজ্ঞপ্তি', close: 'বন্ধ করুন' },
+  ta: { welcomeBack: 'மீண்டும் வரவேற்கிறோம்', notifications: 'அறிவிப்புகள்', close: 'மூடவும்' },
+  te: { welcomeBack: 'తిరిగి స్వాగతం', notifications: 'నోటిఫికేషన్లు', close: 'మూసివేయండి' },
+  kn: { welcomeBack: 'ಮತ್ತೆ ಸ್ವಾಗತ', notifications: 'ಅಧಿಸೂಚನೆಗಳು', close: 'ಮುಚ್ಚಿ' },
+  ml: { welcomeBack: 'വീണ്ടും സ്വാഗതം', notifications: 'അറിയിപ്പുകൾ', close: 'അടയ്ക്കുക' },
+  or: { welcomeBack: 'ପୁଣି ସ୍ୱାଗତ', notifications: 'ବିଜ୍ଞପ୍ତି', close: 'ବନ୍ଦ କରନ୍ତୁ' },
+  as: { welcomeBack: 'পুনৰ আদৰণি', notifications: 'জাননী', close: 'বন্ধ কৰক' },
+};
+
 const dashboardStatusTranslations = {
   en: { allHealthy: 'All healthy', heavyRain: 'Heavy Rain Expected', inTwoDays: 'In 2 Days', highest: 'Highest', optimal: 'Optimal', ureaDue: 'Urea Due in 3 Days', done: 'Done', active: 'ACTIVE', upcoming: 'Upcoming', expectedMar: 'Expected Mar', qualityVerified: 'Quality Verified Grade A', plantedOn: 'Planted on Oct 15', acres: 'Acres', cropType: 'Crop Type', fieldName: 'Field Name / Area', saveCrop: 'Save & Add Crop', viewDetails: 'View Crop details', newCrop: 'New Crop' },
   hi: { allHealthy: 'सब स्वस्थ', heavyRain: 'भारी बारिश की संभावना', inTwoDays: '2 दिनों में', highest: 'उच्चतम', optimal: 'उत्तम', ureaDue: '3 दिनों में यूरिया आवश्यक', done: 'पूर्ण', active: 'सक्रिय', upcoming: 'आगामी', expectedMar: 'मार्च में अपेक्षित', qualityVerified: 'गुणवत्ता सत्यापित ग्रेड A', plantedOn: '15 अक्टूबर को बोया गया', acres: 'एकड़', cropType: 'फसल का प्रकार', fieldName: 'खेत का नाम / क्षेत्रफल', saveCrop: 'सहेजें और फसल जोड़ें', viewDetails: 'फसल का विवरण देखें', newCrop: 'नई फसल' },
@@ -481,7 +496,7 @@ const dashboardGreetingTranslations = {
 const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   ...base,
   ...overrides,
-  common: { ...base.common, ...(commonTranslations[languageId] || {}), ...overrides.common },
+  common: { ...base.common, ...(commonUiTranslations[languageId] || {}), ...(commonTranslations[languageId] || {}), ...overrides.common },
   landing: { ...base.landing, ...overrides.landing },
   auth: { ...base.auth, ...(authTranslations[languageId] || {}), ...overrides.auth },
   otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
