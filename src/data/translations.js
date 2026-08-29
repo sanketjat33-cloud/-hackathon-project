@@ -493,6 +493,21 @@ const dashboardGreetingTranslations = {
   as: { greeting: 'নমস্কাৰ, ৰাম সিং! 🌾', summary: 'চাংগ্ৰুৰ, পঞ্জাব • খৰিফ ঋতু ২০২৬ৰ বাবে আপোনাৰ পথাৰৰ সাৰাংশ', verified: 'পৰীক্ষিত কৃষক', newCrop: 'নতুন শস্য', cropManagement: 'শস্য ব্যৱস্থাপনা', heroTitle: 'Agrova-ৰ সৈতে স্মাৰ্ট কৃষি', heroText: 'আপোনাৰ শস্যৰ বাবে ব্যক্তিগত পৰামৰ্শ লাভ কৰক।', explore: 'পৰামৰ্শ চাওক', actionRequired: 'আজি ব্যৱস্থা প্ৰয়োজন', actionText: 'কাইলৈ বৰষুণৰ সম্ভাৱনা আছে। ঘেঁহুত পানী জমা নহ’বলৈ আজি জলসিঞ্চন নকৰিব।' },
 };
 
+const toolkitStatusTranslations = {
+  en: { lookingGood: 'Looking good', alertActive: 'Alert Active', updateNeeded: 'Update needed', verified: 'Verified', matches: '2 matches', pricesUp: 'Prices up' },
+  hi: { lookingGood: 'सब अच्छा है', alertActive: 'अलर्ट सक्रिय', updateNeeded: 'अपडेट आवश्यक', verified: 'सत्यापित', matches: '2 मिलान', pricesUp: 'कीमतें बढ़ीं' },
+  pa: { lookingGood: 'ਸਭ ਵਧੀਆ ਹੈ', alertActive: 'ਅਲਰਟ ਸਰਗਰਮ', updateNeeded: 'ਅੱਪਡੇਟ ਲੋੜੀਂਦਾ', verified: 'ਪ੍ਰਮਾਣਿਤ', matches: '2 ਮੇਲ', pricesUp: 'ਕੀਮਤਾਂ ਵਧੀਆਂ' },
+  mr: { lookingGood: 'सर्व ठीक आहे', alertActive: 'सूचना सक्रिय', updateNeeded: 'अपडेट आवश्यक', verified: 'सत्यापित', matches: '2 जुळले', pricesUp: 'किमती वाढल्या' },
+  gu: { lookingGood: 'બધું સારું છે', alertActive: 'ચેતવણી સક્રિય', updateNeeded: 'અપડેટ જરૂરી', verified: 'ચકાસાયેલ', matches: '2 મેળ', pricesUp: 'કિંમતો વધી' },
+  bn: { lookingGood: 'সব ভালো', alertActive: 'সতর্কতা সক্রিয়', updateNeeded: 'আপডেট প্রয়োজন', verified: 'যাচাই করা', matches: '২টি মিল', pricesUp: 'দাম বেড়েছে' },
+  ta: { lookingGood: 'நன்றாக உள்ளது', alertActive: 'எச்சரிக்கை செயலில்', updateNeeded: 'புதுப்பிப்பு தேவை', verified: 'சரிபார்க்கப்பட்டது', matches: '2 பொருத்தங்கள்', pricesUp: 'விலைகள் உயர்ந்தன' },
+  te: { lookingGood: 'అంతా బాగుంది', alertActive: 'హెచ్చరిక సక్రియం', updateNeeded: 'నవీకరణ అవసరం', verified: 'ధృవీకరించబడింది', matches: '2 సరిపోలికలు', pricesUp: 'ధరలు పెరిగాయి' },
+  kn: { lookingGood: 'ಎಲ್ಲವೂ ಚೆನ್ನಾಗಿದೆ', alertActive: 'ಎಚ್ಚರಿಕೆ ಸಕ್ರಿಯ', updateNeeded: 'ನವೀಕರಣ ಅಗತ್ಯ', verified: 'ಪರಿಶೀಲಿಸಲಾಗಿದೆ', matches: '2 ಹೊಂದಾಣಿಕೆಗಳು', pricesUp: 'ಬೆಲೆಗಳು ಏರಿವೆ' },
+  ml: { lookingGood: 'എല്ലാം നന്നായി', alertActive: 'മുന്നറിയിപ്പ് സജീവം', updateNeeded: 'പുതുക്കൽ ആവശ്യമാണ്', verified: 'പരിശോധിച്ചു', matches: '2 പൊരുത്തങ്ങൾ', pricesUp: 'വിലകൾ ഉയർന്നു' },
+  or: { lookingGood: 'ସବୁ ଭଲ ଅଛି', alertActive: 'ସତର୍କତା ସକ୍ରିୟ', updateNeeded: 'ଅଦ୍ୟତନ ଆବଶ୍ୟକ', verified: 'ଯାଞ୍ଚିତ', matches: '2ଟି ମେଳ', pricesUp: 'ମୂଲ୍ୟ ବଢ଼ିଛି' },
+  as: { lookingGood: 'সকলো ভাল', alertActive: 'সতৰ্কতা সক্ৰিয়', updateNeeded: 'আপডেট প্ৰয়োজন', verified: 'পৰীক্ষিত', matches: '২টা মিল', pricesUp: 'দাম বাঢ়িছে' },
+};
+
 const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   ...base,
   ...overrides,
@@ -501,7 +516,7 @@ const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   auth: { ...base.auth, ...(authTranslations[languageId] || {}), ...overrides.auth },
   otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
   nav: { ...(navTranslations.en || {}), ...(navTranslations[languageId] || {}), ...overrides.nav },
-  status: { ...(dashboardStatusTranslations.en || {}), ...(dashboardStatusTranslations[languageId] || {}), ...(cropStageTranslations[languageId] || {}), ...overrides.status },
+  status: { ...(dashboardStatusTranslations.en || {}), ...(dashboardStatusTranslations[languageId] || {}), ...(cropStageTranslations[languageId] || {}), ...(toolkitStatusTranslations[languageId] || {}), ...overrides.status },
   dashboard: { ...base.dashboard, ...(dashboardGreetingTranslations[languageId] || {}), ...overrides.dashboard },
   ai: { ...base.ai, ...overrides.ai },
   language: { ...base.language, ...(languageTranslations[languageId] || {}) },

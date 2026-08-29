@@ -523,7 +523,7 @@ export function DashboardPage() {
                     3
                   </p>
                   <p className="text-xs text-emerald-700 font-bold mt-1">
-                    ↗ {t.status.allHealthy}
+                    ↗ {t.status.lookingGood}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -664,7 +664,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.cropHealth}</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Looking good</p>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.lookingGood}</p>
               </div>
             </div>
 
@@ -678,7 +678,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.weather}</h3>
-                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Alert Active</p>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">{t.status.alertActive}</p>
               </div>
             </div>
 
@@ -692,7 +692,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.soilHealth}</h3>
-                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Update needed</p>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">{t.status.updateNeeded}</p>
               </div>
             </div>
 
@@ -706,7 +706,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.testing}</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Verified</p>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.verified}</p>
               </div>
             </div>
 
@@ -720,7 +720,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.schemes}</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">2 matches</p>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.matches}</p>
               </div>
             </div>
 
@@ -734,7 +734,7 @@ export function DashboardPage() {
               </div>
               <div>
                 <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.market}</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Prices up</p>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.pricesUp}</p>
               </div>
             </div>
 
