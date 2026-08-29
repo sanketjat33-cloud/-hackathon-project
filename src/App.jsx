@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import OTPPage from './pages/OTPPage';
 import Dashboard from './pages/Dashboard.jsx';
+import MyCropsPage from './pages/MyCropsPage.jsx';
 
 function App() {
   return (
@@ -25,6 +26,10 @@ function App() {
 
         {/* Dashboard Page */}
         <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* My Crops Page */}
+        <Route path="/my-crops" element={<MyCropsPage />} />
+        <Route path="/crops" element={<MyCropsPage />} />
 
       </Routes>
     </BrowserRouter>

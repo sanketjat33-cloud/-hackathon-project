@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import farmerHero from '../assets/farmer-hero.png';
 import marketplaceImage from '../assets/marketplace-image.png';
@@ -77,6 +78,8 @@ const heroImages = [
  * - Floating AI Button: Fixed pill with Ask Agrova AI.
  */
 export function DashboardPage() {
+  const navigate = useNavigate();
+
   // Selected Language State
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     return localStorage.getItem('selectedLanguage') || 'hi';
@@ -152,7 +155,7 @@ export function DashboardPage() {
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
           
           {/* Left — AGROVA Logo & Wordmark */}
-          <div className="flex items-center gap-3.5 flex-shrink-0">
+          <div className="flex items-center gap-3.5 flex-shrink-0 cursor-pointer" onClick={() => navigate('/dashboard')}>
             <div className="w-12 h-12 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
               <img
                 src={agrovaLogo}
@@ -186,7 +189,15 @@ export function DashboardPage() {
                 <button
                   key={item}
                   type="button"
-                  onClick={() => setActiveTab(item)}
+                  onClick={() => {
+                    setActiveTab(item);
+                    if (item === 'Home') {
+                      navigate('/dashboard');
+                    }
+                    if (item === 'My Crops') {
+                      navigate('/my-crops');
+                    }
+                  }}
                   className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
                     isActive
                       ? 'border-[#173f31] text-[#173f31] font-bold'
@@ -332,6 +343,12 @@ export function DashboardPage() {
                   onClick={() => {
                     setActiveTab(item);
                     setIsMobileMenuOpen(false);
+                    if (item === 'Home') {
+                      navigate('/dashboard');
+                    }
+                    if (item === 'My Crops') {
+                      navigate('/my-crops');
+                    }
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
                     isActive
@@ -351,7 +368,7 @@ export function DashboardPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-7 space-y-7">
         
         {/* ==================== 2. GREETING / FARM SUMMARY ==================== */}
-        <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-1 px-1">
+        <section className="flex flex-col md:flex-row md:items-start justify-between gap-4 py-1 px-1">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#173f31] tracking-tight">
@@ -361,23 +378,26 @@ export function DashboardPage() {
                 <CheckCircle2 size={13} className="text-emerald-700" />
                 Verified Farmer
               </span>
-              <button
-                type="button"
-                onClick={() => setActiveModal('new-crop')}
-                className="px-3.5 py-1 rounded-full bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <PlusCircle size={14} className="text-emerald-300" />
-                <span>New Crop</span>
-              </button>
             </div>
             <p className="text-xs sm:text-sm text-gray-600 font-medium pt-0.5">
               Here is your farm summary for Sangrur, Punjab • Kharif Season 2026
             </p>
           </div>
 
-          <div className="flex items-center gap-2 bg-white/80 backdrop-blur-xs px-4 py-2 rounded-xl border border-gray-200/70 text-xs font-bold text-gray-700 shadow-2xs self-start md:self-auto">
-            <MapPin size={15} className="text-emerald-700" />
-            <span>Sangrur • 28 Aug 2026</span>
+          {/* Right Side: Location Pill & New Crop Button with Identical Dimensions */}
+          <div className="flex flex-col items-start md:items-end gap-2 self-start md:self-auto flex-shrink-0 w-[190px]">
+            <div className="w-full h-9 flex items-center justify-center gap-2 bg-white/80 backdrop-blur-xs px-4 rounded-xl border border-gray-200/70 text-xs font-bold text-gray-700 shadow-2xs">
+              <MapPin size={15} className="text-emerald-700 flex-shrink-0" />
+              <span className="truncate">Sangrur • 28 Aug 2026</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveModal('new-crop')}
+              className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
+            >
+              <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />
+              <span>New Crop</span>
+            </button>
           </div>
         </section>
 
