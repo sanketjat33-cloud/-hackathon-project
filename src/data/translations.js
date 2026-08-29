@@ -382,11 +382,49 @@ const languageTranslations = {
   as: { title: 'আপোনাৰ ভাষা বাছক', subtitle: 'Choose Your Language', description1: 'আপোনাৰ Agrova অভিজ্ঞতা সজাবলৈ পছন্দৰ ভাষা বাছক।', description2: 'আপুনি পিছত এই ছেটিং সলনি কৰিব পাৰিব।' },
 };
 
+const authTranslations = {
+  mr: { title: 'Agrova मध्ये आपले स्वागत आहे', subtitle: 'तुमचे स्मार्ट शेती आणि थेट बाजारपेठ व्यासपीठ.', roleLabel: 'मी आहे...', farmer: 'शेतकरी', wholesaler: 'घाऊक व्यापारी', mobile: 'मोबाइल क्रमांक', password: 'पासवर्ड', enterMobile: 'मोबाइल क्रमांक टाका', enterPassword: 'तुमचा पासवर्ड टाका', or: 'किंवा', newToAgrova: 'Agrova वर नवीन आहात?' },
+  gu: { title: 'Agrova માં આપનું સ્વાગત છે', subtitle: 'તમારું સ્માર્ટ ખેતી અને સીધું બજાર પ્લેટફોર્મ.', roleLabel: 'હું છું...', farmer: 'ખેડૂત', wholesaler: 'જથ્થાબંધ વેપારી', mobile: 'મોબાઇલ નંબર', password: 'પાસવર્ડ', enterMobile: 'મોબાઇલ નંબર દાખલ કરો', enterPassword: 'તમારો પાસવર્ડ દાખલ કરો', or: 'અથવા', newToAgrova: 'Agrova પર નવા છો?' },
+  bn: { title: 'Agrova-তে স্বাগতম', subtitle: 'আপনার স্মার্ট কৃষি ও সরাসরি বাজার প্ল্যাটফর্ম।', roleLabel: 'আমি একজন...', farmer: 'কৃষক', wholesaler: 'পাইকার', mobile: 'মোবাইল নম্বর', password: 'পাসওয়ার্ড', enterMobile: 'মোবাইল নম্বর লিখুন', enterPassword: 'আপনার পাসওয়ার্ড লিখুন', or: 'অথবা', newToAgrova: 'Agrova-তে নতুন?' },
+  ta: { title: 'Agrova-க்கு வரவேற்கிறோம்', subtitle: 'உங்கள் ஸ்மார்ட் விவசாயம் மற்றும் நேரடி சந்தை தளம்.', roleLabel: 'நான் ஒரு...', farmer: 'விவசாயி', wholesaler: 'மொத்த விற்பனையாளர்', mobile: 'மொபைல் எண்', password: 'கடவுச்சொல்', enterMobile: 'மொபைல் எண்ணை உள்ளிடவும்', enterPassword: 'கடவுச்சொல்லை உள்ளிடவும்', or: 'அல்லது', newToAgrova: 'Agrova-வில் புதியவரா?' },
+  te: { title: 'Agrova కు స్వాగతం', subtitle: 'మీ స్మార్ట్ వ్యవసాయం మరియు ప్రత్యక్ష మార్కెట్ వేదిక.', roleLabel: 'నేను...', farmer: 'రైతు', wholesaler: 'టోకు వ్యాపారి', mobile: 'మొబైల్ నంబర్', password: 'పాస్‌వర్డ్', enterMobile: 'మొబైల్ నంబర్ నమోదు చేయండి', enterPassword: 'మీ పాస్‌వర్డ్ నమోదు చేయండి', or: 'లేదా', newToAgrova: 'Agrova కు కొత్తవారా?' },
+  kn: { title: 'Agrova ಗೆ ಸ್ವಾಗತ', subtitle: 'ನಿಮ್ಮ ಸ್ಮಾರ್ಟ್ ಕೃಷಿ ಮತ್ತು ನೇರ ಮಾರುಕಟ್ಟೆ ವೇದಿಕೆ.', roleLabel: 'ನಾನು...', farmer: 'ರೈತ', wholesaler: 'ಸಗಟು ವ್ಯಾಪಾರಿ', mobile: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ', password: 'ಪಾಸ್‌ವರ್ಡ್', enterMobile: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ', enterPassword: 'ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ', or: 'ಅಥವಾ', newToAgrova: 'Agrova ಗೆ ಹೊಸಬರೇ?' },
+  ml: { title: 'Agrova-യിലേക്ക് സ്വാഗതം', subtitle: 'നിങ്ങളുടെ സ്മാർട്ട് കൃഷിയും നേരിട്ടുള്ള വിപണി പ്ലാറ്റ്‌ഫോമും.', roleLabel: 'ഞാൻ ഒരു...', farmer: 'കർഷകൻ', wholesaler: 'മൊത്തവ്യാപാരി', mobile: 'മൊബൈൽ നമ്പർ', password: 'പാസ്‌വേഡ്', enterMobile: 'മൊബൈൽ നമ്പർ നൽകുക', enterPassword: 'പാസ്‌വേഡ് നൽകുക', or: 'അല്ലെങ്കിൽ', newToAgrova: 'Agrova-യിൽ പുതിയയാളാണോ?' },
+  or: { title: 'Agrova କୁ ସ୍ୱାଗତ', subtitle: 'ଆପଣଙ୍କ ସ୍ମାର୍ଟ କୃଷି ଏବଂ ସିଧାସଳଖ ବଜାର ପ୍ଲାଟଫର୍ମ।', roleLabel: 'ମୁଁ ଜଣେ...', farmer: 'ଚାଷୀ', wholesaler: 'ପାଇକାରୀ ବ୍ୟବସାୟୀ', mobile: 'ମୋବାଇଲ ନମ୍ବର', password: 'ପାସୱାର୍ଡ', enterMobile: 'ମୋବାଇଲ ନମ୍ବର ଲେଖନ୍ତୁ', enterPassword: 'ଆପଣଙ୍କ ପାସୱାର୍ଡ ଲେଖନ୍ତୁ', or: 'କିମ୍ବା', newToAgrova: 'Agrova ରେ ନୂଆ କି?' },
+  as: { title: 'Agrova লৈ আদৰণি', subtitle: 'আপোনাৰ স্মাৰ্ট কৃষি আৰু প্ৰত্যক্ষ বজাৰ মঞ্চ।', roleLabel: 'মই এজন...', farmer: 'কৃষক', wholesaler: 'পাইকাৰী বিক্ৰেতা', mobile: 'মোবাইল নম্বৰ', password: 'পাছৱৰ্ড', enterMobile: 'মোবাইল নম্বৰ লিখক', enterPassword: 'আপোনাৰ পাছৱৰ্ড লিখক', or: 'বা', newToAgrova: 'Agrova-ত নতুন নেকি?' },
+};
+
+const commonTranslations = {
+  mr: { sendOtp: 'OTP पाठवा', login: 'लॉगिन', loginOtp: 'OTP ने लॉगिन करा', loginPassword: 'पासवर्डने लॉगिन करा', registerFarmer: 'शेतकरी म्हणून नोंदणी', registerBuyer: 'खरेदीदार म्हणून नोंदणी', verifyContinue: 'पडताळा आणि पुढे जा', changeMobile: 'मोबाइल क्रमांक बदला' },
+  gu: { sendOtp: 'OTP મોકલો', login: 'લોગિન', loginOtp: 'OTP વડે લોગિન કરો', loginPassword: 'પાસવર્ડ વડે લોગિન કરો', registerFarmer: 'ખેડૂત તરીકે નોંધણી', registerBuyer: 'ખરીદદાર તરીકે નોંધણી', verifyContinue: 'ચકાસો અને આગળ વધો', changeMobile: 'મોબાઇલ નંબર બદલો' },
+  bn: { sendOtp: 'OTP পাঠান', login: 'লগইন', loginOtp: 'OTP দিয়ে লগইন করুন', loginPassword: 'পাসওয়ার্ড দিয়ে লগইন করুন', registerFarmer: 'কৃষক হিসেবে নিবন্ধন', registerBuyer: 'ক্রেতা হিসেবে নিবন্ধন', verifyContinue: 'যাচাই করে এগিয়ে যান', changeMobile: 'মোবাইল নম্বর বদলান' },
+  ta: { sendOtp: 'OTP அனுப்பவும்', login: 'உள்நுழைக', loginOtp: 'OTP மூலம் உள்நுழைக', loginPassword: 'கடவுச்சொல் மூலம் உள்நுழைக', registerFarmer: 'விவசாயியாக பதிவு', registerBuyer: 'வாங்குபவராக பதிவு', verifyContinue: 'சரிபார்த்து தொடரவும்', changeMobile: 'மொபைல் எண்ணை மாற்றவும்' },
+  te: { sendOtp: 'OTP పంపండి', login: 'లాగిన్', loginOtp: 'OTPతో లాగిన్', loginPassword: 'పాస్‌వర్డ్‌తో లాగిన్', registerFarmer: 'రైతుగా నమోదు', registerBuyer: 'కొనుగోలుదారుగా నమోదు', verifyContinue: 'ధృవీకరించి కొనసాగండి', changeMobile: 'మొబైల్ నంబర్ మార్చండి' },
+  kn: { sendOtp: 'OTP ಕಳುಹಿಸಿ', login: 'ಲಾಗಿನ್', loginOtp: 'OTP ಮೂಲಕ ಲಾಗಿನ್', loginPassword: 'ಪಾಸ್‌ವರ್ಡ್ ಮೂಲಕ ಲಾಗಿನ್', registerFarmer: 'ರೈತರಾಗಿ ನೋಂದಣಿ', registerBuyer: 'ಖರೀದಿದಾರರಾಗಿ ನೋಂದಣಿ', verifyContinue: 'ಪರಿಶೀಲಿಸಿ ಮುಂದುವರಿಯಿರಿ', changeMobile: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ' },
+  ml: { sendOtp: 'OTP അയയ്ക്കുക', login: 'ലോഗിൻ', loginOtp: 'OTP ഉപയോഗിച്ച് ലോഗിൻ', loginPassword: 'പാസ്‌വേഡ് ഉപയോഗിച്ച് ലോഗിൻ', registerFarmer: 'കർഷകനായി രജിസ്റ്റർ ചെയ്യുക', registerBuyer: 'വാങ്ങുന്നയാളായി രജിസ്റ്റർ ചെയ്യുക', verifyContinue: 'പരിശോധിച്ച് തുടരുക', changeMobile: 'മൊബൈൽ നമ്പർ മാറ്റുക' },
+  or: { sendOtp: 'OTP ପଠାନ୍ତୁ', login: 'ଲଗଇନ', loginOtp: 'OTP ଦ୍ୱାରା ଲଗଇନ', loginPassword: 'ପାସୱାର୍ଡ ଦ୍ୱାରା ଲଗଇନ', registerFarmer: 'ଚାଷୀ ଭାବେ ପଞ୍ଜୀକରଣ', registerBuyer: 'କ୍ରେତା ଭାବେ ପଞ୍ଜୀକରଣ', verifyContinue: 'ଯାଞ୍ଚ କରି ଆଗକୁ ଯାଆନ୍ତୁ', changeMobile: 'ମୋବାଇଲ ନମ୍ବର ବଦଳାନ୍ତୁ' },
+  as: { sendOtp: 'OTP পঠিয়াওক', login: 'লগইন', loginOtp: 'OTP-ৰে লগইন কৰক', loginPassword: 'পাছৱৰ্ডেৰে লগইন কৰক', registerFarmer: 'কৃষক হিচাপে পঞ্জীয়ন', registerBuyer: 'ক্ৰেতা হিচাপে পঞ্জীয়ন', verifyContinue: 'পৰীক্ষা কৰি আগবাঢ়ক', changeMobile: 'মোবাইল নম্বৰ সলনি কৰক' },
+};
+
+const otpTranslations = {
+  mr: { title: 'तुमचा मोबाइल क्रमांक पडताळा', subtitle: 'आम्ही 6 अंकी कोड पाठवला आहे', demoOtp: 'डेमो OTP', resend: 'OTP पुन्हा पाठवा', resendIn: 'OTP पुन्हा पाठवण्यासाठी', changeMobile: 'मोबाइल क्रमांक बदला', secureText: 'तुमचा मोबाइल क्रमांक सुरक्षितपणे पडताळला आहे.', invalidOtp: 'कृपया पूर्ण 6 अंकी OTP टाका.' },
+  gu: { title: 'તમારો મોબાઇલ નંબર ચકાસો', subtitle: 'અમે 6 અંકનો કોડ મોકલ્યો છે', demoOtp: 'ડેમો OTP', resend: 'OTP ફરી મોકલો', resendIn: 'OTP ફરી મોકલવામાં', changeMobile: 'મોબાઇલ નંબર બદલો', secureText: 'તમારો મોબાઇલ નંબર સુરક્ષિત રીતે ચકાસવામાં આવ્યો છે.', invalidOtp: 'કૃપા કરીને સંપૂર્ણ 6 અંકનો OTP દાખલ કરો.' },
+  bn: { title: 'আপনার মোবাইল নম্বর যাচাই করুন', subtitle: 'আমরা ৬ সংখ্যার কোড পাঠিয়েছি', demoOtp: 'ডেমো OTP', resend: 'OTP আবার পাঠান', resendIn: 'OTP আবার পাঠাতে', changeMobile: 'মোবাইল নম্বর বদলান', secureText: 'আপনার মোবাইল নম্বর নিরাপদে যাচাই করা হয়েছে।', invalidOtp: 'সম্পূর্ণ ৬ সংখ্যার OTP লিখুন।' },
+  ta: { title: 'உங்கள் மொபைல் எண்ணைச் சரிபார்க்கவும்', subtitle: '6 இலக்கக் குறியீட்டை அனுப்பியுள்ளோம்', demoOtp: 'டெமோ OTP', resend: 'OTP மீண்டும் அனுப்பவும்', resendIn: 'OTP மீண்டும் அனுப்ப', changeMobile: 'மொபைல் எண்ணை மாற்றவும்', secureText: 'உங்கள் மொபைல் எண் பாதுகாப்பாகச் சரிபார்க்கப்பட்டது.', invalidOtp: 'முழு 6 இலக்க OTP-யை உள்ளிடவும்.' },
+  te: { title: 'మీ మొబైల్ నంబర్‌ను ధృవీకరించండి', subtitle: 'మేము 6 అంకెల కోడ్ పంపాము', demoOtp: 'డెమో OTP', resend: 'OTP మళ్లీ పంపండి', resendIn: 'OTP మళ్లీ పంపడానికి', changeMobile: 'మొబైల్ నంబర్ మార్చండి', secureText: 'మీ మొబైల్ నంబర్ సురక్షితంగా ధృవీకరించబడింది.', invalidOtp: 'పూర్తి 6 అంకెల OTP నమోదు చేయండి.' },
+  kn: { title: 'ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ', subtitle: 'ನಾವು 6 ಅಂಕಿಯ ಕೋಡ್ ಕಳುಹಿಸಿದ್ದೇವೆ', demoOtp: 'ಡೆಮೊ OTP', resend: 'OTP ಮತ್ತೆ ಕಳುಹಿಸಿ', resendIn: 'OTP ಮತ್ತೆ ಕಳುಹಿಸಲು', changeMobile: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ಬದಲಾಯಿಸಿ', secureText: 'ನಿಮ್ಮ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ.', invalidOtp: 'ಪೂರ್ಣ 6 ಅಂಕಿಯ OTP ನಮೂದಿಸಿ.' },
+  ml: { title: 'നിങ്ങളുടെ മൊബൈൽ നമ്പർ പരിശോധിക്കുക', subtitle: '6 അക്ക കോഡ് അയച്ചിട്ടുണ്ട്', demoOtp: 'ഡെമോ OTP', resend: 'OTP വീണ്ടും അയയ്ക്കുക', resendIn: 'OTP വീണ്ടും അയയ്ക്കാൻ', changeMobile: 'മൊബൈൽ നമ്പർ മാറ്റുക', secureText: 'നിങ്ങളുടെ മൊബൈൽ നമ്പർ സുരക്ഷിതമായി പരിശോധിച്ചു.', invalidOtp: 'പൂർണ്ണമായ 6 അക്ക OTP നൽകുക.' },
+  or: { title: 'ଆପଣଙ୍କ ମୋବାଇଲ ନମ୍ବର ଯାଞ୍ଚ କରନ୍ତୁ', subtitle: 'ଆମେ 6 ଅଙ୍କର କୋଡ୍ ପଠାଇଛୁ', demoOtp: 'ଡେମୋ OTP', resend: 'OTP ପୁଣି ପଠାନ୍ତୁ', resendIn: 'OTP ପୁଣି ପଠାଇବାକୁ', changeMobile: 'ମୋବାଇଲ ନମ୍ବର ବଦଳାନ୍ତୁ', secureText: 'ଆପଣଙ୍କ ମୋବାଇଲ ନମ୍ବର ସୁରକ୍ଷିତ ଭାବେ ଯାଞ୍ଚ ହୋଇଛି।', invalidOtp: 'ସମ୍ପୂର୍ଣ୍ଣ 6 ଅଙ୍କର OTP ଲେଖନ୍ତୁ।' },
+  as: { title: 'আপোনাৰ মোবাইল নম্বৰ পৰীক্ষা কৰক', subtitle: 'আমি ৬ সংখ্যাৰ ক’ড পঠিয়াইছোঁ', demoOtp: 'ডেমো OTP', resend: 'OTP পুনৰ পঠিয়াওক', resendIn: 'OTP পুনৰ পঠিয়াবলৈ', changeMobile: 'মোবাইল নম্বৰ সলনি কৰক', secureText: 'আপোনাৰ মোবাইল নম্বৰ সুৰক্ষিতভাৱে পৰীক্ষা কৰা হৈছে।', invalidOtp: 'সম্পূৰ্ণ ৬ সংখ্যাৰ OTP লিখক।' },
+};
+
 const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   ...base,
   ...overrides,
-  common: { ...base.common, ...overrides.common },
+  common: { ...base.common, ...(commonTranslations[languageId] || {}), ...overrides.common },
   landing: { ...base.landing, ...overrides.landing },
+  auth: { ...base.auth, ...(authTranslations[languageId] || {}), ...overrides.auth },
+  otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
   dashboard: { ...base.dashboard, ...overrides.dashboard },
   ai: { ...base.ai, ...overrides.ai },
   language: { ...base.language, ...(languageTranslations[languageId] || {}) },

@@ -114,7 +114,7 @@ export function AuthPage() {
               AGROVA
             </span>
             <span className="text-[11px] sm:text-[12px] font-medium text-emerald-200/90 leading-tight mt-0.5">
-              Grow better. Sell smarter. Earn more.
+              {t.common.brandTagline}
             </span>
           </div>
         </div>

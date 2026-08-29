@@ -115,7 +115,7 @@ export function OTPPage() {
     const fullOtp = otp.join('');
 
     if (fullOtp.length < 6) {
-      setError('Please enter the complete 6-digit OTP.');
+      setError(t.otp.invalidOtp);
       return;
     }
 
@@ -182,7 +182,7 @@ export function OTPPage() {
               AGROVA
             </span>
             <span className="text-[11px] sm:text-[12px] font-medium text-emerald-200/90 leading-tight mt-0.5">
-              Grow better. Sell smarter. Earn more.
+              {t.common.brandTagline}
             </span>
           </div>
         </div>
@@ -208,7 +208,7 @@ export function OTPPage() {
         <div className="w-full max-w-[440px] bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-200/80 text-center my-auto">
           {/* Heading */}
           <h1 className="text-xl sm:text-2xl font-bold text-[#173f31] tracking-tight">
-            Verify Your Mobile Number
+            {t.otp.title}
           </h1>
 
           {/* Subtitle & Masked Mobile Number */}

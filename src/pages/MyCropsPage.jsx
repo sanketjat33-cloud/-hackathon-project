@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatField from '../assets/wheat-field.png';
 import { AIButton } from '../components/AIButton';
+import { useLanguage } from '../hooks/useLanguage';
 import {
   Sprout,
   Plus,
@@ -24,6 +25,7 @@ import {
  */
 export function MyCropsPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('My Crops');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -185,11 +187,11 @@ export function MyCropsPage() {
         {/* Heading Section */}
         <div className="space-y-2">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-            My Crops
+            {t.dashboard.myCrops || t.dashboard.activeCrops}
           </h1>
           <div className="w-12 h-1 bg-[#173f31] rounded-full"></div>
           <p className="text-sm font-medium text-gray-600 pt-1">
-            Your selected crops
+            {t.dashboard.selectedCrops || t.dashboard.activeCrops}
           </p>
         </div>
 
@@ -228,7 +230,7 @@ export function MyCropsPage() {
                 onClick={() => setIsDetailModalOpen(true)}
                 className="w-full py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-between cursor-pointer group-hover:bg-emerald-50 group-hover:text-[#173f31]"
               >
-                <span>View Crop details</span>
+                <span>{t.dashboard.viewDetails || t.dashboard.viewAll}</span>
                 <ChevronRight size={16} className="text-gray-500 group-hover:text-[#173f31] group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
@@ -247,7 +249,7 @@ export function MyCropsPage() {
 
             <div className="space-y-1">
               <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#173f31]">
-                Add New Crop
+                {t.dashboard.newCrop}
               </h3>
               <p className="text-xs text-gray-500 font-medium leading-relaxed">
                 Track another field or<br />plantation
