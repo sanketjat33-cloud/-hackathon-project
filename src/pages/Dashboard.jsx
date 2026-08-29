@@ -178,7 +178,11 @@ export function DashboardPage() {
     setAiInput('');
 
     try {
-      const response = await api.askAi({ message: text, language: selectedLanguage });
+      const history = newMsgs.slice(-10).map((message) => ({
+        role: message.sender === 'user' ? 'user' : 'assistant',
+        content: message.text,
+      }));
+      const response = await api.askAi({ message: text, language: selectedLanguage, history });
       setAiMessages((prev) => [...prev, { sender: 'ai', text: response.reply }]);
     } catch (error) {
       setAiMessages((prev) => [...prev, { sender: 'ai', text: t.ai.fallback }]);

@@ -142,7 +142,22 @@ const buildAiReply = (message = '', language = 'en') => {
   return selected.default;
 };
 
-const askAi = async (message, language) => {
+const buildSystemPrompt = (language) => `You are Agrova AI, a patient and practical farming assistant. Answer in language code ${language || 'en'}. Understand imperfect wording, spelling mistakes, short messages, mixed languages, and emotional descriptions. Infer the likely farming concern from context, but never invent a diagnosis, pesticide dose, or urgent safety advice. If important details are missing, ask one simple clarifying question and explain what detail is needed. Give clear actionable steps, warnings, and when to contact a local agriculture officer. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.`;
+
+const normalizeHistory = (history, message) => {
+  const safeHistory = Array.isArray(history)
+    ? history
+      .filter((item) => item && ['user', 'assistant'].includes(item.role) && String(item.content || '').trim())
+      .slice(-10)
+      .map((item) => ({ role: item.role, content: String(item.content).trim() }))
+    : [];
+
+  if (!safeHistory.length) safeHistory.push({ role: 'user', content: String(message).trim() });
+  return safeHistory;
+};
+
+const askAi = async (message, language, history) => {
+  const conversation = normalizeHistory(history, message);
   const groqKey = process.env.GROQ_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
   const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
@@ -159,9 +174,9 @@ const askAi = async (message, language) => {
         messages: [
           {
             role: 'system',
-            content: `You are Agrova AI, a concise and practical farming assistant. Answer in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.`,
+            content: buildSystemPrompt(language),
           },
-          { role: 'user', content: String(message).trim() },
+          ...conversation,
         ],
       }),
       signal: AbortSignal.timeout(15000),
@@ -184,10 +199,11 @@ const askAi = async (message, language) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: `You are Agrova AI, a concise and practical farming assistant. Answer in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.` }],
-          },
-          contents: [{ role: 'user', parts: [{ text: String(message).trim() }] }],
+          systemInstruction: { parts: [{ text: buildSystemPrompt(language) }] },
+          contents: conversation.map((item) => ({
+            role: item.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: item.content }],
+          })),
           generationConfig: { temperature: 0.4 },
         }),
         signal: AbortSignal.timeout(15000),
@@ -221,9 +237,9 @@ const askAi = async (message, language) => {
       messages: [
         {
           role: 'system',
-          content: `You are Agrova AI, a concise and practical farming assistant. Answer the user's question in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. If a question is unrelated to farming, answer helpfully but keep the response concise.`,
+          content: buildSystemPrompt(language),
         },
-        { role: 'user', content: String(message).trim() },
+        ...conversation,
       ],
     }),
     signal: AbortSignal.timeout(15000),
@@ -354,7 +370,7 @@ app.get('/api/dashboard/:userId?', (req, res) => {
 });
 
 app.post('/api/ai/chat', async (req, res) => {
-  const { message = '', language = 'en' } = req.body || {};
+  const { message = '', language = 'en', history = [] } = req.body || {};
 
   if (!String(message).trim()) {
     return res.status(400).json({
@@ -366,7 +382,7 @@ app.post('/api/ai/chat', async (req, res) => {
   try {
     return res.json({
       ok: true,
-      reply: await askAi(message, language),
+      reply: await askAi(message, language, history),
       source: process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY || process.env.XAI_API_KEY || process.env.OPENAI_API_KEY
         ? 'model'
         : 'local',
