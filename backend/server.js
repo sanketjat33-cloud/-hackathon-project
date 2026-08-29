@@ -143,7 +143,33 @@ const buildAiReply = (message = '', language = 'en') => {
 };
 
 const askAi = async (message, language) => {
+  const geminiKey = process.env.GEMINI_API_KEY;
   const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
+  if (geminiKey) {
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: `You are Agrova AI, a concise and practical farming assistant. Answer in language code ${language || 'en'}. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.` }],
+          },
+          contents: [{ role: 'user', parts: [{ text: String(message).trim() }] }],
+          generationConfig: { temperature: 0.4 },
+        }),
+        signal: AbortSignal.timeout(15000),
+      },
+    );
+
+    if (!response.ok) throw new Error(`Gemini provider returned ${response.status}`);
+    const payload = await response.json();
+    const reply = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim();
+    if (!reply) throw new Error('Gemini provider returned an empty response');
+    return reply;
+  }
+
   if (!apiKey) {
     return buildAiReply(message, language);
   }
@@ -310,7 +336,7 @@ app.post('/api/ai/chat', async (req, res) => {
     return res.json({
       ok: true,
       reply: await askAi(message, language),
-      source: apiKey ? 'model' : 'local',
+      source: process.env.GEMINI_API_KEY || apiKey ? 'model' : 'local',
     });
   } catch (error) {
     console.warn('AI provider unavailable, using local fallback:', error.message);
