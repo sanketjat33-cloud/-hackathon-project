@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../hooks/useLanguage';
 
 /**
  * AIButton component for floating Agrova AI assistance.
@@ -8,6 +9,8 @@ import React from 'react';
  * @param {Function} [props.onClick] - Optional click handler
  */
 export function AIButton({ onClick }) {
+  const { t } = useLanguage();
+
   return (
     <button
       type="button"
@@ -37,7 +40,7 @@ export function AIButton({ onClick }) {
         <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
         <line x1="12" y1="19" x2="12" y2="22" />
       </svg>
-      <span className="whitespace-nowrap font-medium">Ask Agrova AI</span>
+      <span className="whitespace-nowrap font-medium">{t.common.askAi}</span>
     </button>
   );
 }

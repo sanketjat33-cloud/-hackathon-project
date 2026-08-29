@@ -198,7 +198,7 @@ export function DashboardPage() {
                 AGROVA
               </span>
               <span className="hidden xl:inline text-[11px] font-medium text-gray-500 leading-tight mt-1">
-                Grow better. Sell smarter. Earn more.
+                {t.common.brandTagline}
               </span>
             </div>
           </div>
@@ -524,7 +524,7 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    ACTIVE CROPS
+                    {t.dashboard.activeCrops}
                   </p>
                   <p className="text-2xl font-extrabold text-[#173f31] mt-1">
                     3
@@ -544,7 +544,7 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-red-700 uppercase tracking-wider">
-                    WEATHER ALERT
+                    {t.dashboard.weatherAlert}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-red-900 mt-1">
                     Heavy Rain Exp.
@@ -564,7 +564,7 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    ACTIVE BIDS
+                    {t.dashboard.activeBids}
                   </p>
                   <p className="text-2xl font-extrabold text-[#173f31] mt-1">
                     5
@@ -584,7 +584,7 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    SOIL HEALTH
+                    {t.dashboard.soilHealth}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-[#173f31] mt-1">
                     Optimal (pH 6.8)
@@ -611,7 +611,7 @@ export function DashboardPage() {
               </div>
               <div className="space-y-1">
                 <h4 className="text-base font-extrabold text-amber-950">
-                  Action Required Today
+                  {t.dashboard.actionRequired}
                 </h4>
                 <p className="text-xs sm:text-sm text-amber-900/90 font-medium leading-relaxed">
                   Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.
@@ -643,7 +643,7 @@ export function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-                Farming Toolkit
+                  {t.dashboard.toolkit}
               </h2>
               <p className="text-xs text-gray-500 font-medium mt-0.5">
                 Quick diagnostic and management tools for your field
@@ -653,7 +653,7 @@ export function DashboardPage() {
               onClick={() => setActiveModal('guidance')}
               className="text-xs font-bold text-[#173f31] hover:text-emerald-700 flex items-center gap-1 cursor-pointer"
             >
-              <span>View All</span>
+                <span>{t.dashboard.viewAll}</span>
               <ArrowRight size={14} />
             </button>
           </div>
@@ -670,7 +670,7 @@ export function DashboardPage() {
                 <Sprout size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Crop Health</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.cropHealth}</h3>
                 <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Looking good</p>
               </div>
             </div>
@@ -684,7 +684,7 @@ export function DashboardPage() {
                 <CloudSun size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Weather</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.weather}</h3>
                 <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Alert Active</p>
               </div>
             </div>
@@ -698,7 +698,7 @@ export function DashboardPage() {
                 <Layers size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Soil Health</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.soilHealth}</h3>
                 <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Update needed</p>
               </div>
             </div>
@@ -712,7 +712,7 @@ export function DashboardPage() {
                 <FlaskConical size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Testing</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.testing}</h3>
                 <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Verified</p>
               </div>
             </div>
@@ -726,7 +726,7 @@ export function DashboardPage() {
                 <Landmark size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Schemes</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.schemes}</h3>
                 <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">2 matches</p>
               </div>
             </div>
@@ -740,7 +740,7 @@ export function DashboardPage() {
                 <Store size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Market</h3>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.market}</h3>
                 <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Prices up</p>
               </div>
             </div>
@@ -754,7 +754,7 @@ export function DashboardPage() {
             <div>
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-                  Wheat (PBW 343)
+                  {t.dashboard.wheat}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
                   Quality Verified Grade A
@@ -770,7 +770,7 @@ export function DashboardPage() {
               onClick={() => setActiveModal('update-progress')}
               className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
             >
-              Update Progress
+              {t.dashboard.updateProgress}
             </button>
           </div>
 
@@ -886,7 +886,7 @@ export function DashboardPage() {
                 AGROVA MARKET
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                Ready to Sell?
+                {t.dashboard.readyToSell}
               </h2>
               <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed font-medium max-w-lg">
                 Connect directly with verified wholesale buyers. Skip the middlemen, secure the best price, and arrange hassle-free pickup.
@@ -897,11 +897,11 @@ export function DashboardPage() {
             <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
-                  <span>New Bids: </span>
+                  <span>{t.dashboard.newBids}: </span>
                   <span className="font-bold text-white">7</span>
                 </div>
                 <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
-                  <span>Highest Bid: </span>
+                  <span>{t.dashboard.highestBid}: </span>
                   <span className="font-bold text-white">₹2,550/q</span>
                 </div>
               </div>
@@ -911,7 +911,7 @@ export function DashboardPage() {
                 onClick={() => setActiveModal('review-bids')}
                 className="px-6 py-3.5 rounded-xl bg-white text-[#173f31] hover:bg-emerald-50 font-bold text-xs sm:text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex-shrink-0"
               >
-                <span>Review Bids & Sell</span>
+                <span>{t.dashboard.reviewBids}</span>
                 <ArrowRight size={18} />
               </button>
             </div>

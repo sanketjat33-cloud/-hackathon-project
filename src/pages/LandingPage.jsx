@@ -121,13 +121,12 @@ function LandingPage() {
                                     />
                                 </div>
 
-                                <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
-                                    Grow Better
+                                    <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
+                                    {t.landing.growBetter}
                                 </h3>
 
                                 <p className="relative mt-3 text-base leading-relaxed text-gray-600">
-                                    Get simple guidance for your crops. From planting to
-                                    harvesting, access expert advice tailored to your land.
+                                    {t.landing.growBetterText}
                                 </p>
 
                             </div>
@@ -144,13 +143,12 @@ function LandingPage() {
                                     />
                                 </div>
 
-                                <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
-                                    Protect Better
+                                    <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
+                                    {t.landing.protectBetter}
                                 </h3>
 
                                 <p className="relative mt-3 text-base leading-relaxed text-gray-600">
-                                    Know the weather and protect your crops. Receive timely
-                                    alerts for adverse conditions and disease outbreaks.
+                                    {t.landing.protectBetterText}
                                 </p>
 
                             </div>
@@ -167,13 +165,12 @@ function LandingPage() {
                                     />
                                 </div>
 
-                                <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
-                                    Sell Better
+                                    <h3 className="relative mt-5 text-2xl font-semibold text-[#111827]">
+                                    {t.landing.sellBetter}
                                 </h3>
 
                                 <p className="relative mt-3 text-base leading-relaxed text-gray-600">
-                                    Connect with buyers and get better offers. Access live
-                                    market prices and secure fair deals for your harvest.
+                                    {t.landing.sellBetterText}
                                 </p>
 
                             </div>

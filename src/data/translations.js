@@ -17,6 +17,7 @@ export const translations = {
       registerBuyer: 'Register as Buyer',
       loginWithPassword: 'Login with Password',
       loginHere: 'Login',
+      brandTagline: 'Grow better. Sell smarter. Earn more.',
     },
     language: {
       title: 'Choose Your Language',
@@ -120,6 +121,7 @@ export const translations = {
       registerBuyer: 'खरीदार के रूप में पंजीकरण',
       loginWithPassword: 'पासवर्ड से लॉगिन',
       loginHere: 'लॉगिन',
+      brandTagline: 'बेहतर उगाएं। समझदारी से बेचें। अधिक कमाएं।',
     },
     language: {
       title: 'अपनी भाषा चुनें',
@@ -223,6 +225,7 @@ export const translations = {
       registerBuyer: 'ਖਰੀਦਦਾਰੀ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ',
       loginWithPassword: 'ਪਾਸਵਰਡ ਨਾਲ ਲੌਗਇਨ',
       loginHere: 'ਲੌਗਇਨ',
+      brandTagline: 'ਬਿਹਤਰ ਉਗਾਓ। ਸਮਝਦਾਰੀ ਨਾਲ ਵੇਚੋ। ਵੱਧ ਕਮਾਓ।',
     },
     language: {
       title: 'ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ',
@@ -310,8 +313,87 @@ export const translations = {
   },
 };
 
+const regionalTranslations = {
+  mr: {
+    common: { askAi: 'Agrova AI ला विचारा', brandTagline: 'चांगले पिकवा. हुशारीने विका. अधिक कमवा.' },
+    landing: { heroTitle: 'तुमची शेती, आता सोपी.', heroLine1: 'तुमची पिके अधिक चांगली वाढवा.', heroLine2: 'हवामानापासून पिकांचे संरक्षण करा.', heroLine3: 'योग्य किमतीत विक्री करा.', ctaStart: 'सुरू करा →', alreadyAccount: 'आधीच खाते आहे?', login: 'लॉगिन', featuresTitle: 'तुम्हाला हवे ते सर्व एका ठिकाणी', growBetter: 'चांगले पिकवा', growBetterText: 'तुमच्या पिकांसाठी सोपे मार्गदर्शन मिळवा.', protectBetter: 'चांगले संरक्षण', protectBetterText: 'हवामान जाणून पिकांचे संरक्षण करा.', sellBetter: 'चांगले विका', sellBetterText: 'खरेदीदारांशी जोडा आणि चांगल्या ऑफर मिळवा.' },
+    dashboard: { askAi: 'Agrova AI ला विचारा', activeCrops: 'सक्रिय पिके', weatherAlert: 'हवामान सूचना', activeBids: 'सक्रिय बोली', soilHealth: 'मातीचे आरोग्य', actionRequired: 'आज कृती आवश्यक', toolkit: 'शेती साधनपेटी', viewAll: 'सर्व पहा', cropHealth: 'पिकांचे आरोग्य', weather: 'हवामान', market: 'बाजार', schemes: 'योजना', testing: 'चाचणी', wheat: 'गहू (PBW 343)', updateProgress: 'प्रगती अद्ययावत करा', readyToSell: 'विक्रीसाठी तयार?', newBids: 'नवीन बोली', highestBid: 'सर्वोच्च बोली', reviewBids: 'बोली पहा आणि विका' },
+    ai: { welcome: 'नमस्कार! मी Agrova AI, तुमचा शेती सहाय्यक आहे. आज मी कशी मदत करू?', fallback: 'AI सेवा तात्पुरती उपलब्ध नाही.' },
+  },
+  gu: {
+    common: { askAi: 'Agrova AI ને પૂછો', brandTagline: 'વધુ સારું ઉગાડો. સમજદારીથી વેચો. વધુ કમાઓ.' },
+    landing: { heroTitle: 'તમારી ખેતી, હવે સરળ.', heroLine1: 'તમારા પાકને વધુ સારી રીતે ઉગાડો.', heroLine2: 'હવામાનથી પાકનું રક્ષણ કરો.', heroLine3: 'યોગ્ય ભાવે વેચો.', ctaStart: 'શરૂ કરો →', alreadyAccount: 'પહેલેથી ખાતું છે?', login: 'લોગિન', featuresTitle: 'તમને જોઈતી દરેક વસ્તુ એક જ જગ્યાએ', growBetter: 'વધુ સારું ઉગાડો', growBetterText: 'તમારા પાક માટે સરળ માર્ગદર્શન મેળવો.', protectBetter: 'વધુ સારું રક્ષણ', protectBetterText: 'હવામાન જાણો અને પાકનું રક્ષણ કરો.', sellBetter: 'વધુ સારું વેચો', sellBetterText: 'ખરીદદારો સાથે જોડાઓ અને સારી ઓફર મેળવો.' },
+    dashboard: { askAi: 'Agrova AI ને પૂછો', activeCrops: 'સક્રિય પાક', weatherAlert: 'હવામાન ચેતવણી', activeBids: 'સક્રિય બોલી', soilHealth: 'જમીનનું સ્વાસ્થ્ય', actionRequired: 'આજે કાર્યવાહી જરૂરી', toolkit: 'ખેતી સાધનો', viewAll: 'બધું જુઓ', cropHealth: 'પાકનું સ્વાસ્થ્ય', weather: 'હવામાન', market: 'બજાર', schemes: 'યોજનાઓ', testing: 'પરીક્ષણ', wheat: 'ઘઉં (PBW 343)', updateProgress: 'પ્રગતિ અપડેટ કરો', readyToSell: 'વેચવા તૈયાર?', newBids: 'નવી બોલીઓ', highestBid: 'સૌથી ઊંચી બોલી', reviewBids: 'બોલી જુઓ અને વેચો' },
+    ai: { welcome: 'નમસ્તે! હું Agrova AI, તમારો ખેતી સહાયક છું. આજે હું કેવી રીતે મદદ કરી શકું?', fallback: 'AI સેવા અસ્થાયી રીતે ઉપલબ્ધ નથી.' },
+  },
+  bn: {
+    common: { askAi: 'Agrova AI-কে জিজ্ঞাসা করুন', brandTagline: 'ভালো ফলান। বুদ্ধিমানের মতো বিক্রি করুন। বেশি উপার্জন করুন।' },
+    landing: { heroTitle: 'আপনার কৃষি, আরও সহজ।', heroLine1: 'আপনার ফসল আরও ভালোভাবে ফলান।', heroLine2: 'আবহাওয়া থেকে ফসল রক্ষা করুন।', heroLine3: 'সঠিক দামে বিক্রি করুন।', ctaStart: 'শুরু করুন →', alreadyAccount: 'ইতিমধ্যে অ্যাকাউন্ট আছে?', login: 'লগইন', featuresTitle: 'আপনার প্রয়োজনীয় সবকিছু এক জায়গায়', growBetter: 'ভালো ফলান', growBetterText: 'আপনার ফসলের জন্য সহজ নির্দেশনা পান।', protectBetter: 'ভালো সুরক্ষা', protectBetterText: 'আবহাওয়া জেনে ফসল রক্ষা করুন।', sellBetter: 'ভালো বিক্রি', sellBetterText: 'ক্রেতাদের সঙ্গে যুক্ত হয়ে ভালো অফার পান।' },
+    dashboard: { askAi: 'Agrova AI-কে জিজ্ঞাসা করুন', activeCrops: 'সক্রিয় ফসল', weatherAlert: 'আবহাওয়ার সতর্কতা', activeBids: 'সক্রিয় দর', soilHealth: 'মাটির স্বাস্থ্য', actionRequired: 'আজ পদক্ষেপ প্রয়োজন', toolkit: 'কৃষি টুলকিট', viewAll: 'সব দেখুন', cropHealth: 'ফসলের স্বাস্থ্য', weather: 'আবহাওয়া', market: 'বাজার', schemes: 'প্রকল্প', testing: 'পরীক্ষা', wheat: 'গম (PBW 343)', updateProgress: 'অগ্রগতি আপডেট করুন', readyToSell: 'বিক্রির জন্য প্রস্তুত?', newBids: 'নতুন দর', highestBid: 'সর্বোচ্চ দর', reviewBids: 'দর দেখুন ও বিক্রি করুন' },
+    ai: { welcome: 'নমস্কার! আমি Agrova AI, আপনার কৃষি সহায়ক। আজ কীভাবে সাহায্য করতে পারি?', fallback: 'AI পরিষেবা সাময়িকভাবে উপলব্ধ নয়।' },
+  },
+  ta: {
+    common: { askAi: 'Agrova AI-யிடம் கேளுங்கள்', brandTagline: 'சிறப்பாக வளருங்கள். புத்திசாலித்தனமாக விற்கவும். அதிகம் சம்பாதிக்கவும்.' },
+    landing: { heroTitle: 'உங்கள் விவசாயம், இப்போது எளிது.', heroLine1: 'உங்கள் பயிர்களை சிறப்பாக வளர்க்கவும்.', heroLine2: 'வானிலையிலிருந்து பயிர்களைப் பாதுகாக்கவும்.', heroLine3: 'சரியான விலையில் விற்கவும்.', ctaStart: 'தொடங்குங்கள் →', alreadyAccount: 'ஏற்கனவே கணக்கு உள்ளதா?', login: 'உள்நுழைக', featuresTitle: 'உங்களுக்குத் தேவையான அனைத்தும் ஒரே இடத்தில்', growBetter: 'சிறப்பாக வளருங்கள்', growBetterText: 'உங்கள் பயிர்களுக்கு எளிய வழிகாட்டுதலைப் பெறுங்கள்.', protectBetter: 'சிறப்பாகப் பாதுகாக்கவும்', protectBetterText: 'வானிலையை அறிந்து பயிர்களைப் பாதுகாக்கவும்.', sellBetter: 'சிறப்பாக விற்கவும்', sellBetterText: 'வாங்குபவர்களுடன் இணைந்து சிறந்த சலுகைகளைப் பெறுங்கள்.' },
+    dashboard: { askAi: 'Agrova AI-யிடம் கேளுங்கள்', activeCrops: 'செயலில் உள்ள பயிர்கள்', weatherAlert: 'வானிலை எச்சரிக்கை', activeBids: 'செயலில் உள்ள ஏலங்கள்', soilHealth: 'மண் நலம்', actionRequired: 'இன்று நடவடிக்கை தேவை', toolkit: 'விவசாய கருவிப்பெட்டி', viewAll: 'அனைத்தையும் காண்க', cropHealth: 'பயிர் நலம்', weather: 'வானிலை', market: 'சந்தை', schemes: 'திட்டங்கள்', testing: 'சோதனை', wheat: 'கோதுமை (PBW 343)', updateProgress: 'முன்னேற்றத்தைப் புதுப்பிக்கவும்', readyToSell: 'விற்கத் தயாரா?', newBids: 'புதிய ஏலங்கள்', highestBid: 'அதிகபட்ச ஏலம்', reviewBids: 'ஏலங்களைப் பார்த்து விற்கவும்' },
+    ai: { welcome: 'வணக்கம்! நான் Agrova AI, உங்கள் விவசாய உதவியாளர். இன்று எப்படி உதவலாம்?', fallback: 'AI சேவை தற்காலிகமாக கிடைக்கவில்லை.' },
+  },
+  te: {
+    common: { askAi: 'Agrova AIని అడగండి', brandTagline: 'మెరుగ్గా పండించండి. తెలివిగా అమ్మండి. ఎక్కువ సంపాదించండి.' },
+    landing: { heroTitle: 'మీ వ్యవసాయం, ఇప్పుడు సులభం.', heroLine1: 'మీ పంటలను మెరుగ్గా పండించండి.', heroLine2: 'వాతావరణం నుండి పంటలను రక్షించండి.', heroLine3: 'సరైన ధరకు అమ్మండి.', ctaStart: 'ప్రారంభించండి →', alreadyAccount: 'ఇప్పటికే ఖాతా ఉందా?', login: 'లాగిన్', featuresTitle: 'మీకు కావాల్సినవన్నీ ఒకే చోట', growBetter: 'మెరుగ్గా పండించండి', growBetterText: 'మీ పంటలకు సులభమైన మార్గదర్శకత్వం పొందండి.', protectBetter: 'మెరుగ్గా రక్షించండి', protectBetterText: 'వాతావరణాన్ని తెలుసుకుని పంటలను రక్షించండి.', sellBetter: 'మెరుగ్గా అమ్మండి', sellBetterText: 'కొనుగోలుదారులతో అనుసంధానమై మంచి ఆఫర్లు పొందండి.' },
+    dashboard: { askAi: 'Agrova AIని అడగండి', activeCrops: 'చురుకైన పంటలు', weatherAlert: 'వాతావరణ హెచ్చరిక', activeBids: 'చురుకైన బిడ్లు', soilHealth: 'నేల ఆరోగ్యం', actionRequired: 'ఈరోజు చర్య అవసరం', toolkit: 'వ్యవసాయ సాధనాలు', viewAll: 'అన్నీ చూడండి', cropHealth: 'పంట ఆరోగ్యం', weather: 'వాతావరణం', market: 'మార్కెట్', schemes: 'పథకాలు', testing: 'పరీక్ష', wheat: 'గోధుమ (PBW 343)', updateProgress: 'పురోగతిని నవీకరించండి', readyToSell: 'అమ్మడానికి సిద్ధమా?', newBids: 'కొత్త బిడ్లు', highestBid: 'అత్యధిక బిడ్', reviewBids: 'బిడ్లు చూసి అమ్మండి' },
+    ai: { welcome: 'నమస్కారం! నేను Agrova AI, మీ వ్యవసాయ సహాయకుడిని. ఈరోజు ఎలా సహాయం చేయగలను?', fallback: 'AI సేవ తాత్కాలికంగా అందుబాటులో లేదు.' },
+  },
+  kn: {
+    common: { askAi: 'Agrova AI ಅನ್ನು ಕೇಳಿ', brandTagline: 'ಉತ್ತಮವಾಗಿ ಬೆಳೆಸಿ. ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ಮಾರಾಟ ಮಾಡಿ. ಹೆಚ್ಚು ಗಳಿಸಿ.' },
+    landing: { heroTitle: 'ನಿಮ್ಮ ಕೃಷಿ, ಈಗ ಸುಲಭ.', heroLine1: 'ನಿಮ್ಮ ಬೆಳೆಗಳನ್ನು ಉತ್ತಮವಾಗಿ ಬೆಳೆಸಿ.', heroLine2: 'ಹವಾಮಾನದಿಂದ ಬೆಳೆಗಳನ್ನು ರಕ್ಷಿಸಿ.', heroLine3: 'ಸರಿಯಾದ ಬೆಲೆಗೆ ಮಾರಾಟ ಮಾಡಿ.', ctaStart: 'ಪ್ರಾರಂಭಿಸಿ →', alreadyAccount: 'ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?', login: 'ಲಾಗಿನ್', featuresTitle: 'ನಿಮಗೆ ಬೇಕಾದ ಎಲ್ಲವೂ ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ', growBetter: 'ಉತ್ತಮವಾಗಿ ಬೆಳೆಸಿ', growBetterText: 'ನಿಮ್ಮ ಬೆಳೆಗಳಿಗೆ ಸರಳ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ.', protectBetter: 'ಉತ್ತಮವಾಗಿ ರಕ್ಷಿಸಿ', protectBetterText: 'ಹವಾಮಾನ ತಿಳಿದು ಬೆಳೆಗಳನ್ನು ರಕ್ಷಿಸಿ.', sellBetter: 'ಉತ್ತಮವಾಗಿ ಮಾರಾಟ ಮಾಡಿ', sellBetterText: 'ಖರೀದಿದಾರರೊಂದಿಗೆ ಸಂಪರ್ಕಿಸಿ ಉತ್ತಮ ಕೊಡುಗೆ ಪಡೆಯಿರಿ.' },
+    dashboard: { askAi: 'Agrova AI ಅನ್ನು ಕೇಳಿ', activeCrops: 'ಸಕ್ರಿಯ ಬೆಳೆಗಳು', weatherAlert: 'ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ', activeBids: 'ಸಕ್ರಿಯ ಬಿಡ್‌ಗಳು', soilHealth: 'ಮಣ್ಣಿನ ಆರೋಗ್ಯ', actionRequired: 'ಇಂದು ಕ್ರಮ ಅಗತ್ಯ', toolkit: 'ಕೃಷಿ ಸಾಧನಗಳು', viewAll: 'ಎಲ್ಲವನ್ನೂ ನೋಡಿ', cropHealth: 'ಬೆಳೆ ಆರೋಗ್ಯ', weather: 'ಹವಾಮಾನ', market: 'ಮಾರುಕಟ್ಟೆ', schemes: 'ಯೋಜನೆಗಳು', testing: 'ಪರೀಕ್ಷೆ', wheat: 'ಗೋಧಿ (PBW 343)', updateProgress: 'ಪ್ರಗತಿ ನವೀಕರಿಸಿ', readyToSell: 'ಮಾರಾಟಕ್ಕೆ ಸಿದ್ಧವೇ?', newBids: 'ಹೊಸ ಬಿಡ್‌ಗಳು', highestBid: 'ಅತ್ಯಧಿಕ ಬಿಡ್', reviewBids: 'ಬಿಡ್ ನೋಡಿ ಮತ್ತು ಮಾರಾಟ ಮಾಡಿ' },
+    ai: { welcome: 'ನಮಸ್ಕಾರ! ನಾನು Agrova AI, ನಿಮ್ಮ ಕೃಷಿ ಸಹಾಯಕ. ಇಂದು ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ?', fallback: 'AI ಸೇವೆ ತಾತ್ಕಾಲಿಕವಾಗಿ ಲಭ್ಯವಿಲ್ಲ.' },
+  },
+  ml: {
+    common: { askAi: 'Agrova AI-യോട് ചോദിക്കൂ', brandTagline: 'നന്നായി വളർത്തൂ. ബുദ്ധിപൂർവ്വം വിൽക്കൂ. കൂടുതൽ നേടൂ.' },
+    landing: { heroTitle: 'നിങ്ങളുടെ കൃഷി, ഇപ്പോൾ എളുപ്പം.', heroLine1: 'നിങ്ങളുടെ വിളകൾ മികച്ച രീതിയിൽ വളർത്തൂ.', heroLine2: 'കാലാവസ്ഥയിൽ നിന്ന് വിളകളെ സംരക്ഷിക്കൂ.', heroLine3: 'ശരിയായ വിലയ്ക്ക് വിൽക്കൂ.', ctaStart: 'തുടങ്ങൂ →', alreadyAccount: 'ഇതിനകം അക്കൗണ്ട് ഉണ്ടോ?', login: 'ലോഗിൻ', featuresTitle: 'നിങ്ങൾക്ക് വേണ്ടതെല്ലാം ഒരിടത്ത്', growBetter: 'നന്നായി വളർത്തൂ', growBetterText: 'നിങ്ങളുടെ വിളകൾക്ക് ലളിതമായ മാർഗനിർദേശം നേടൂ.', protectBetter: 'നന്നായി സംരക്ഷിക്കൂ', protectBetterText: 'കാലാവസ്ഥ അറിഞ്ഞ് വിളകളെ സംരക്ഷിക്കൂ.', sellBetter: 'നന്നായി വിൽക്കൂ', sellBetterText: 'വാങ്ങുന്നവരുമായി ചേർന്ന് മികച്ച ഓഫറുകൾ നേടൂ.' },
+    dashboard: { askAi: 'Agrova AI-യോട് ചോദിക്കൂ', activeCrops: 'സജീവ വിളകൾ', weatherAlert: 'കാലാവസ്ഥാ മുന്നറിയിപ്പ്', activeBids: 'സജീവ ബിഡുകൾ', soilHealth: 'മണ്ണിന്റെ ആരോഗ്യം', actionRequired: 'ഇന്ന് നടപടി ആവശ്യമാണ്', toolkit: 'കൃഷി ഉപകരണങ്ങൾ', viewAll: 'എല്ലാം കാണുക', cropHealth: 'വിള ആരോഗ്യം', weather: 'കാലാവസ്ഥ', market: 'വിപണി', schemes: 'പദ്ധതികൾ', testing: 'പരിശോധന', wheat: 'ഗോതമ്പ് (PBW 343)', updateProgress: 'പുരോഗതി പുതുക്കുക', readyToSell: 'വിൽക്കാൻ തയ്യാറാണോ?', newBids: 'പുതിയ ബിഡുകൾ', highestBid: 'ഏറ്റവും ഉയർന്ന ബിഡ്', reviewBids: 'ബിഡുകൾ പരിശോധിച്ച് വിൽക്കൂ' },
+    ai: { welcome: 'നമസ്കാരം! ഞാൻ Agrova AI, നിങ്ങളുടെ കൃഷി സഹായി. ഇന്ന് എങ്ങനെ സഹായിക്കാം?', fallback: 'AI സേവനം താൽക്കാലികമായി ലഭ്യമല്ല.' },
+  },
+  or: {
+    common: { askAi: 'Agrova AIଙ୍କୁ ପଚାରନ୍ତୁ', brandTagline: 'ଭଲ ଚାଷ କରନ୍ତୁ। ବୁଦ୍ଧିମତାର ସହ ବିକ୍ରି କରନ୍ତୁ। ଅଧିକ ରୋଜଗାର କରନ୍ତୁ।' },
+    landing: { heroTitle: 'ଆପଣଙ୍କ ଚାଷ, ଏବେ ସହଜ।', heroLine1: 'ଆପଣଙ୍କ ଫସଲକୁ ଭଲ ଭାବରେ ଚାଷ କରନ୍ତୁ।', heroLine2: 'ପାଣିପାଗରୁ ଫସଲକୁ ସୁରକ୍ଷା କରନ୍ତୁ।', heroLine3: 'ଠିକ ମୂଲ୍ୟରେ ବିକ୍ରି କରନ୍ତୁ।', ctaStart: 'ଆରମ୍ଭ କରନ୍ତୁ →', alreadyAccount: 'ପୂର୍ବରୁ ଖାତା ଅଛି?', login: 'ଲଗଇନ', featuresTitle: 'ଆପଣଙ୍କ ଆବଶ୍ୟକ ସବୁକିଛି ଗୋଟିଏ ସ୍ଥାନରେ', growBetter: 'ଭଲ ଚାଷ କରନ୍ତୁ', growBetterText: 'ଆପଣଙ୍କ ଫସଲ ପାଇଁ ସରଳ ପରାମର୍ଶ ପାଆନ୍ତୁ।', protectBetter: 'ଭଲ ସୁରକ୍ଷା', protectBetterText: 'ପାଣିପାଗ ଜାଣି ଫସଲକୁ ସୁରକ୍ଷା କରନ୍ତୁ।', sellBetter: 'ଭଲ ବିକ୍ରି କରନ୍ତୁ', sellBetterText: 'କ୍ରେତାଙ୍କ ସହ ଯୋଗାଯୋଗ କରି ଭଲ ଅଫର ପାଆନ୍ତୁ।' },
+    dashboard: { askAi: 'Agrova AIଙ୍କୁ ପଚାରନ୍ତୁ', activeCrops: 'ସକ୍ରିୟ ଫସଲ', weatherAlert: 'ପାଣିପାଗ ସତର୍କତା', activeBids: 'ସକ୍ରିୟ ବିଡ୍', soilHealth: 'ମାଟି ସ୍ୱାସ୍ଥ୍ୟ', actionRequired: 'ଆଜି କାର୍ଯ୍ୟ ଆବଶ୍ୟକ', toolkit: 'କୃଷି ଉପକରଣ', viewAll: 'ସବୁ ଦେଖନ୍ତୁ', cropHealth: 'ଫସଲ ସ୍ୱାସ୍ଥ୍ୟ', weather: 'ପାଣିପାଗ', market: 'ବଜାର', schemes: 'ଯୋଜନା', testing: 'ପରୀକ୍ଷା', wheat: 'ଗହମ (PBW 343)', updateProgress: 'ଅଗ୍ରଗତି ଅଦ୍ୟତନ କରନ୍ତୁ', readyToSell: 'ବିକ୍ରି ପାଇଁ ପ୍ରସ୍ତୁତ?', newBids: 'ନୂଆ ବିଡ୍', highestBid: 'ସର୍ବୋଚ୍ଚ ବିଡ୍', reviewBids: 'ବିଡ୍ ଦେଖି ବିକ୍ରି କରନ୍ତୁ' },
+    ai: { welcome: 'ନମସ୍କାର! ମୁଁ Agrova AI, ଆପଣଙ୍କ କୃଷି ସହାୟକ। ଆଜି କିପରି ସାହାଯ୍ୟ କରିବି?', fallback: 'AI ସେବା ଅସ୍ଥାୟୀ ଭାବେ ଉପଲବ୍ଧ ନାହିଁ।' },
+  },
+  as: {
+    common: { askAi: 'Agrova AI-ক সোধক', brandTagline: 'ভালকৈ খেতি কৰক। বুদ্ধিমানভাৱে বিক্ৰী কৰক। অধিক উপাৰ্জন কৰক।' },
+    landing: { heroTitle: 'আপোনাৰ খেতি, এতিয়া সহজ।', heroLine1: 'আপোনাৰ শস্য ভালদৰে খেতি কৰক।', heroLine2: 'বতৰৰ পৰা শস্য ৰক্ষা কৰক।', heroLine3: 'সঠিক দামত বিক্ৰী কৰক।', ctaStart: 'আৰম্ভ কৰক →', alreadyAccount: 'ইতিমধ্যে একাউণ্ট আছে?', login: 'লগইন', featuresTitle: 'আপোনাৰ প্ৰয়োজনীয় সকলো একে ঠাইতে', growBetter: 'ভালকৈ খেতি কৰক', growBetterText: 'আপোনাৰ শস্যৰ বাবে সহজ পৰামৰ্শ লাভ কৰক।', protectBetter: 'ভালকৈ ৰক্ষা কৰক', protectBetterText: 'বতৰ জানি শস্য ৰক্ষা কৰক।', sellBetter: 'ভালকৈ বিক্ৰী কৰক', sellBetterText: 'ক্ৰেতাৰ সৈতে সংযোগ হৈ ভাল অফাৰ লাভ কৰক।' },
+    dashboard: { askAi: 'Agrova AI-ক সোধক', activeCrops: 'সক্ৰিয় শস্য', weatherAlert: 'বতৰৰ সতৰ্কতা', activeBids: 'সক্ৰিয় নিবিদা', soilHealth: 'মাটিৰ স্বাস্থ্য', actionRequired: 'আজি ব্যৱস্থা প্ৰয়োজন', toolkit: 'কৃষি সঁজুলি', viewAll: 'সকলো চাওক', cropHealth: 'শস্যৰ স্বাস্থ্য', weather: 'বতৰ', market: 'বজাৰ', schemes: 'আঁচনি', testing: 'পৰীক্ষা', wheat: 'ঘেঁহু (PBW 343)', updateProgress: 'অগ্ৰগতি আপডেট কৰক', readyToSell: 'বিক্ৰীৰ বাবে সাজু?', newBids: 'নতুন নিবিদা', highestBid: 'সৰ্বোচ্চ নিবিদা', reviewBids: 'নিবিদা চাই বিক্ৰী কৰক' },
+    ai: { welcome: 'নমস্কাৰ! মই Agrova AI, আপোনাৰ কৃষি সহায়ক। আজি কেনেকৈ সহায় কৰিব পাৰোঁ?', fallback: 'AI সেৱা সাময়িকভাৱে উপলব্ধ নহয়।' },
+  },
+};
+
+const languageTranslations = {
+  mr: { title: 'तुमची भाषा निवडा', subtitle: 'Choose Your Language', description1: 'तुमचा Agrova अनुभव सानुकूलित करण्यासाठी तुमची पसंतीची भाषा निवडा.', description2: 'तुम्ही ही सेटिंग नंतर बदलू शकता.' },
+  gu: { title: 'તમારી ભાષા પસંદ કરો', subtitle: 'Choose Your Language', description1: 'તમારો Agrova અનુભવ અનુકૂળ બનાવવા તમારી પસંદગીની ભાષા પસંદ કરો.', description2: 'તમે આ સેટિંગ પછીથી બદલી શકો છો.' },
+  bn: { title: 'আপনার ভাষা বেছে নিন', subtitle: 'Choose Your Language', description1: 'আপনার Agrova অভিজ্ঞতা সাজাতে পছন্দের ভাষা বেছে নিন।', description2: 'আপনি পরে এই সেটিং বদলাতে পারবেন।' },
+  ta: { title: 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்', subtitle: 'Choose Your Language', description1: 'உங்கள் Agrova அனுபவத்தைத் தனிப்பயனாக்க விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்.', description2: 'இந்த அமைப்பை பின்னர் மாற்றலாம்.' },
+  te: { title: 'మీ భాషను ఎంచుకోండి', subtitle: 'Choose Your Language', description1: 'మీ Agrova అనుభవాన్ని అనుకూలీకరించడానికి మీ భాషను ఎంచుకోండి.', description2: 'ఈ సెట్టింగ్‌ను తర్వాత మార్చవచ్చు.' },
+  kn: { title: 'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ', subtitle: 'Choose Your Language', description1: 'ನಿಮ್ಮ Agrova ಅನುಭವವನ್ನು ಹೊಂದಿಸಲು ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.', description2: 'ಈ ಸೆಟ್ಟಿಂಗ್ ಅನ್ನು ನಂತರ ಬದಲಾಯಿಸಬಹುದು.' },
+  ml: { title: 'നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക', subtitle: 'Choose Your Language', description1: 'നിങ്ങളുടെ Agrova അനുഭവം ക്രമീകരിക്കാൻ ഭാഷ തിരഞ്ഞെടുക്കുക.', description2: 'ഈ ക്രമീകരണം പിന്നീട് മാറ്റാം.' },
+  or: { title: 'ଆପଣଙ୍କ ଭାଷା ବାଛନ୍ତୁ', subtitle: 'Choose Your Language', description1: 'ଆପଣଙ୍କ Agrova ଅନୁଭବକୁ ସଜାଇବା ପାଇଁ ଭାଷା ବାଛନ୍ତୁ।', description2: 'ଆପଣ ପରେ ଏହି ସେଟିଂ ବଦଳାଇପାରିବେ।' },
+  as: { title: 'আপোনাৰ ভাষা বাছক', subtitle: 'Choose Your Language', description1: 'আপোনাৰ Agrova অভিজ্ঞতা সজাবলৈ পছন্দৰ ভাষা বাছক।', description2: 'আপুনি পিছত এই ছেটিং সলনি কৰিব পাৰিব।' },
+};
+
+const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
+  ...base,
+  ...overrides,
+  common: { ...base.common, ...overrides.common },
+  landing: { ...base.landing, ...overrides.landing },
+  dashboard: { ...base.dashboard, ...overrides.dashboard },
+  ai: { ...base.ai, ...overrides.ai },
+  language: { ...base.language, ...(languageTranslations[languageId] || {}) },
+});
+
 export const getTranslation = (languageId = 'en') => {
-  return translations[languageId] || translations.en;
+  return mergeTranslations(translations.en, translations[languageId] || regionalTranslations[languageId], languageId);
 };
 
 export const getLanguageName = (languageId = 'en') => {
