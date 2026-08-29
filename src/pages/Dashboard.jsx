@@ -6,6 +6,8 @@ import marketplaceImage from '../assets/marketplace-image.png';
 import chatgptImage from '../assets/ChatGPT Image Aug 25, 2026, 01_30_15 PM.png';
 import { AIButton } from '../components/AIButton';
 import { languages } from '../data/languages';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 import {
   Sprout,
   Sun,
@@ -80,10 +82,15 @@ const heroImages = [
 export function DashboardPage() {
   const navigate = useNavigate();
 
-  // Selected Language State
-  const [selectedLanguage, setSelectedLanguage] = useState(() => {
-    return localStorage.getItem('selectedLanguage') || 'hi';
+  const [dashboardData, setDashboardData] = useState({
+    user: { name: 'Ram Singh', role: 'Farmer', location: 'Sangrur, Punjab', season: 'Kharif Season 2026' },
+    stats: { activeCrops: 3, weatherAlert: 'Heavy Rain Expected', activeBids: 5, highestBid: 2550, soilHealth: 'Optimal (pH 6.8)' },
+    market: { newBids: 7, highestBid: 2550, buyer: 'AgriCorp WholeSalers Sangrur' },
+    ai: { welcome: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?' }
   });
+
+  // Selected Language State
+  const { languageId: selectedLanguage, setLanguage, t } = useLanguage();
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   // Active Navigation Tab State
@@ -116,19 +123,44 @@ export function DashboardPage() {
   const [aiMessages, setAiMessages] = useState([
     {
       sender: 'ai',
-      text: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?'
+      text: t.ai.welcome
     }
   ]);
+
+  useEffect(() => {
+    const cachedDashboard = localStorage.getItem('agrova_dashboard');
+    if (cachedDashboard) {
+      try {
+        setDashboardData(JSON.parse(cachedDashboard));
+      } catch (error) {
+        console.warn('Failed to parse cached dashboard', error);
+      }
+    }
+
+    api.getDashboard().then((response) => {
+      if (response.dashboard) {
+        setDashboardData(response.dashboard);
+        localStorage.setItem('agrova_dashboard', JSON.stringify(response.dashboard));
+      }
+    }).catch((error) => {
+      console.warn('Dashboard fetch failed:', error.message);
+    });
+  }, []);
+
+  useEffect(() => {
+    setAiMessages([
+      { sender: 'ai', text: t.ai.welcome }
+    ]);
+  }, [selectedLanguage]);
 
   const currentLanguage = languages.find((lang) => lang.id === selectedLanguage);
 
   const handleLanguageSelect = (langId) => {
-    setSelectedLanguage(langId);
-    localStorage.setItem('selectedLanguage', langId);
+    setLanguage(langId);
     setIsLangOpen(false);
   };
 
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const text = textToSend || aiInput;
     if (!text.trim()) return;
 
@@ -136,15 +168,13 @@ export function DashboardPage() {
     setAiMessages(newMsgs);
     setAiInput('');
 
-    setTimeout(() => {
-      let aiReply = "For Wheat (PBW 343) at Day 42, maintain soil moisture at 40%. Avoid heavy watering today as rain is expected tomorrow.";
-      if (text.toLowerCase().includes('bid') || text.toLowerCase().includes('price') || text.toLowerCase().includes('sell')) {
-        aiReply = "Highest bid for your Wheat produce in Sangrur today is ₹2,550/q by AgriCorp Traders. 7 buyers are currently bidding!";
-      } else if (text.toLowerCase().includes('scheme') || text.toLowerCase().includes('gov')) {
-        aiReply = "You qualify for PM-Kisan 17th Installment and Sub-Mission on Agricultural Mechanization (SMAM) with 50% tractor subsidy.";
-      }
-      setAiMessages((prev) => [...prev, { sender: 'ai', text: aiReply }]);
-    }, 600);
+    try {
+      const response = await api.askAi({ message: text, language: selectedLanguage });
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: response.reply }]);
+    } catch (error) {
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: t.ai.fallback }]);
+      console.warn('AI fetch failed:', error.message);
+    }
   };
 
   return (

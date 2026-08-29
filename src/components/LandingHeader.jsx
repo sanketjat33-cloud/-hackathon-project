@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import agrovaLogo from '../assets/agrova-logo.png';
 import { languages } from '../data/languages';
+import { useLanguage } from '../hooks/useLanguage';
 
 export function LandingHeader() {
-    const [selectedLanguage, setSelectedLanguage] = useState(() => {
-        return localStorage.getItem('selectedLanguage') || 'hi';
-    });
+    const { languageId: selectedLanguage, setLanguage } = useLanguage();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -14,8 +13,7 @@ export function LandingHeader() {
     );
 
     const handleLanguageChange = (languageId) => {
-        setSelectedLanguage(languageId);
-        localStorage.setItem('selectedLanguage', languageId);
+        setLanguage(languageId);
         setIsOpen(false);
     };
 

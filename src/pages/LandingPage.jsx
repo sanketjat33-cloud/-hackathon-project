@@ -4,10 +4,12 @@ import { LandingHeader } from '../components/LandingHeader';
 import { AIButton } from '../components/AIButton';
 import { useNavigate } from 'react-router-dom';
 import { Sprout, Sun, Store } from 'lucide-react';
+import { useLanguage } from '../hooks/useLanguage';
 
 function LandingPage() {
 
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     return (
         <div className="min-h-screen bg-[#f8faf9]">
@@ -29,14 +31,14 @@ function LandingPage() {
                         <div>
 
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-[#173f31]">
-                                Your Farming, Made Easier.
+                                {t.landing.heroTitle}
                             </h1>
 
                             <div className="mt-7 space-y-4 text-lg text-gray-700">
 
                                 <p className="flex items-center gap-3">
                                     <span className="text-2xl text-[#173f31]">🌱</span>
-                                    Grow your crops better.
+                                    {t.landing.heroLine1}
                                 </p>
 
                                 <p className="flex items-center gap-3">
@@ -45,12 +47,12 @@ function LandingPage() {
                                         strokeWidth={2}
                                         className="text-[#173f31]"
                                     />
-                                    Protect them from weather.
+                                    {t.landing.heroLine2}
                                 </p>
 
                                 <p className="flex items-center gap-3">
                                     <span className="text-2xl text-[#173f31]">☀️</span>
-                                    Sell them at the right price.
+                                    {t.landing.heroLine3}
                                 </p>
 
                             </div>
@@ -62,17 +64,17 @@ function LandingPage() {
                                     onClick={() => navigate('/auth')}
                                     className="px-7 py-3.5 rounded-xl bg-[#173f31] text-white font-semibold shadow-md hover:bg-[#113126] transition-all duration-200"
                                 >
-                                    Get Started →
+                                    {t.landing.ctaStart}
                                 </button>
 
                                 <p className="text-[#173f31]">
-                                    Already have an account?{' '}
+                                    {t.landing.alreadyAccount}{' '}
                                     <button
                                         type="button"
                                         onClick={() => navigate('/auth')}
                                         className="font-semibold hover:underline"
                                     >
-                                        Login
+                                        {t.landing.login}
                                     </button>
                                 </p>
 
@@ -102,7 +104,7 @@ function LandingPage() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                         <h2 className="text-3xl sm:text-4xl font-bold text-center text-[#173f31]">
-                            Everything you need in one place
+                            {t.landing.featuresTitle}
                         </h2>
 
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -189,7 +191,7 @@ function LandingPage() {
                         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
 
                             <p className="text-sm text-gray-500">
-                                © 2024 AGROVA Ecosystems. Resilient Agriculture.
+                                {t.landing.footer}
                             </p>
 
                             <div className="flex items-center gap-6 text-sm text-gray-500">
