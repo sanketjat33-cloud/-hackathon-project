@@ -523,7 +523,7 @@ export function DashboardPage() {
                     3
                   </p>
                   <p className="text-xs text-emerald-700 font-bold mt-1">
-                    ↗ All healthy
+                    ↗ {t.status.allHealthy}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -540,10 +540,10 @@ export function DashboardPage() {
                     {t.dashboard.weatherAlert}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-red-900 mt-1">
-                    Heavy Rain Exp.
+                    {t.status.heavyRain}
                   </p>
                   <p className="text-xs text-red-700 font-semibold mt-1">
-                    ◷ In 2 Days
+                    ◷ {t.status.inTwoDays}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs">
@@ -563,7 +563,7 @@ export function DashboardPage() {
                     5
                   </p>
                   <p className="text-xs text-gray-600 font-medium mt-1">
-                    Highest: <span className="font-bold text-[#173f31]">₹2,550/q</span>
+                    {t.status.highest}: <span className="font-bold text-[#173f31]">₹2,550/q</span>
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -580,10 +580,10 @@ export function DashboardPage() {
                     {t.dashboard.soilHealth}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-[#173f31] mt-1">
-                    Optimal (pH 6.8)
+                    {t.status.optimal} (pH 6.8)
                   </p>
                   <p className="text-xs text-amber-700 font-semibold mt-1">
-                    Urea Due in 3 Days
+                    {t.status.ureaDue}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -750,11 +750,11 @@ export function DashboardPage() {
                   {t.dashboard.wheat}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
-                  Quality Verified Grade A
+                  {t.status.qualityVerified}
                 </span>
               </div>
               <p className="text-xs text-gray-500 font-medium mt-1">
-                Planted on Oct 15 • 3 Acres
+                {t.status.plantedOn} • 3 {t.status.acres}
               </p>
             </div>
 
@@ -780,8 +780,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Sowing</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.sowing}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -791,8 +791,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Irrigation</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.irrigation}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -802,8 +802,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Fertilizer</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.fertilizer}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -813,9 +813,9 @@ export function DashboardPage() {
                   42
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-[#173f31]">Growth</p>
+                  <p className="text-xs font-extrabold text-[#173f31]">{t.status.growth}</p>
                   <span className="inline-block px-2 py-0.5 bg-[#173f31] text-white text-[10px] font-bold rounded-full mt-0.5">
-                    ACTIVE
+                    {t.status.active}
                   </span>
                 </div>
               </div>
@@ -826,8 +826,8 @@ export function DashboardPage() {
                   ○
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-600">Protection</p>
-                  <p className="text-[11px] text-gray-400 font-medium">Upcoming</p>
+                  <p className="text-xs font-bold text-gray-600">{t.status.protection}</p>
+                  <p className="text-[11px] text-gray-400 font-medium">{t.status.upcoming}</p>
                 </div>
               </div>
 
@@ -837,8 +837,8 @@ export function DashboardPage() {
                   🌾
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-600">Harvest</p>
-                  <p className="text-[11px] text-gray-400 font-medium">Expected Mar</p>
+                  <p className="text-xs font-bold text-gray-600">{t.status.harvest}</p>
+                  <p className="text-[11px] text-gray-400 font-medium">{t.status.expectedMar}</p>
                 </div>
               </div>
 

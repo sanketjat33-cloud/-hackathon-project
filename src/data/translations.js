@@ -433,6 +433,36 @@ const navTranslations = {
   as: { home: 'হোম', myCrops: 'মোৰ শস্য', cropRoadmap: 'শস্য ৰোডমেপ', sellCrop: 'শস্য বিক্ৰী কৰক', bids: 'নিবিদা', market: 'বজাৰ', governmentSchemes: 'চৰকাৰী আঁচনি' },
 };
 
+const dashboardStatusTranslations = {
+  en: { allHealthy: 'All healthy', heavyRain: 'Heavy Rain Expected', inTwoDays: 'In 2 Days', highest: 'Highest', optimal: 'Optimal', ureaDue: 'Urea Due in 3 Days', done: 'Done', active: 'ACTIVE', upcoming: 'Upcoming', expectedMar: 'Expected Mar', qualityVerified: 'Quality Verified Grade A', plantedOn: 'Planted on Oct 15', acres: 'Acres', cropType: 'Crop Type', fieldName: 'Field Name / Area', saveCrop: 'Save & Add Crop', viewDetails: 'View Crop details', newCrop: 'New Crop' },
+  hi: { allHealthy: 'सब स्वस्थ', heavyRain: 'भारी बारिश की संभावना', inTwoDays: '2 दिनों में', highest: 'उच्चतम', optimal: 'उत्तम', ureaDue: '3 दिनों में यूरिया आवश्यक', done: 'पूर्ण', active: 'सक्रिय', upcoming: 'आगामी', expectedMar: 'मार्च में अपेक्षित', qualityVerified: 'गुणवत्ता सत्यापित ग्रेड A', plantedOn: '15 अक्टूबर को बोया गया', acres: 'एकड़', cropType: 'फसल का प्रकार', fieldName: 'खेत का नाम / क्षेत्रफल', saveCrop: 'सहेजें और फसल जोड़ें', viewDetails: 'फसल का विवरण देखें', newCrop: 'नई फसल' },
+  pa: { allHealthy: 'ਸਭ ਤੰਦਰੁਸਤ', heavyRain: 'ਭਾਰੀ ਮੀਂਹ ਦੀ ਸੰਭਾਵਨਾ', inTwoDays: '2 ਦਿਨਾਂ ਵਿੱਚ', highest: 'ਸਭ ਤੋਂ ਉੱਚੀ', optimal: 'ਬਿਹਤਰ', ureaDue: '3 ਦਿਨਾਂ ਵਿੱਚ ਯੂਰੀਆ ਲੋੜੀਂਦੀ', done: 'ਪੂਰਾ', active: 'ਸਰਗਰਮ', upcoming: 'ਆਉਣ ਵਾਲਾ', expectedMar: 'ਮਾਰਚ ਵਿੱਚ ਉਮੀਦ', qualityVerified: 'ਗੁਣਵੱਤਾ ਪ੍ਰਮਾਣਿਤ ਗ੍ਰੇਡ A', plantedOn: '15 ਅਕਤੂਬਰ ਨੂੰ ਬੀਜਿਆ', acres: 'ਏਕੜ', cropType: 'ਫਸਲ ਦੀ ਕਿਸਮ', fieldName: 'ਖੇਤ ਦਾ ਨਾਮ / ਖੇਤਰਫਲ', saveCrop: 'ਸੰਭਾਲੋ ਅਤੇ ਫਸਲ ਜੋੜੋ', viewDetails: 'ਫਸਲ ਦਾ ਵੇਰਵਾ ਵੇਖੋ', newCrop: 'ਨਵੀਂ ਫਸਲ' },
+  mr: { allHealthy: 'सर्व निरोगी', heavyRain: 'मुसळधार पावसाची शक्यता', inTwoDays: '2 दिवसांत', highest: 'सर्वोच्च', optimal: 'उत्तम', ureaDue: '3 दिवसांत युरिया आवश्यक', done: 'पूर्ण', active: 'सक्रिय', upcoming: 'आगामी', expectedMar: 'मार्चमध्ये अपेक्षित', qualityVerified: 'गुणवत्ता सत्यापित ग्रेड A', plantedOn: '15 ऑक्टोबरला पेरणी', acres: 'एकर', cropType: 'पिकाचा प्रकार', fieldName: 'शेताचे नाव / क्षेत्र', saveCrop: 'जतन करा आणि पीक जोडा', viewDetails: 'पिकाचा तपशील पहा', newCrop: 'नवीन पीक' },
+  gu: { allHealthy: 'બધા સ્વસ્થ', heavyRain: 'ભારે વરસાદની શક્યતા', inTwoDays: '2 દિવસમાં', highest: 'સૌથી ઊંચી', optimal: 'શ્રેષ્ઠ', ureaDue: '3 દિવસમાં યુરિયા જરૂરી', done: 'પૂર્ણ', active: 'સક્રિય', upcoming: 'આગામી', expectedMar: 'માર્ચમાં અપેક્ષિત', qualityVerified: 'ગુણવત્તા ચકાસેલ ગ્રેડ A', plantedOn: '15 ઓક્ટોબરે વાવેલ', acres: 'એકર', cropType: 'પાકનો પ્રકાર', fieldName: 'ખેતરનું નામ / વિસ્તાર', saveCrop: 'સાચવો અને પાક ઉમેરો', viewDetails: 'પાકની વિગતો જુઓ', newCrop: 'નવો પાક' },
+  bn: { allHealthy: 'সব সুস্থ', heavyRain: 'ভারী বৃষ্টির সম্ভাবনা', inTwoDays: '২ দিনের মধ্যে', highest: 'সর্বোচ্চ', optimal: 'সেরা', ureaDue: '৩ দিনে ইউরিয়া প্রয়োজন', done: 'সম্পন্ন', active: 'সক্রিয়', upcoming: 'আসন্ন', expectedMar: 'মার্চে প্রত্যাশিত', qualityVerified: 'গুণমান যাচাই গ্রেড A', plantedOn: '১৫ অক্টোবর রোপণ করা', acres: 'একর', cropType: 'ফসলের ধরন', fieldName: 'জমির নাম / এলাকা', saveCrop: 'সংরক্ষণ করে ফসল যোগ করুন', viewDetails: 'ফসলের বিবরণ দেখুন', newCrop: 'নতুন ফসল' },
+  ta: { allHealthy: 'அனைத்தும் நலம்', heavyRain: 'கனமழை எதிர்பார்ப்பு', inTwoDays: '2 நாட்களில்', highest: 'அதிகபட்சம்', optimal: 'சிறந்தது', ureaDue: '3 நாட்களில் யூரியா தேவை', done: 'முடிந்தது', active: 'செயலில்', upcoming: 'வரவிருக்கும்', expectedMar: 'மார்ச் மாதம் எதிர்பார்ப்பு', qualityVerified: 'தரம் சரிபார்க்கப்பட்டது கிரேடு A', plantedOn: 'அக்டோபர் 15 அன்று நடப்பட்டது', acres: 'ஏக்கர்', cropType: 'பயிர் வகை', fieldName: 'வயல் பெயர் / பரப்பளவு', saveCrop: 'சேமித்து பயிரைச் சேர்க்கவும்', viewDetails: 'பயிர் விவரங்களைக் காண்க', newCrop: 'புதிய பயிர்' },
+  te: { allHealthy: 'అన్నీ ఆరోగ్యంగా ఉన్నాయి', heavyRain: 'భారీ వర్షం వచ్చే అవకాశం', inTwoDays: '2 రోజుల్లో', highest: 'అత్యధిక', optimal: 'ఉత్తమం', ureaDue: '3 రోజుల్లో యూరియా అవసరం', done: 'పూర్తయింది', active: 'చురుకైనది', upcoming: 'రాబోయేది', expectedMar: 'మార్చిలో అంచనా', qualityVerified: 'నాణ్యత ధృవీకరించిన గ్రేడ్ A', plantedOn: 'అక్టోబర్ 15న నాటారు', acres: 'ఎకరాలు', cropType: 'పంట రకం', fieldName: 'పొలం పేరు / విస్తీర్ణం', saveCrop: 'సేవ్ చేసి పంటను జోడించండి', viewDetails: 'పంట వివరాలు చూడండి', newCrop: 'కొత్త పంట' },
+  kn: { allHealthy: 'ಎಲ್ಲವೂ ಆರೋಗ್ಯಕರ', heavyRain: 'ಭಾರಿ ಮಳೆಯ ನಿರೀಕ್ಷೆ', inTwoDays: '2 ದಿನಗಳಲ್ಲಿ', highest: 'ಅತ್ಯಧಿಕ', optimal: 'ಉತ್ತಮ', ureaDue: '3 ದಿನಗಳಲ್ಲಿ ಯೂರಿಯಾ ಅಗತ್ಯ', done: 'ಮುಗಿದಿದೆ', active: 'ಸಕ್ರಿಯ', upcoming: 'ಮುಂಬರುವ', expectedMar: 'ಮಾರ್ಚ್‌ನಲ್ಲಿ ನಿರೀಕ್ಷೆ', qualityVerified: 'ಗುಣಮಟ್ಟ ಪರಿಶೀಲಿಸಿದ ಗ್ರೇಡ್ A', plantedOn: 'ಅಕ್ಟೋಬರ್ 15ರಂದು ನೆಡಲಾಗಿದೆ', acres: 'ಎಕರೆ', cropType: 'ಬೆಳೆ ಪ್ರಕಾರ', fieldName: 'ಹೊಲದ ಹೆಸರು / ವಿಸ್ತೀರ್ಣ', saveCrop: 'ಉಳಿಸಿ ಮತ್ತು ಬೆಳೆ ಸೇರಿಸಿ', viewDetails: 'ಬೆಳೆ ವಿವರಗಳನ್ನು ನೋಡಿ', newCrop: 'ಹೊಸ ಬೆಳೆ' },
+  ml: { allHealthy: 'എല്ലാം ആരോഗ്യകരം', heavyRain: 'കനത്ത മഴ പ്രതീക്ഷിക്കുന്നു', inTwoDays: '2 ദിവസത്തിനുള്ളിൽ', highest: 'ഏറ്റവും ഉയർന്ന', optimal: 'മികച്ചത്', ureaDue: '3 ദിവസത്തിനുള്ളിൽ യൂറിയ ആവശ്യമാണ്', done: 'പൂർത്തിയായി', active: 'സജീവം', upcoming: 'വരാനിരിക്കുന്നത്', expectedMar: 'മാർച്ചിൽ പ്രതീക്ഷിക്കുന്നു', qualityVerified: 'ഗുണനിലവാരം പരിശോധിച്ചു ഗ്രേഡ് A', plantedOn: 'ഒക്ടോബർ 15-ന് നട്ടത്', acres: 'ഏക്കർ', cropType: 'വിളയുടെ തരം', fieldName: 'വയലിന്റെ പേര് / വിസ്തീർണ്ണം', saveCrop: 'സംരക്ഷിച്ച് വിള ചേർക്കുക', viewDetails: 'വിളയുടെ വിവരങ്ങൾ കാണുക', newCrop: 'പുതിയ വിള' },
+  or: { allHealthy: 'ସମସ୍ତେ ସୁସ୍ଥ', heavyRain: 'ପ୍ରବଳ ବର୍ଷାର ସମ୍ଭାବନା', inTwoDays: '2 ଦିନରେ', highest: 'ସର୍ବୋଚ୍ଚ', optimal: 'ଉତ୍ତମ', ureaDue: '3 ଦିନରେ ୟୁରିଆ ଆବଶ୍ୟକ', done: 'ସମ୍ପନ୍ନ', active: 'ସକ୍ରିୟ', upcoming: 'ଆଗାମୀ', expectedMar: 'ମାର୍ଚ୍ଚରେ ଆଶା', qualityVerified: 'ଗୁଣବତ୍ତା ଯାଞ୍ଚିତ ଗ୍ରେଡ୍ A', plantedOn: 'ଅକ୍ଟୋବର 15ରେ ଲଗାଯାଇଛି', acres: 'ଏକର', cropType: 'ଫସଲ ପ୍ରକାର', fieldName: 'କ୍ଷେତ ନାମ / କ୍ଷେତ୍ର', saveCrop: 'ସଞ୍ଚୟ କରି ଫସଲ ଯୋଡନ୍ତୁ', viewDetails: 'ଫସଲ ବିବରଣୀ ଦେଖନ୍ତୁ', newCrop: 'ନୂଆ ଫସଲ' },
+  as: { allHealthy: 'সকলো সুস্থ', heavyRain: 'ধাৰাসাৰ বৰষুণৰ সম্ভাৱনা', inTwoDays: '২ দিনত', highest: 'সৰ্বোচ্চ', optimal: 'উত্তম', ureaDue: '৩ দিনত ইউৰিয়া প্ৰয়োজন', done: 'সম্পূৰ্ণ', active: 'সক্ৰিয়', upcoming: 'আগন্তুক', expectedMar: 'মাৰ্চত আশা কৰা হৈছে', qualityVerified: 'গুণগত মান পৰীক্ষিত গ্ৰেড A', plantedOn: '১৫ অক্টোবৰত ৰোপণ কৰা', acres: 'একৰ', cropType: 'শস্যৰ প্ৰকাৰ', fieldName: 'পথাৰৰ নাম / মাটি', saveCrop: 'সংৰক্ষণ কৰি শস্য যোগ কৰক', viewDetails: 'শস্যৰ বিৱৰণ চাওক', newCrop: 'নতুন শস্য' },
+};
+
+const cropStageTranslations = {
+  en: { sowing: 'Sowing', irrigation: 'Irrigation', fertilizer: 'Fertilizer', growth: 'Growth', protection: 'Protection', harvest: 'Harvest' },
+  hi: { sowing: 'बुवाई', irrigation: 'सिंचाई', fertilizer: 'उर्वरक', growth: 'विकास', protection: 'सुरक्षा', harvest: 'कटाई' },
+  pa: { sowing: 'ਬਿਜਾਈ', irrigation: 'ਸਿੰਚਾਈ', fertilizer: 'ਖਾਦ', growth: 'ਵਾਧਾ', protection: 'ਸੁਰੱਖਿਆ', harvest: 'ਵਾਢੀ' },
+  mr: { sowing: 'पेरणी', irrigation: 'सिंचन', fertilizer: 'खत', growth: 'वाढ', protection: 'संरक्षण', harvest: 'कापणी' },
+  gu: { sowing: 'વાવણી', irrigation: 'સિંચાઈ', fertilizer: 'ખાતર', growth: 'વૃદ્ધિ', protection: 'રક્ષણ', harvest: 'કાપણી' },
+  bn: { sowing: 'বপন', irrigation: 'সেচ', fertilizer: 'সার', growth: 'বৃদ্ধি', protection: 'সুরক্ষা', harvest: 'ফসল কাটা' },
+  ta: { sowing: 'விதைத்தல்', irrigation: 'நீர்ப்பாசனம்', fertilizer: 'உரம்', growth: 'வளர்ச்சி', protection: 'பாதுகாப்பு', harvest: 'அறுவடை' },
+  te: { sowing: 'విత్తడం', irrigation: 'నీటిపారుదల', fertilizer: 'ఎరువు', growth: 'పెరుగుదల', protection: 'రక్షణ', harvest: 'కోత' },
+  kn: { sowing: 'ಬಿತ್ತನೆ', irrigation: 'ನೀರಾವರಿ', fertilizer: 'ಗೊಬ್ಬರ', growth: 'ಬೆಳವಣಿಗೆ', protection: 'ರಕ್ಷಣೆ', harvest: 'ಕೊಯ್ಲು' },
+  ml: { sowing: 'വിതയ്ക്കൽ', irrigation: 'ജലസേചനം', fertilizer: 'വളം', growth: 'വളർച്ച', protection: 'സംരക്ഷണം', harvest: 'വിളവെടുപ്പ്' },
+  or: { sowing: 'ବୁଣା', irrigation: 'ଜଳସେଚନ', fertilizer: 'ସାର', growth: 'ବୃଦ୍ଧି', protection: 'ସୁରକ୍ଷା', harvest: 'ଅମଳ' },
+  as: { sowing: 'সিঁচা', irrigation: 'জলসিঞ্চন', fertilizer: 'সাৰ', growth: 'বৃদ্ধি', protection: 'সুৰক্ষা', harvest: 'চপোৱা' },
+};
+
 const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   ...base,
   ...overrides,
@@ -441,6 +471,7 @@ const mergeTranslations = (base, overrides = {}, languageId = 'en') => ({
   auth: { ...base.auth, ...(authTranslations[languageId] || {}), ...overrides.auth },
   otp: { ...base.otp, ...(otpTranslations[languageId] || {}), ...overrides.otp },
   nav: { ...(navTranslations.en || {}), ...(navTranslations[languageId] || {}), ...overrides.nav },
+  status: { ...(dashboardStatusTranslations.en || {}), ...(dashboardStatusTranslations[languageId] || {}), ...(cropStageTranslations[languageId] || {}), ...overrides.status },
   dashboard: { ...base.dashboard, ...overrides.dashboard },
   ai: { ...base.ai, ...overrides.ai },
   language: { ...base.language, ...(languageTranslations[languageId] || {}) },
