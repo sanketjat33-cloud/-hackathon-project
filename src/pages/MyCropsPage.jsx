@@ -36,6 +36,8 @@ export function MyCropsPage() {
       navigate('/dashboard');
     } else if (tabName === 'My Crops') {
       navigate('/my-crops');
+    } else if (tabName === 'Government Schemes') {
+      navigate('/government-schemes');
     }
   };
 
@@ -225,7 +227,7 @@ export function MyCropsPage() {
               {/* Bottom Light-Gray Button Container */}
               <button
                 type="button"
-                onClick={() => setIsDetailModalOpen(true)}
+                onClick={() => navigate('/my-crops/wheat')}
                 className="w-full py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-between cursor-pointer group-hover:bg-emerald-50 group-hover:text-[#173f31]"
               >
                 <span>View Crop details</span>
@@ -237,7 +239,7 @@ export function MyCropsPage() {
 
           {/* RIGHT CARD: ADD NEW CROP CARD */}
           <div 
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => navigate('/select-crop')}
             className="bg-white rounded-3xl border-2 border-dashed border-gray-300 hover:border-emerald-600 hover:bg-emerald-50/20 transition p-8 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer min-h-[320px] sm:min-h-[340px] group shadow-2xs"
           >
             {/* Plus Icon inside Light-Gray Rounded Square */}

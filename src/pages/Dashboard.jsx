@@ -197,6 +197,9 @@ export function DashboardPage() {
                     if (item === 'My Crops') {
                       navigate('/my-crops');
                     }
+                    if (item === 'Government Schemes') {
+                      navigate('/government-schemes');
+                    }
                   }}
                   className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
                     isActive
@@ -349,6 +352,9 @@ export function DashboardPage() {
                     if (item === 'My Crops') {
                       navigate('/my-crops');
                     }
+                    if (item === 'Government Schemes') {
+                      navigate('/government-schemes');
+                    }
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
                     isActive
@@ -392,7 +398,7 @@ export function DashboardPage() {
             </div>
             <button
               type="button"
-              onClick={() => setActiveModal('new-crop')}
+              onClick={() => navigate('/select-crop')}
               className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />

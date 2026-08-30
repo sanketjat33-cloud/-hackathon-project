@@ -6,6 +6,10 @@ import AuthPage from './pages/AuthPage';
 import OTPPage from './pages/OTPPage';
 import Dashboard from './pages/Dashboard.jsx';
 import MyCropsPage from './pages/MyCropsPage.jsx';
+import CropDetailsPage from './pages/CropDetailsPage.jsx';
+import SelectCropPage from './pages/SelectCropPage.jsx';
+import SelectedCropPage from './pages/SelectedCropPage.jsx';
+import GovernmentSchemesPage from './pages/GovernmentSchemesPage.jsx';
 
 function App() {
   return (
@@ -30,6 +34,21 @@ function App() {
         {/* My Crops Page */}
         <Route path="/my-crops" element={<MyCropsPage />} />
         <Route path="/crops" element={<MyCropsPage />} />
+
+        {/* Select / Add New Crop Page */}
+        <Route path="/select-crop" element={<SelectCropPage />} />
+        <Route path="/add-crop" element={<SelectCropPage />} />
+
+        {/* Selected Crop Confirmation Page */}
+        <Route path="/selected-crop" element={<SelectedCropPage />} />
+        <Route path="/selected-crop/:cropId" element={<SelectedCropPage />} />
+
+        {/* Crop Details Page */}
+        <Route path="/my-crops/:cropId" element={<CropDetailsPage />} />
+        <Route path="/crops/:cropId" element={<CropDetailsPage />} />
+
+        {/* Government Schemes Page */}
+        <Route path="/government-schemes" element={<GovernmentSchemesPage />} />
 
       </Routes>
     </BrowserRouter>
