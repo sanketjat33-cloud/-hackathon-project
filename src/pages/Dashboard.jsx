@@ -200,6 +200,18 @@ export function DashboardPage() {
                     if (item === 'Government Schemes') {
                       navigate('/government-schemes');
                     }
+                    if (item === 'Market') {
+                      navigate('/market');
+                    }
+                    if (item === 'Sell Crop') {
+                      navigate('/sell-crop');
+                    }
+                    if (item === 'Bids') {
+                      navigate('/bids');
+                    }
+                    if (item === 'Crop Roadmap') {
+                      navigate('/crop-roadmap');
+                    }
                   }}
                   className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
                     isActive
@@ -354,6 +366,18 @@ export function DashboardPage() {
                     }
                     if (item === 'Government Schemes') {
                       navigate('/government-schemes');
+                    }
+                    if (item === 'Market') {
+                      navigate('/market');
+                    }
+                    if (item === 'Sell Crop') {
+                      navigate('/sell-crop');
+                    }
+                    if (item === 'Bids') {
+                      navigate('/bids');
+                    }
+                    if (item === 'Crop Roadmap') {
+                      navigate('/crop-roadmap');
                     }
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
@@ -743,7 +767,7 @@ export function DashboardPage() {
 
             <button
               type="button"
-              onClick={() => setActiveModal('update-progress')}
+              onClick={() => navigate('/update-progress')}
               className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
             >
               Update Progress

@@ -10,6 +10,11 @@ import CropDetailsPage from './pages/CropDetailsPage.jsx';
 import SelectCropPage from './pages/SelectCropPage.jsx';
 import SelectedCropPage from './pages/SelectedCropPage.jsx';
 import GovernmentSchemesPage from './pages/GovernmentSchemesPage.jsx';
+import MarketPage from './pages/MarketPage.jsx';
+import SellCropPage from './pages/SellCropPage.jsx';
+import BidsPage from './pages/BidsPage.jsx';
+import ProgressUpdatePage from './pages/ProgressUpdatePage.jsx';
+import CropRoadmapPage from './pages/CropRoadmapPage.jsx';
 
 function App() {
   return (
@@ -49,6 +54,25 @@ function App() {
 
         {/* Government Schemes Page */}
         <Route path="/government-schemes" element={<GovernmentSchemesPage />} />
+
+        {/* Market Page */}
+        <Route path="/market" element={<MarketPage />} />
+
+        {/* Sell Crop Page */}
+        <Route path="/sell-crop" element={<SellCropPage />} />
+        <Route path="/sell" element={<SellCropPage />} />
+
+        {/* Bids Page */}
+        <Route path="/bids" element={<BidsPage />} />
+        <Route path="/my-bids" element={<BidsPage />} />
+
+        {/* Progress Update Page */}
+        <Route path="/update-progress" element={<ProgressUpdatePage />} />
+        <Route path="/progress-update" element={<ProgressUpdatePage />} />
+
+        {/* Crop Roadmap Page */}
+        <Route path="/crop-roadmap" element={<CropRoadmapPage />} />
+        <Route path="/roadmap" element={<CropRoadmapPage />} />
 
       </Routes>
     </BrowserRouter>

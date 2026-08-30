@@ -38,6 +38,12 @@ export function MyCropsPage() {
       navigate('/my-crops');
     } else if (tabName === 'Government Schemes') {
       navigate('/government-schemes');
+    } else if (tabName === 'Market') {
+      navigate('/market');
+    } else if (tabName === 'Bids') {
+      navigate('/bids');
+    } else if (tabName === 'Crop Roadmap') {
+      navigate('/crop-roadmap');
     }
   };
 
