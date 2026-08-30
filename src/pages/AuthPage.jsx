@@ -5,6 +5,8 @@ import { languages } from '../data/languages';
 import { AIButton } from '../components/AIButton';
 import { ChevronDown, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 
 /**
  * AuthPage component for AGROVA platform.
@@ -14,9 +16,7 @@ import { useNavigate } from 'react-router-dom';
 export function AuthPage() {
   const navigate = useNavigate();
   // Selected Language State (syncs with localStorage if available)
-  const [selectedLanguage, setSelectedLanguage] = useState(() => {
-    return localStorage.getItem('selectedLanguage') || 'hi';
-  });
+  const { languageId: selectedLanguage, setLanguage, t } = useLanguage();
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   // Role Selection State: 'Farmer' (default) or 'Wholesaler'
@@ -33,50 +33,53 @@ export function AuthPage() {
   const currentLanguage = languages.find((lang) => lang.id === selectedLanguage);
 
   const handleLanguageSelect = (langId) => {
-    setSelectedLanguage(langId);
-    localStorage.setItem('selectedLanguage', langId);
+    setLanguage(langId);
     setIsLangOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic frontend validation for mobile number
     const trimmedMobile = mobileNumber.trim();
     if (!trimmedMobile) {
-      setError('Please enter your mobile number.');
+      setError(t.auth.pleaseMobile);
       return;
     }
 
     if (trimmedMobile.length < 10 || !/^\d+$/.test(trimmedMobile)) {
-      setError('Please enter a valid 10-digit mobile number.');
+      setError(t.auth.invalidMobile);
       return;
     }
 
     if (isPasswordMode && !password.trim()) {
-      setError('Please enter your password.');
-      return;
+      setError(t.auth.pleasePassword);
     }
 
     setError('');
 
-    if (isPasswordMode) {
-      console.log('Logging in with Password:', {
-        mobileNumber: `+91 ${trimmedMobile}`,
+    try {
+      const response = await api.login({
+        mobileNumber: trimmedMobile,
         role,
+        ...(isPasswordMode ? { password } : {}),
       });
-    } else {
-      console.log('Sending OTP to:', {
-        mobileNumber: `+91 ${trimmedMobile}`,
-        role,
-      });
+
+      if (response.directLogin) {
+        localStorage.setItem('agrova_session', JSON.stringify(response.user));
+        localStorage.setItem('agrova_dashboard', JSON.stringify(response.dashboard));
+        navigate('/dashboard');
+        return;
+      }
 
       navigate('/auth/otp', {
         state: {
           mobileNumber: trimmedMobile,
-          role: role,
+          role,
+          demoOtp: response.otp,
         },
       });
+    } catch (submitError) {
+      setError(submitError.message || 'Something went wrong. Please try again.');
     }
   };
 
@@ -111,7 +114,7 @@ export function AuthPage() {
               AGROVA
             </span>
             <span className="text-[11px] sm:text-[12px] font-medium text-emerald-200/90 leading-tight mt-0.5">
-              Grow better. Sell smarter. Earn more.
+              {t.common.brandTagline}
             </span>
           </div>
         </div>
@@ -179,16 +182,16 @@ export function AuthPage() {
           <div className="w-full max-w-md bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-200/80">
             {/* Card Heading */}
             <h1 className="text-2xl sm:text-3xl font-bold text-[#173f31] tracking-tight">
-              Welcome to Agrova
+              {t.auth.title}
             </h1>
             <p className="text-sm text-gray-500 mt-1 font-medium">
-              Your smart farming and direct marketplace platform.
+              {t.auth.subtitle}
             </p>
 
             {/* Role Selection */}
             <div className="mt-6">
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2.5">
-                I am a...
+                {t.auth.roleLabel}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -200,7 +203,7 @@ export function AuthPage() {
                     }`}
                 >
                   <span className="text-base">🌾</span>
-                  <span>Farmer</span>
+                  <span>{t.auth.farmer}</span>
                 </button>
                 <button
                   type="button"
@@ -211,7 +214,7 @@ export function AuthPage() {
                     }`}
                 >
                   <span className="text-base">🏢</span>
-                  <span>Wholesaler</span>
+                  <span>{t.auth.wholesaler}</span>
                 </button>
               </div>
             </div>
@@ -224,7 +227,7 @@ export function AuthPage() {
                   htmlFor="mobileInput"
                   className="block text-xs font-semibold text-gray-700 mb-1.5"
                 >
-                  Mobile Number
+                  {t.auth.mobile}
                 </label>
                 <div className="flex rounded-xl overflow-hidden border border-gray-300 focus-within:border-[#173f31] focus-within:ring-1 focus-within:ring-[#173f31] transition-all">
                   <span className="px-3.5 py-3 bg-gray-100 text-gray-700 font-semibold text-sm flex items-center justify-center border-r border-gray-300 select-none">
@@ -238,7 +241,7 @@ export function AuthPage() {
                       setMobileNumber(e.target.value);
                       if (error) setError('');
                     }}
-                    placeholder="Enter mobile number"
+                    placeholder={t.auth.enterMobile}
                     className="w-full px-3.5 py-3 text-gray-900 placeholder-gray-400 text-sm focus:outline-none bg-white font-medium"
                     maxLength={10}
                   />
@@ -252,7 +255,7 @@ export function AuthPage() {
                     htmlFor="passwordInput"
                     className="block text-xs font-semibold text-gray-700 mb-1.5"
                   >
-                    Password
+                    {t.auth.password}
                   </label>
                   <input
                     id="passwordInput"
@@ -262,7 +265,7 @@ export function AuthPage() {
                       setPassword(e.target.value);
                       if (error) setError('');
                     }}
-                    placeholder="Enter your password"
+                    placeholder={t.auth.enterPassword}
                     className="w-full px-3.5 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#173f31] focus:ring-1 focus:ring-[#173f31] transition-all bg-white font-medium"
                   />
                 </div>
@@ -280,7 +283,7 @@ export function AuthPage() {
                 type="submit"
                 className="w-full py-3.5 px-6 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white font-semibold text-base shadow-md shadow-[#173f31]/15 hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 mt-2"
               >
-                <span>{isPasswordMode ? 'Login' : 'Send OTP'}</span>
+                <span>{isPasswordMode ? t.common.login : t.common.sendOtp}</span>
                 <span className="text-lg">→</span>
               </button>
             </form>
@@ -296,8 +299,8 @@ export function AuthPage() {
                 className="text-xs font-semibold text-[#173f31] hover:underline cursor-pointer"
               >
                 {isPasswordMode
-                  ? 'Login with OTP instead'
-                  : 'Login with Password instead'}
+                  ? t.common.loginOtp
+                  : t.common.loginPassword}
               </button>
             </div>
 
@@ -305,14 +308,14 @@ export function AuthPage() {
             <div className="my-6 relative flex items-center justify-center">
               <div className="w-full border-t border-gray-200"></div>
               <span className="bg-white px-3 text-xs text-gray-400 font-medium absolute">
-                or
+                {t.auth.or}
               </span>
             </div>
 
             {/* Registration Options */}
             <div>
               <p className="text-center text-xs font-semibold text-gray-500 mb-3">
-                New to Agrova?
+                {t.auth.newToAgrova}
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -320,14 +323,14 @@ export function AuthPage() {
                   onClick={() => console.log('Register as Farmer selected')}
                   className="py-2.5 px-3 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-emerald-50/70 text-xs font-semibold transition-colors cursor-pointer text-center"
                 >
-                  Register as Farmer
+                  {t.common.registerFarmer}
                 </button>
                 <button
                   type="button"
                   onClick={() => console.log('Register as Buyer selected')}
                   className="py-2.5 px-3 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-emerald-50/70 text-xs font-semibold transition-colors cursor-pointer text-center"
                 >
-                  Register as Buyer
+                  {t.common.registerBuyer}
                 </button>
               </div>
             </div>

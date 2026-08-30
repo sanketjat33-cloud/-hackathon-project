@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 
 import { LanguageCard } from '../components/LanguageCard';
 import { AIButton } from '../components/AIButton';
 import { languages } from '../data/languages';
+import { useLanguage } from '../hooks/useLanguage';
 
 /**
  * LanguagePage component for Agrova language selection.
@@ -12,14 +13,14 @@ import { languages } from '../data/languages';
  */
 export function LanguagePage() {
     const navigate = useNavigate();
-    const [selectedLanguage, setSelectedLanguage] = useState('hi');
+    const { languageId, setLanguage, t } = useLanguage();
 
     const handleContinue = () => {
         const currentLang = languages.find(
-            (l) => l.id === selectedLanguage
+            (l) => l.id === languageId
         );
 
-        localStorage.setItem('selectedLanguage', selectedLanguage);
+        setLanguage(languageId);
 
         console.log('Selected language:', currentLang);
 
@@ -36,18 +37,18 @@ export function LanguagePage() {
                 <div className="text-center max-w-[640px] mx-auto mb-5 sm:mb-6">
                     {/* Main Heading */}
                     <h1 className="text-[28px] sm:text-[36px] lg:text-[42px] font-bold tracking-tight text-[#173f31] leading-tight">
-                        Choose Your Language
+                        {t.language.title}
                     </h1>
 
                     {/* Hindi Subtitle */}
                     <p className="text-[17px] sm:text-[20px] lg:text-[22px] font-medium text-[#173f31]/90 mt-1 sm:mt-1.5">
-                        अपनी पसंदीदा भाषा चुनें
+                        {t.language.subtitle}
                     </p>
 
                     {/* Description */}
                     <div className="mt-2.5 sm:mt-3 text-sm sm:text-base text-gray-500 leading-relaxed font-normal">
-                        <p>Select your preferred language to customize your Agrova experience.</p>
-                        <p>You can change this later in settings.</p>
+                        <p>{t.language.description1}</p>
+                        <p>{t.language.description2}</p>
                     </div>
                 </div>
 
@@ -57,8 +58,8 @@ export function LanguagePage() {
                         <LanguageCard
                             key={lang.id}
                             language={lang}
-                            selected={selectedLanguage === lang.id}
-                            onClick={() => setSelectedLanguage(lang.id)}
+                            selected={languageId === lang.id}
+                            onClick={() => setLanguage(lang.id)}
                         />
                     ))}
                 </div>
@@ -72,9 +73,9 @@ export function LanguagePage() {
                         tabIndex={0}
                         aria-label="More Languages"
                     >
-                        <span>More Languages</span>
+                        <span>{t.common.moreLanguages}</span>
                         <span className="text-gray-300">|</span>
-                        <span>अन्य भाषाएं</span>
+                        <span>{t.language.subtitle}</span>
                         <svg
                             className="w-4 h-4 text-gray-400"
                             fill="none"
@@ -95,7 +96,7 @@ export function LanguagePage() {
                         onClick={handleContinue}
                         className="w-full max-w-xs sm:w-[220px] py-3.5 px-6 rounded-[12px] bg-[#173f31] hover:bg-[#102d23] text-white font-semibold text-base shadow-md shadow-[#173f31]/15 hover:shadow-lg transition-all duration-200 cursor-pointer text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                     >
-                        Continue
+                        {t.common.continue}
                     </button>
                 </div>
             </main>

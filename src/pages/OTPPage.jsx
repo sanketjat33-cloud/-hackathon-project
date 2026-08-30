@@ -4,6 +4,8 @@ import agrovaLogo from '../assets/agrova-logo.png';
 import farmerHero from '../assets/farmer-hero.png';
 import { AIButton } from '../components/AIButton';
 import { Lock } from 'lucide-react';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 
 /**
  * OTPPage component for AGROVA 6-digit OTP verification.
@@ -13,10 +15,12 @@ import { Lock } from 'lucide-react';
 export function OTPPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // Read state passed from AuthPage
   const rawMobile = location.state?.mobileNumber || '';
   const role = location.state?.role || 'Farmer';
+  const demoOtp = location.state?.demoOtp || '';
 
   // Mask mobile number to format: +91 •••••• 4821
   const formatMaskedMobile = (mobile) => {
@@ -106,23 +110,29 @@ export function OTPPage() {
   };
 
   // Handle OTP Verification submit
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
     const fullOtp = otp.join('');
 
     if (fullOtp.length < 6) {
-      setError('Please enter the complete 6-digit OTP.');
+      setError(t.otp.invalidOtp);
       return;
     }
 
     setError('');
-    console.log('OTP Verified successfully:', {
-      otp: fullOtp,
-      mobileNumber: rawMobile,
-      role: role,
-    });
 
-    navigate('/dashboard');
+    try {
+      const response = await api.verifyOtp({
+        mobileNumber: rawMobile,
+        otp: fullOtp,
+      });
+
+      localStorage.setItem('agrova_session', JSON.stringify(response.user));
+      localStorage.setItem('agrova_dashboard', JSON.stringify(response.dashboard));
+      navigate('/dashboard');
+    } catch (verifyError) {
+      setError(verifyError.message || 'Invalid OTP. Please try again.');
+    }
   };
 
   // Handle Resend OTP click
@@ -172,7 +182,7 @@ export function OTPPage() {
               AGROVA
             </span>
             <span className="text-[11px] sm:text-[12px] font-medium text-emerald-200/90 leading-tight mt-0.5">
-              Grow better. Sell smarter. Earn more.
+              {t.common.brandTagline}
             </span>
           </div>
         </div>
@@ -198,16 +208,22 @@ export function OTPPage() {
         <div className="w-full max-w-[440px] bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-200/80 text-center my-auto">
           {/* Heading */}
           <h1 className="text-xl sm:text-2xl font-bold text-[#173f31] tracking-tight">
-            Verify Your Mobile Number
+            {t.otp.title}
           </h1>
 
           {/* Subtitle & Masked Mobile Number */}
           <div className="mt-2 text-xs sm:text-sm text-gray-600 font-medium">
-            <p>We've sent a 6-digit verification code to</p>
+            <p>{t.otp.subtitle}</p>
             <p className="mt-1 font-semibold text-gray-900 text-sm tracking-wide">
               {formatMaskedMobile(rawMobile)}
             </p>
           </div>
+
+          {demoOtp && (
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 font-semibold">
+              {t.otp.demoOtp}: <span className="tracking-[0.2em]">{demoOtp}</span>
+            </div>
+          )}
 
           {/* OTP Verification Form */}
           <form onSubmit={handleVerify} className="mt-8">
@@ -242,7 +258,7 @@ export function OTPPage() {
               type="submit"
               className="w-full mt-7 py-3.5 px-6 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white font-semibold text-base shadow-md shadow-[#173f31]/15 hover:shadow-lg transition-all duration-200 cursor-pointer text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
-              Verify & Continue
+              {t.common.verifyContinue}
             </button>
           </form>
 
@@ -261,7 +277,7 @@ export function OTPPage() {
                     : 'text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {canResend ? 'Resend OTP' : `Resend OTP in ${timer}s`}
+                {canResend ? t.otp.resend : `${t.otp.resendIn} ${timer}s`}
               </button>
             </div>
 
@@ -272,7 +288,7 @@ export function OTPPage() {
                 onClick={() => navigate('/auth')}
                 className="text-xs sm:text-sm font-semibold text-gray-700 hover:text-[#173f31] hover:underline cursor-pointer"
               >
-                Change Mobile Number
+                {t.otp.changeMobile}
               </button>
             </div>
           </div>
@@ -281,7 +297,7 @@ export function OTPPage() {
           <div className="mt-8 pt-6 border-t border-gray-200/80">
             <p className="text-xs text-gray-500 font-medium flex items-center justify-center gap-1.5">
               <Lock size={14} className="text-gray-400" />
-              <span>Your mobile number is securely verified.</span>
+              <span>{t.otp.secureText}</span>
             </p>
           </div>
         </div>

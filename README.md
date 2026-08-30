@@ -1,16 +1,83 @@
-# React + Vite
+# Agrova
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Agrova is a smart agriculture platform connecting farmers and wholesalers through a digital experience for crop management, weather awareness, market access, and AI-powered guidance.
 
-Currently, two official plugins are available:
+## Features
+- Farmer and wholesaler login flow
+- OTP verification flow
+- Multi-language support
+- AI assistant for farming and bidding guidance
+- Responsive dashboard with agricultural data
+- Express backend for demo auth and AI APIs
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+- React Router
+- Express
+- Node.js
 
-## React Compiler
+## Project Structure
+```bash
+project-root/
+├── backend/
+│   └── server.js
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── data/
+│   ├── hooks/
+│   ├── pages/
+│   ├── services/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── package.json
+├── vite.config.js
+├── index.html
+├── README.md
+└── .gitignore
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Installation
+1. Clone the repository
+2. Install dependencies:
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Run the app
+Start the backend:
+
+```bash
+npm run server
+```
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+Or run both together:
+
+```bash
+npm run dev:full
+```
+
+## Demo Notes
+- OTP is demo-safe and shown in the UI for testing.
+- AI responses are backend-driven and respond in the selected language.
+- This is a working prototype and can be extended with real SMS, database, and authentication services.
+
+## Build Verification
+This project has been validated with:
+
+```bash
+npm run build
+```
+
+The build completes successfully.

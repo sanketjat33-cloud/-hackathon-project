@@ -6,6 +6,8 @@ import marketplaceImage from '../assets/marketplace-image.png';
 import chatgptImage from '../assets/ChatGPT Image Aug 25, 2026, 01_30_15 PM.png';
 import { AIButton } from '../components/AIButton';
 import { languages } from '../data/languages';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 import {
   Sprout,
   Sun,
@@ -80,14 +82,19 @@ const heroImages = [
 export function DashboardPage() {
   const navigate = useNavigate();
 
-  // Selected Language State
-  const [selectedLanguage, setSelectedLanguage] = useState(() => {
-    return localStorage.getItem('selectedLanguage') || 'hi';
+  const [dashboardData, setDashboardData] = useState({
+    user: { name: 'Ram Singh', role: 'Farmer', location: 'Sangrur, Punjab', season: 'Kharif Season 2026' },
+    stats: { activeCrops: 3, weatherAlert: 'Heavy Rain Expected', activeBids: 5, highestBid: 2550, soilHealth: 'Optimal (pH 6.8)' },
+    market: { newBids: 7, highestBid: 2550, buyer: 'AgriCorp WholeSalers Sangrur' },
+    ai: { welcome: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?' }
   });
+
+  // Selected Language State
+  const { languageId: selectedLanguage, setLanguage, t } = useLanguage();
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   // Active Navigation Tab State
-  const [activeTab, setActiveTab] = useState('Home');
+  const [activeTab, setActiveTab] = useState('home');
 
   // Mobile Menu Drawer Toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -116,19 +123,53 @@ export function DashboardPage() {
   const [aiMessages, setAiMessages] = useState([
     {
       sender: 'ai',
-      text: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?'
+      text: t.ai.welcome
     }
   ]);
 
+  useEffect(() => {
+    const cachedDashboard = localStorage.getItem('agrova_dashboard');
+    if (cachedDashboard) {
+      try {
+        setDashboardData(JSON.parse(cachedDashboard));
+      } catch (error) {
+        console.warn('Failed to parse cached dashboard', error);
+      }
+    }
+
+    api.getDashboard().then((response) => {
+      if (response.dashboard) {
+        setDashboardData(response.dashboard);
+        localStorage.setItem('agrova_dashboard', JSON.stringify(response.dashboard));
+      }
+    }).catch((error) => {
+      console.warn('Dashboard fetch failed:', error.message);
+    });
+  }, []);
+
+  useEffect(() => {
+    setAiMessages([
+      { sender: 'ai', text: t.ai.welcome }
+    ]);
+  }, [selectedLanguage]);
+
   const currentLanguage = languages.find((lang) => lang.id === selectedLanguage);
+  const navItems = [
+    { key: 'home', label: t.nav.home },
+    { key: 'myCrops', label: t.nav.myCrops },
+    { key: 'cropRoadmap', label: t.nav.cropRoadmap },
+    { key: 'sellCrop', label: t.nav.sellCrop },
+    { key: 'bids', label: t.nav.bids },
+    { key: 'market', label: t.nav.market },
+    { key: 'governmentSchemes', label: t.nav.governmentSchemes },
+  ];
 
   const handleLanguageSelect = (langId) => {
-    setSelectedLanguage(langId);
-    localStorage.setItem('selectedLanguage', langId);
+    setLanguage(langId);
     setIsLangOpen(false);
   };
 
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const text = textToSend || aiInput;
     if (!text.trim()) return;
 
@@ -136,15 +177,17 @@ export function DashboardPage() {
     setAiMessages(newMsgs);
     setAiInput('');
 
-    setTimeout(() => {
-      let aiReply = "For Wheat (PBW 343) at Day 42, maintain soil moisture at 40%. Avoid heavy watering today as rain is expected tomorrow.";
-      if (text.toLowerCase().includes('bid') || text.toLowerCase().includes('price') || text.toLowerCase().includes('sell')) {
-        aiReply = "Highest bid for your Wheat produce in Sangrur today is ₹2,550/q by AgriCorp Traders. 7 buyers are currently bidding!";
-      } else if (text.toLowerCase().includes('scheme') || text.toLowerCase().includes('gov')) {
-        aiReply = "You qualify for PM-Kisan 17th Installment and Sub-Mission on Agricultural Mechanization (SMAM) with 50% tractor subsidy.";
-      }
-      setAiMessages((prev) => [...prev, { sender: 'ai', text: aiReply }]);
-    }, 600);
+    try {
+      const history = newMsgs.slice(-10).map((message) => ({
+        role: message.sender === 'user' ? 'user' : 'assistant',
+        content: message.text,
+      }));
+      const response = await api.askAi({ message: text, language: selectedLanguage, history });
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: response.reply }]);
+    } catch (error) {
+      setAiMessages((prev) => [...prev, { sender: 'ai', text: t.ai.fallback }]);
+      console.warn('AI fetch failed:', error.message);
+    }
   };
 
   return (
@@ -168,33 +211,25 @@ export function DashboardPage() {
                 AGROVA
               </span>
               <span className="hidden xl:inline text-[11px] font-medium text-gray-500 leading-tight mt-1">
-                Grow better. Sell smarter. Earn more.
+                {t.common.brandTagline}
               </span>
             </div>
           </div>
 
           {/* Center — Navigation Links (7 exact items in exact order) */}
           <nav className="hidden lg:flex items-center gap-3 xl:gap-5 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
                   onClick={() => {
-                    setActiveTab(item);
-                    if (item === 'Home') {
+                    setActiveTab(item.key);
+                    if (item.key === 'home') {
                       navigate('/dashboard');
                     }
-                    if (item === 'My Crops') {
+                    if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
                     if (item === 'Government Schemes') {
@@ -219,7 +254,7 @@ export function DashboardPage() {
                       : 'border-transparent text-gray-600 hover:text-[#173f31] hover:border-gray-300'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -285,13 +320,13 @@ export function DashboardPage() {
                   <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                     <h4 className="text-sm font-bold text-[#173f31] flex items-center gap-1.5">
                       <Bell size={16} className="text-emerald-600" />
-                      Notifications (3)
+                      {t.common.notifications} (3)
                     </h4>
                     <button
                       onClick={() => setIsNotifOpen(false)}
                       className="text-xs text-gray-400 hover:text-gray-600"
                     >
-                      Close
+                      {t.common.close}
                     </button>
                   </div>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -315,7 +350,7 @@ export function DashboardPage() {
             <div className="flex items-center gap-2.5">
               <div className="flex flex-col text-right leading-tight">
                 <span className="text-[11px] font-medium text-gray-500">
-                  Welcome back,
+                  {t.common.welcomeBack},
                 </span>
                 <span className="text-sm font-bold text-[#173f31]">
                   Rajesh
@@ -341,27 +376,19 @@ export function DashboardPage() {
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-[80px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
                   onClick={() => {
-                    setActiveTab(item);
+                    setActiveTab(item.key);
                     setIsMobileMenuOpen(false);
-                    if (item === 'Home') {
+                    if (item.key === 'home') {
                       navigate('/dashboard');
                     }
-                    if (item === 'My Crops') {
+                    if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
                     if (item === 'Government Schemes') {
@@ -386,7 +413,7 @@ export function DashboardPage() {
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -402,15 +429,15 @@ export function DashboardPage() {
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#173f31] tracking-tight">
-                Namaste, Ram Singh! 🌾
+                {t.dashboard.greeting}
               </h1>
               <span className="px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-800 text-xs font-bold border border-emerald-200/80 flex items-center gap-1">
                 <CheckCircle2 size={13} className="text-emerald-700" />
-                Verified Farmer
+                {t.dashboard.verified}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-gray-600 font-medium pt-0.5">
-              Here is your farm summary for Sangrur, Punjab • Kharif Season 2026
+              {t.dashboard.summary}
             </p>
           </div>
 
@@ -426,7 +453,7 @@ export function DashboardPage() {
               className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />
-              <span>New Crop</span>
+              <span>{t.dashboard.newCrop}</span>
             </button>
           </div>
         </section>
@@ -457,15 +484,15 @@ export function DashboardPage() {
             {/* Hero Text Content Overlay (Fixed & Static) */}
             <div className="relative z-20 p-6 sm:p-8 space-y-3 max-w-xl">
               <span className="inline-block px-3 py-1 rounded-full bg-emerald-400 text-[#173f31] text-xs font-extrabold uppercase tracking-wider shadow-xs">
-                CROP MANAGEMENT
+                {t.dashboard.cropManagement}
               </span>
 
               <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Grow Smarter with Agrova
+                {t.dashboard.heroTitle}
               </h2>
 
               <p className="text-xs sm:text-sm text-white/95 font-medium leading-relaxed">
-                Get personalized crop guidance based on your specific crop type, location, and real-time weather data.
+                {t.dashboard.heroText}
               </p>
 
               <div className="pt-2">
@@ -474,7 +501,7 @@ export function DashboardPage() {
                   onClick={() => setActiveModal('guidance')}
                   className="px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold flex items-center gap-2 transition shadow-md cursor-pointer border border-emerald-500/30"
                 >
-                  <span>Explore Guidance</span>
+                  <span>{t.dashboard.explore}</span>
                   <ArrowRight size={16} />
                 </button>
               </div>
@@ -524,13 +551,13 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    ACTIVE CROPS
+                    {t.dashboard.activeCrops}
                   </p>
                   <p className="text-2xl font-extrabold text-[#173f31] mt-1">
                     3
                   </p>
                   <p className="text-xs text-emerald-700 font-bold mt-1">
-                    ↗ All healthy
+                    ↗ {t.status.lookingGood}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -544,13 +571,13 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-red-700 uppercase tracking-wider">
-                    WEATHER ALERT
+                    {t.dashboard.weatherAlert}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-red-900 mt-1">
-                    Heavy Rain Exp.
+                    {t.status.heavyRain}
                   </p>
                   <p className="text-xs text-red-700 font-semibold mt-1">
-                    ◷ In 2 Days
+                    ◷ {t.status.inTwoDays}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs">
@@ -564,13 +591,13 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    ACTIVE BIDS
+                    {t.dashboard.activeBids}
                   </p>
                   <p className="text-2xl font-extrabold text-[#173f31] mt-1">
                     5
                   </p>
                   <p className="text-xs text-gray-600 font-medium mt-1">
-                    Highest: <span className="font-bold text-[#173f31]">₹2,550/q</span>
+                    {t.status.highest}: <span className="font-bold text-[#173f31]">₹2,550/q</span>
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -584,13 +611,13 @@ export function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    SOIL HEALTH
+                    {t.dashboard.soilHealth}
                   </p>
                   <p className="text-base sm:text-lg font-extrabold text-[#173f31] mt-1">
-                    Optimal (pH 6.8)
+                    {t.status.optimal} (pH 6.8)
                   </p>
                   <p className="text-xs text-amber-700 font-semibold mt-1">
-                    Urea Due in 3 Days
+                    {t.status.ureaDue}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center border border-emerald-200">
@@ -611,10 +638,10 @@ export function DashboardPage() {
               </div>
               <div className="space-y-1">
                 <h4 className="text-base font-extrabold text-amber-950">
-                  Action Required Today
+                  {t.dashboard.actionRequired}
                 </h4>
                 <p className="text-xs sm:text-sm text-amber-900/90 font-medium leading-relaxed">
-                  Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.
+                  {t.dashboard.actionText}
                 </p>
               </div>
             </div>
@@ -625,14 +652,14 @@ export function DashboardPage() {
                 onClick={() => setShowAlert(false)}
                 className="px-4 py-2.5 rounded-xl bg-white border border-amber-300 text-amber-950 hover:bg-amber-100 text-xs font-bold transition cursor-pointer"
               >
-                Acknowledge
+                {t.dashboard.acknowledge}
               </button>
               <button
                 type="button"
                 onClick={() => setActiveModal('adjust-schedule')}
                 className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
               >
-                Adjust Schedule
+                {t.dashboard.adjustSchedule}
               </button>
             </div>
           </section>
@@ -643,7 +670,7 @@ export function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-                Farming Toolkit
+                  {t.dashboard.toolkit}
               </h2>
               <p className="text-xs text-gray-500 font-medium mt-0.5">
                 Quick diagnostic and management tools for your field
@@ -653,7 +680,7 @@ export function DashboardPage() {
               onClick={() => setActiveModal('guidance')}
               className="text-xs font-bold text-[#173f31] hover:text-emerald-700 flex items-center gap-1 cursor-pointer"
             >
-              <span>View All</span>
+                <span>{t.dashboard.viewAll}</span>
               <ArrowRight size={14} />
             </button>
           </div>
@@ -670,8 +697,8 @@ export function DashboardPage() {
                 <Sprout size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Crop Health</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Looking good</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.cropHealth}</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.lookingGood}</p>
               </div>
             </div>
 
@@ -684,8 +711,8 @@ export function DashboardPage() {
                 <CloudSun size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Weather</h3>
-                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Alert Active</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.weather}</h3>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">{t.status.alertActive}</p>
               </div>
             </div>
 
@@ -698,8 +725,8 @@ export function DashboardPage() {
                 <Layers size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Soil Health</h3>
-                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">Update needed</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.soilHealth}</h3>
+                <p className="text-[11px] font-semibold text-amber-700 mt-0.5">{t.status.updateNeeded}</p>
               </div>
             </div>
 
@@ -712,8 +739,8 @@ export function DashboardPage() {
                 <FlaskConical size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Testing</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Verified</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.testing}</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.verified}</p>
               </div>
             </div>
 
@@ -726,8 +753,8 @@ export function DashboardPage() {
                 <Landmark size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Schemes</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">2 matches</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.schemes}</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.matches}</p>
               </div>
             </div>
 
@@ -740,8 +767,8 @@ export function DashboardPage() {
                 <Store size={24} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-[#173f31]">Market</h3>
-                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">Prices up</p>
+                <h3 className="text-xs font-bold text-[#173f31]">{t.dashboard.market}</h3>
+                <p className="text-[11px] font-semibold text-emerald-700 mt-0.5">{t.status.pricesUp}</p>
               </div>
             </div>
 
@@ -754,14 +781,14 @@ export function DashboardPage() {
             <div>
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-                  Wheat (PBW 343)
+                  {t.dashboard.wheat}
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
-                  Quality Verified Grade A
+                  {t.status.qualityVerified}
                 </span>
               </div>
               <p className="text-xs text-gray-500 font-medium mt-1">
-                Planted on Oct 15 • 3 Acres
+                {t.status.plantedOn} • 3 {t.status.acres}
               </p>
             </div>
 
@@ -770,7 +797,7 @@ export function DashboardPage() {
               onClick={() => navigate('/update-progress')}
               className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
             >
-              Update Progress
+              {t.dashboard.updateProgress}
             </button>
           </div>
 
@@ -787,8 +814,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Sowing</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.sowing}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -798,8 +825,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Irrigation</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.irrigation}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -809,8 +836,8 @@ export function DashboardPage() {
                   ✓
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-[#173f31]">Fertilizer</p>
-                  <p className="text-[11px] text-emerald-700 font-semibold">Done</p>
+                  <p className="text-xs font-bold text-[#173f31]">{t.status.fertilizer}</p>
+                  <p className="text-[11px] text-emerald-700 font-semibold">{t.status.done}</p>
                 </div>
               </div>
 
@@ -820,9 +847,9 @@ export function DashboardPage() {
                   42
                 </div>
                 <div>
-                  <p className="text-xs font-extrabold text-[#173f31]">Growth</p>
+                  <p className="text-xs font-extrabold text-[#173f31]">{t.status.growth}</p>
                   <span className="inline-block px-2 py-0.5 bg-[#173f31] text-white text-[10px] font-bold rounded-full mt-0.5">
-                    ACTIVE
+                    {t.status.active}
                   </span>
                 </div>
               </div>
@@ -833,8 +860,8 @@ export function DashboardPage() {
                   ○
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-600">Protection</p>
-                  <p className="text-[11px] text-gray-400 font-medium">Upcoming</p>
+                  <p className="text-xs font-bold text-gray-600">{t.status.protection}</p>
+                  <p className="text-[11px] text-gray-400 font-medium">{t.status.upcoming}</p>
                 </div>
               </div>
 
@@ -844,8 +871,8 @@ export function DashboardPage() {
                   🌾
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-600">Harvest</p>
-                  <p className="text-[11px] text-gray-400 font-medium">Expected Mar</p>
+                  <p className="text-xs font-bold text-gray-600">{t.status.harvest}</p>
+                  <p className="text-[11px] text-gray-400 font-medium">{t.status.expectedMar}</p>
                 </div>
               </div>
 
@@ -886,7 +913,7 @@ export function DashboardPage() {
                 AGROVA MARKET
               </span>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                Ready to Sell?
+                {t.dashboard.readyToSell}
               </h2>
               <p className="text-sm sm:text-base text-emerald-100/90 leading-relaxed font-medium max-w-lg">
                 Connect directly with verified wholesale buyers. Skip the middlemen, secure the best price, and arrange hassle-free pickup.
@@ -897,11 +924,11 @@ export function DashboardPage() {
             <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
-                  <span>New Bids: </span>
+                  <span>{t.dashboard.newBids}: </span>
                   <span className="font-bold text-white">7</span>
                 </div>
                 <div className="bg-emerald-400/15 border border-emerald-400/25 px-4 py-2 rounded-full text-xs font-semibold text-emerald-200 backdrop-blur-xs">
-                  <span>Highest Bid: </span>
+                  <span>{t.dashboard.highestBid}: </span>
                   <span className="font-bold text-white">₹2,550/q</span>
                 </div>
               </div>
@@ -911,7 +938,7 @@ export function DashboardPage() {
                 onClick={() => setActiveModal('review-bids')}
                 className="px-6 py-3.5 rounded-xl bg-white text-[#173f31] hover:bg-emerald-50 font-bold text-xs sm:text-sm shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.02] active:scale-[0.98] flex-shrink-0"
               >
-                <span>Review Bids & Sell</span>
+                <span>{t.dashboard.reviewBids}</span>
                 <ArrowRight size={18} />
               </button>
             </div>

@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import agrovaLogo from '../assets/agrova-logo.png';
 import { languages } from '../data/languages';
+import { useLanguage } from '../hooks/useLanguage';
 
 export function LandingHeader() {
-    const [selectedLanguage, setSelectedLanguage] = useState(() => {
-        return localStorage.getItem('selectedLanguage') || 'hi';
-    });
+    const { languageId: selectedLanguage, setLanguage, t } = useLanguage();
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -14,8 +13,7 @@ export function LandingHeader() {
     );
 
     const handleLanguageChange = (languageId) => {
-        setSelectedLanguage(languageId);
-        localStorage.setItem('selectedLanguage', languageId);
+        setLanguage(languageId);
         setIsOpen(false);
     };
 
@@ -41,7 +39,7 @@ export function LandingHeader() {
                         </span>
 
                         <span className="text-[11px] sm:text-[12px] font-medium text-gray-500 leading-tight mt-0.5">
-                            Grow better. Sell smarter. Earn more.
+                            {t.common.brandTagline}
                         </span>
                     </div>
 

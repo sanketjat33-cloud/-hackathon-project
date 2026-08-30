@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatField from '../assets/wheat-field.png';
 import { AIButton } from '../components/AIButton';
+import { useLanguage } from '../hooks/useLanguage';
 import {
   Sprout,
   Plus,
@@ -24,17 +25,27 @@ import {
  */
 export function MyCropsPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('My Crops');
+  const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState('myCrops');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const navItems = [
+    { key: 'home', label: t.nav.home },
+    { key: 'myCrops', label: t.nav.myCrops },
+    { key: 'cropRoadmap', label: t.nav.cropRoadmap },
+    { key: 'sellCrop', label: t.nav.sellCrop },
+    { key: 'bids', label: t.nav.bids },
+    { key: 'market', label: t.nav.market },
+    { key: 'governmentSchemes', label: t.nav.governmentSchemes },
+  ];
 
   const handleNavClick = (tabName) => {
     setActiveTab(tabName);
-    if (tabName === 'Home') {
+    if (tabName === 'home') {
       navigate('/dashboard');
-    } else if (tabName === 'My Crops') {
+    } else if (tabName === 'myCrops') {
       navigate('/my-crops');
     } else if (tabName === 'Government Schemes') {
       navigate('/government-schemes');
@@ -73,28 +84,20 @@ export function MyCropsPage() {
 
           {/* Center — Navigation Items (7 exact items in exact order) */}
           <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
-                  onClick={() => handleNavClick(item)}
+                  onClick={() => handleNavClick(item.key)}
                   className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
                     isActive
                       ? 'border-[#173f31] text-[#173f31] font-bold'
                       : 'border-transparent text-gray-600 hover:text-[#173f31]'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -155,22 +158,14 @@ export function MyCropsPage() {
         {/* Mobile Menu Drawer */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
+            {navItems.map((item) => {
+              const isActive = activeTab === item.key;
               return (
                 <button
                   key={item}
                   type="button"
                   onClick={() => {
-                    handleNavClick(item);
+                    handleNavClick(item.key);
                     setIsMobileMenuOpen(false);
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
@@ -179,7 +174,7 @@ export function MyCropsPage() {
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               );
             })}
@@ -193,11 +188,11 @@ export function MyCropsPage() {
         {/* Heading Section */}
         <div className="space-y-2">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-            My Crops
+            {t.dashboard.myCrops || t.dashboard.activeCrops}
           </h1>
           <div className="w-12 h-1 bg-[#173f31] rounded-full"></div>
           <p className="text-sm font-medium text-gray-600 pt-1">
-            Your selected crops
+            {t.dashboard.selectedCrops || t.dashboard.activeCrops}
           </p>
         </div>
 
@@ -236,7 +231,7 @@ export function MyCropsPage() {
                 onClick={() => navigate('/my-crops/wheat')}
                 className="w-full py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-between cursor-pointer group-hover:bg-emerald-50 group-hover:text-[#173f31]"
               >
-                <span>View Crop details</span>
+                <span>{t.dashboard.viewDetails || t.dashboard.viewAll}</span>
                 <ChevronRight size={16} className="text-gray-500 group-hover:text-[#173f31] group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
@@ -255,7 +250,7 @@ export function MyCropsPage() {
 
             <div className="space-y-1">
               <h3 className="text-lg font-bold text-gray-900 group-hover:text-[#173f31]">
-                Add New Crop
+                {t.dashboard.newCrop}
               </h3>
               <p className="text-xs text-gray-500 font-medium leading-relaxed">
                 Track another field or<br />plantation
