@@ -6,6 +6,7 @@ import AuthPage from './pages/AuthPage';
 import OTPPage from './pages/OTPPage';
 import Dashboard from './pages/Dashboard.jsx';
 import MyCropsPage from './pages/MyCropsPage.jsx';
+import AllPagesPage from './pages/AllPagesPage.jsx';
 import CropDetailsPage from './pages/CropDetailsPage.jsx';
 import SelectCropPage from './pages/SelectCropPage.jsx';
 import SelectedCropPage from './pages/SelectedCropPage.jsx';
@@ -39,38 +40,24 @@ function App() {
         {/* My Crops Page */}
         <Route path="/my-crops" element={<MyCropsPage />} />
         <Route path="/crops" element={<MyCropsPage />} />
+        {/* All Pages Overview */}
+        <Route path="/all-pages" element={<AllPagesPage />} />
+        <Route path="/pages" element={<AllPagesPage />} />
 
-        {/* Select / Add New Crop Page */}
         <Route path="/select-crop" element={<SelectCropPage />} />
         <Route path="/add-crop" element={<SelectCropPage />} />
-
-        {/* Selected Crop Confirmation Page */}
         <Route path="/selected-crop" element={<SelectedCropPage />} />
         <Route path="/selected-crop/:cropId" element={<SelectedCropPage />} />
-
-        {/* Crop Details Page */}
         <Route path="/my-crops/:cropId" element={<CropDetailsPage />} />
         <Route path="/crops/:cropId" element={<CropDetailsPage />} />
-
-        {/* Government Schemes Page */}
         <Route path="/government-schemes" element={<GovernmentSchemesPage />} />
-
-        {/* Market Page */}
         <Route path="/market" element={<MarketPage />} />
-
-        {/* Sell Crop Page */}
         <Route path="/sell-crop" element={<SellCropPage />} />
         <Route path="/sell" element={<SellCropPage />} />
-
-        {/* Bids Page */}
         <Route path="/bids" element={<BidsPage />} />
         <Route path="/my-bids" element={<BidsPage />} />
-
-        {/* Progress Update Page */}
         <Route path="/update-progress" element={<ProgressUpdatePage />} />
         <Route path="/progress-update" element={<ProgressUpdatePage />} />
-
-        {/* Crop Roadmap Page */}
         <Route path="/crop-roadmap" element={<CropRoadmapPage />} />
         <Route path="/roadmap" element={<CropRoadmapPage />} />
 

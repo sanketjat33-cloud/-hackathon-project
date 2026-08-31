@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getTranslation } from '../data/translations';
+import api from '../services/api';
 
 const LANGUAGE_EVENT = 'agrova-language-change';
 
@@ -12,6 +13,8 @@ export function setStoredLanguage(languageId) {
   if (typeof window === 'undefined') return;
   localStorage.setItem('selectedLanguage', languageId);
   window.dispatchEvent(new Event(LANGUAGE_EVENT));
+  const session = JSON.parse(localStorage.getItem('agrova_session') || 'null');
+  if (session?.id) api.updateUser(session.id, { language: languageId }).catch(() => {});
 }
 
 export function useLanguage() {

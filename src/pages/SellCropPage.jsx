@@ -1,3 +1,5 @@
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -5,6 +7,8 @@ import wheatImg from '../assets/wheat-field.png';
 import mustardImg from '../assets/mustard.jpg';
 import maizeImg from '../assets/maize.jpg';
 import { AIButton } from '../components/AIButton';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 import {
   Check,
   Camera,
@@ -41,6 +45,10 @@ const qualityOptions = [
  */
 export function SellCropPage() {
   const navigate = useNavigate();
+  const tx = usePageText('sell');
+  const { t } = useLanguage();
+  const [submitError, setSubmitError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Navigation State
   const [activeTab, setActiveTab] = useState('Sell Crop');
@@ -82,151 +90,30 @@ export function SellCropPage() {
     setPhotos([...photos, currentCropImage]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Listing Created Successfully for ${quantity} ${unit}s of ${selectedCrop} at ₹${price}/${unit}!`);
-    navigate('/my-crops');
+    const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id;
+    if (!userId) {
+      navigate('/auth');
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmitError('');
+    try {
+      await api.addCrop(userId, { name: selectedCrop, field: `${quantity} ${unit}`, quality, price, farmingType });
+      navigate('/my-crops');
+    } catch (error) {
+      setSubmitError(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Wordmark */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Center — Navigation Items (7 exact items in exact order) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => handleNavClick(item)}
-                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
-                    isActive
-                      ? 'border-[#173f31] text-[#173f31] font-bold'
-                      : 'border-transparent text-gray-600 hover:text-[#173f31]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right — Notification Bell, Vertical Divider & Rajesh Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifications"
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              >
-                <Bell size={20} />
-              </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-2">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-xs font-bold text-[#173f31]">Notifications (2)</h4>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-[11px] text-gray-400 hover:text-gray-600">Close</button>
-                  </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl text-xs text-emerald-900 font-medium">
-                    🛒 3 Wholesale buyers active in Sangrur Mandi
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="h-6 w-px bg-gray-200"></div>
-
-            {/* User Section (Rajesh) */}
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold text-[#173f31]">
-                Rajesh
-              </span>
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-                <span>RJ</span>
-              </div>
-            </div>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    handleNavClick(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                    isActive
-                      ? 'bg-[#173f31] text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+      <AppHeader activeKey="sell" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -234,10 +121,10 @@ export function SellCropPage() {
         {/* PAGE TITLE */}
         <section className="space-y-1">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-            Sell Your Crop
+            {tx('title')}
           </h1>
           <p className="text-xs sm:text-sm font-medium text-gray-600">
-            Provide details to list your crop on the marketplace and start receiving bids.
+            {tx('description')}
           </p>
         </section>
 
@@ -250,7 +137,7 @@ export function SellCropPage() {
             {/* 1. WHICH CROP DO YOU WANT TO SELL? */}
             <div className="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
               <h2 className="text-base font-extrabold text-[#173f31]">
-                1. Which crop do you want to sell?
+                1. {tx('which')}
               </h2>
 
               <div className="grid grid-cols-3 gap-3">
@@ -292,23 +179,23 @@ export function SellCropPage() {
             {/* 2. HOW MUCH DO YOU WANT TO SELL? */}
             <div className="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
               <h2 className="text-base font-extrabold text-[#173f31]">
-                2. How much do you want to sell?
+                2. {tx('quantity')}?
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 block">QUANTITY</label>
+                  <label className="text-xs font-bold text-gray-500 block">{tx('quantity')}</label>
                   <input
                     type="number"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
                     className="w-full px-4 py-3 bg-[#f8faf9] border border-gray-200 rounded-2xl text-sm font-extrabold text-[#173f31] focus:outline-none focus:ring-2 focus:ring-[#173f31]/20 focus:border-[#173f31]"
-                    placeholder="Enter quantity"
+                    placeholder={tx('quantityPlaceholder')}
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 block">UNIT</label>
+                  <label className="text-xs font-bold text-gray-500 block">{tx('unit')}</label>
                   <select
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
@@ -325,7 +212,7 @@ export function SellCropPage() {
             {/* 3. WHAT TYPE OF CROP ARE YOU SELLING? */}
             <div className="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
               <h2 className="text-base font-extrabold text-[#173f31]">
-                3. What type of crop are you selling?
+                3. {tx('farming')}?
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -343,8 +230,8 @@ export function SellCropPage() {
                       <Check size={12} />
                     </div>
                   )}
-                  <h3 className="text-sm font-extrabold text-[#173f31]">Organic</h3>
-                  <p className="text-xs text-gray-500 font-medium">No synthetic fertilizers</p>
+                  <h3 className="text-sm font-extrabold text-[#173f31]">{tx('organic')}</h3>
+                  <p className="text-xs text-gray-500 font-medium">{tx('organicText')}</p>
                 </div>
 
                 {/* Conventional */}
@@ -361,8 +248,8 @@ export function SellCropPage() {
                       <Check size={12} />
                     </div>
                   )}
-                  <h3 className="text-sm font-extrabold text-[#173f31]">Conventional</h3>
-                  <p className="text-xs text-gray-500 font-medium">Standard farming practices</p>
+                  <h3 className="text-sm font-extrabold text-[#173f31]">{tx('conventional')}</h3>
+                  <p className="text-xs text-gray-500 font-medium">{tx('conventionalText')}</p>
                 </div>
               </div>
 
@@ -374,7 +261,7 @@ export function SellCropPage() {
             {/* 4. WHAT IS THE QUALITY OF YOUR CROP? */}
             <div className="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
               <h2 className="text-base font-extrabold text-[#173f31]">
-                4. What is the quality of your crop?
+                4. {tx('quality')}?
               </h2>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -433,7 +320,7 @@ export function SellCropPage() {
                   className="flex-1 py-2.5 px-4 rounded-xl bg-gray-100 hover:bg-gray-200/80 text-gray-700 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Camera size={16} />
-                  <span>Take Photo</span>
+                  <span>{tx('takePhoto')}</span>
                 </button>
 
                 <button
@@ -442,7 +329,7 @@ export function SellCropPage() {
                   className="flex-1 py-2.5 px-4 rounded-xl bg-gray-100 hover:bg-gray-200/80 text-gray-700 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Upload size={16} />
-                  <span>Upload</span>
+                  <span>{tx('upload')}</span>
                 </button>
               </div>
             </div>
@@ -474,20 +361,20 @@ export function SellCropPage() {
             <div className="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-6 shadow-2xs space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-base font-extrabold text-[#173f31]">
-                  7. Your Expected Price
+                  7. {tx('expected')}
                 </h2>
                 <button
                   type="button"
                   onClick={() => navigate('/market')}
                   className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1 cursor-pointer"
                 >
-                  <span>View Market Price</span>
+                  <span>{tx('marketPrice')}</span>
                   <ArrowUpRight size={14} />
                 </button>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 block">PRICE PER QUINTAL (₹)</label>
+                <label className="text-xs font-bold text-gray-500 block">{tx('price')}</label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-extrabold text-[#173f31]">
                     ₹
@@ -515,7 +402,7 @@ export function SellCropPage() {
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-[#173f31]">Churu, Rajasthan</h4>
-                    <span className="text-xs text-gray-500 font-medium">Primary Farm Location</span>
+                    <span className="text-xs text-gray-500 font-medium">{tx('location')}</span>
                   </div>
                 </div>
 
@@ -530,11 +417,13 @@ export function SellCropPage() {
             </div>
 
             {/* PRIMARY SUBMIT BUTTON */}
+            {submitError && <p className="text-sm font-medium text-red-600">{submitError}</p>}
             <button
               type="submit"
+              disabled={isSubmitting}
               className="w-full py-4 px-6 rounded-2xl bg-[#173f31] hover:bg-[#113126] text-white font-extrabold text-base transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Put Crop Up for Bidding</span>
+              <span>{tx('submit')}</span>
               <ArrowRight size={18} />
             </button>
 
@@ -543,7 +432,7 @@ export function SellCropPage() {
           {/* RIGHT COLUMN: YOUR LISTING PREVIEW (4-5 cols STICKY) */}
           <div className="lg:col-span-5 space-y-3 sticky top-24">
             <span className="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">
-              YOUR LISTING PREVIEW
+              {tx('preview')}
             </span>
 
             <div className="bg-white rounded-3xl border border-gray-200/90 overflow-hidden shadow-2xs p-5 space-y-4">
@@ -557,10 +446,10 @@ export function SellCropPage() {
                 />
                 <div className="absolute top-3 left-3 flex items-center gap-2">
                   <span className="px-2.5 py-1 rounded-full bg-[#173f31] text-white text-[10px] font-extrabold uppercase">
-                    Listing
+                    {isSubmitting ? tx('saving') : tx('create')}
                   </span>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold uppercase">
-                    New
+                    {tx('new')}
                   </span>
                 </div>
               </div>
@@ -579,7 +468,7 @@ export function SellCropPage() {
               {/* Key Specs */}
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-500 font-medium">Expected Price</span>
+                  <span className="text-gray-500 font-medium">{tx('expected')}</span>
                   <span className="font-extrabold text-gray-900">₹{price} / {unit}</span>
                 </div>
 
@@ -589,17 +478,17 @@ export function SellCropPage() {
                 </div>
 
                 <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-500 font-medium">Farming Type</span>
+                  <span className="text-gray-500 font-medium">{tx('farming')}</span>
                   <span className="font-extrabold text-gray-900">{farmingType}</span>
                 </div>
 
                 <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-500 font-medium">Quality Grade</span>
+                  <span className="text-gray-500 font-medium">{tx('quality')}</span>
                   <span className="font-extrabold text-[#173f31]">{quality}</span>
                 </div>
 
                 <div className="flex items-center justify-between py-1 border-b border-gray-100">
-                  <span className="text-gray-500 font-medium">Lab Certified</span>
+                  <span className="text-gray-500 font-medium">{tx('lab')}</span>
                   <span className={`font-extrabold ${isLabTested ? 'text-emerald-700' : 'text-gray-500'}`}>
                     {isLabTested ? 'Yes (Verified)' : 'No'}
                   </span>
@@ -614,7 +503,7 @@ export function SellCropPage() {
                   </div>
                   <div>
                     <h4 className="text-xs font-extrabold text-[#173f31]">Rajesh</h4>
-                    <span className="text-[10px] text-gray-500 font-medium">Member since 2023</span>
+                    <span className="text-[10px] text-gray-500 font-medium">{tx('member')}</span>
                   </div>
                 </div>
 

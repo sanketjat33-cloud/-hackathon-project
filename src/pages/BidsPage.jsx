@@ -1,3 +1,5 @@
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -130,7 +132,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
       {bid.isBestOffer && (
         <div className="absolute top-4 right-4 bg-emerald-500 text-white font-extrabold px-3.5 py-1 rounded-full text-xs shadow-2xs flex items-center gap-1">
           <Coins size={13} />
-          <span>Best Offer</span>
+          <span>{tx('best')}</span>
         </div>
       )}
 
@@ -144,7 +146,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
             {bid.isVerified && (
               <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold flex items-center gap-1 border border-emerald-200/80">
                 <ShieldCheck size={12} className="text-emerald-700" />
-                Verified Buyer
+                {tx('verified')}
               </span>
             )}
           </div>
@@ -160,7 +162,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
             </span>
             <span className="flex items-center gap-1 text-emerald-800 font-semibold">
               <Truck size={13} />
-              Pickup: {bid.pickupAvailable ? 'Available' : 'Self Drop'}
+              {tx('pickup')}: {bid.pickupAvailable ? tx('available') : tx('selfDrop')}
             </span>
           </div>
         </div>
@@ -173,7 +175,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
       {/* Offer Price & Payout Details */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1">
         <div className="space-y-0.5">
-          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">OFFER PRICE</span>
+          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block">{tx('offer')}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl sm:text-3xl font-extrabold text-[#173f31]">
               {bid.pricePerQtl}
@@ -192,7 +194,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
             onClick={() => onViewOffer(bid)}
             className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition cursor-pointer text-center"
           >
-            View Offer
+            {tx('view')}
           </button>
 
           <button
@@ -204,7 +206,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
                 : 'bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200'
             }`}
           >
-            Accept Bid
+            {tx('accept')}
           </button>
         </div>
       </div>
@@ -218,6 +220,7 @@ function BidCard({ bid, onViewOffer, onAcceptBid }) {
  */
 export function BidsPage() {
   const navigate = useNavigate();
+  const tx = usePageText('bids');
 
   // State Management
   const [activeTab, setActiveTab] = useState('Bids');
@@ -248,141 +251,7 @@ export function BidsPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Wordmark */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Center — Navigation Items (7 exact items in exact order) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => handleNavClick(item)}
-                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
-                    isActive
-                      ? 'border-[#173f31] text-[#173f31] font-bold'
-                      : 'border-transparent text-gray-600 hover:text-[#173f31]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right — Notification Bell, Vertical Divider & Rajesh Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifications"
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              >
-                <Bell size={20} />
-              </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-2">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-xs font-bold text-[#173f31]">Notifications (2)</h4>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-[11px] text-gray-400 hover:text-gray-600">Close</button>
-                  </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl text-xs text-emerald-900 font-medium">
-                    💰 Raj Traders placed a new highest bid: ₹2,550/qtl
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="h-6 w-px bg-gray-200"></div>
-
-            {/* User Section (Rajesh) */}
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold text-[#173f31]">
-                Rajesh
-              </span>
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-                <span>RJ</span>
-              </div>
-            </div>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    handleNavClick(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                    isActive
-                      ? 'bg-[#173f31] text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+      <AppHeader activeKey="bids" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -390,10 +259,10 @@ export function BidsPage() {
         {/* PAGE HEADER */}
         <section className="space-y-2">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-            My Bids
+            {tx('title')}
           </h1>
           <p className="text-xs sm:text-sm font-medium text-gray-600">
-            See offers from wholesalers for your crops.
+            {tx('description')}
           </p>
 
           {/* Green Crop Filter Pill */}
@@ -469,27 +338,27 @@ export function BidsPage() {
             <div className="space-y-3 text-xs text-gray-700">
               <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 flex justify-between items-center">
                 <div>
-                  <span className="text-[10px] font-bold uppercase text-emerald-800 block">OFFERED RATE</span>
+                  <span className="text-[10px] font-bold uppercase text-emerald-800 block">{tx('offered')}</span>
                   <span className="text-xl font-extrabold text-[#173f31]">{viewingBid.pricePerQtl} / Quintal</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] font-bold uppercase text-emerald-800 block">TOTAL PAYOUT</span>
+                  <span className="text-[10px] font-bold uppercase text-emerald-800 block">{tx('payout')}</span>
                   <span className="text-xl font-extrabold text-[#173f31]">{viewingBid.totalAmount}</span>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="font-medium text-gray-500">Payment Terms</span>
+                  <span className="font-medium text-gray-500">{tx('payment')}</span>
                   <span className="font-bold text-gray-900">{viewingBid.paymentTerms}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="font-medium text-gray-500">Scheduled Pickup</span>
+                  <span className="font-medium text-gray-500">{tx('scheduled')}</span>
                   <span className="font-bold text-gray-900">{viewingBid.pickupDate}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="font-medium text-gray-500">Buyer Rating</span>
-                  <span className="font-bold text-amber-600">⭐ {viewingBid.rating} ({viewingBid.dealsCount} verified deals)</span>
+                  <span className="font-medium text-gray-500">{tx('rating')}</span>
+                  <span className="font-bold text-amber-600">⭐ {viewingBid.rating} ({viewingBid.dealsCount} {tx('deals')})</span>
                 </div>
               </div>
 

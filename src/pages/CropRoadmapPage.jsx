@@ -1,3 +1,5 @@
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -23,21 +25,22 @@ import {
 } from 'lucide-react';
 
 const growthCycleStages = [
-  { id: 1, name: 'Land Prep', status: 'completed' },
-  { id: 2, name: 'Sowing', status: 'completed' },
-  { id: 3, name: 'Emergence', status: 'completed' },
-  { id: 4, name: 'Tillering', status: 'current' },
-  { id: 5, name: 'Jointing', status: 'upcoming' },
-  { id: 6, name: 'Heading', status: 'upcoming' },
-  { id: 7, name: 'Ripening', status: 'upcoming' }
+  { id: 1, key: 'landPrep', status: 'completed' },
+  { id: 2, key: 'seed', status: 'completed' },
+  { id: 3, key: 'emergence', status: 'completed' },
+  { id: 4, key: 'tillering', status: 'current' },
+  { id: 5, key: 'jointing', status: 'upcoming' },
+  { id: 6, key: 'heading', status: 'upcoming' },
+  { id: 7, key: 'ripening', status: 'upcoming' }
 ];
 
 /**
  * CropRoadmapPage component for AGROVA Platform.
- * Features Hero wheat header, Growth Progress & Today's Advice, 7-stage Full Growth Cycle, Step-by-Step Sequence timeline, Quick Actions, and Crop Health check.
+ * Features Hero wheat header, {tx('progress')} & {tx('advice')}, 7-stage Full Growth Cycle, {tx('steps')} timeline, Quick Actions, and Crop Health check.
  */
 export function CropRoadmapPage() {
   const navigate = useNavigate();
+  const tx = usePageText('roadmap');
 
   // Navigation State
   const [activeTab, setActiveTab] = useState('Crop Roadmap');
@@ -67,141 +70,7 @@ export function CropRoadmapPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. GLOBAL NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Wordmark */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Center — Navigation Items (7 exact items in exact order) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => handleNavClick(item)}
-                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
-                    isActive
-                      ? 'border-[#173f31] text-[#173f31] font-bold'
-                      : 'border-transparent text-gray-600 hover:text-[#173f31]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right — Notification Bell, Vertical Divider & Rajesh Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifications"
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              >
-                <Bell size={20} />
-              </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-2">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-xs font-bold text-[#173f31]">Notifications (2)</h4>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-[11px] text-gray-400 hover:text-gray-600">Close</button>
-                  </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl text-xs text-emerald-900 font-medium">
-                    🌱 Tillering phase optimal: Nitrogen application recommended
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="h-6 w-px bg-gray-200"></div>
-
-            {/* User Section (Rajesh) */}
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold text-[#173f31]">
-                Rajesh
-              </span>
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-                <span>RJ</span>
-              </div>
-            </div>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    handleNavClick(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                    isActive
-                      ? 'bg-[#173f31] text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+      <AppHeader activeKey="cropRoadmap" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN PAGE LAYOUT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -211,7 +80,7 @@ export function CropRoadmapPage() {
           {/* Background Image */}
           <img
             src={wheatImg}
-            alt="Wheat Crop Roadmap"
+            alt="{tx('title')}"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
 
@@ -222,22 +91,22 @@ export function CropRoadmapPage() {
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold inline-flex items-center gap-1.5 border border-white/20">
                 <Calendar size={13} className="text-emerald-300" />
-                <span>Season: Rabi</span>
+                <span>{tx('season')}</span>
               </span>
 
               <span className="px-3.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold inline-flex items-center gap-1.5 border border-white/20">
                 <Clock size={13} className="text-emerald-300" />
-                <span>Approx: 110–150 days</span>
+                <span>{tx('duration')}</span>
               </span>
             </div>
 
             {/* Heading & Description */}
             <div className="space-y-1.5 max-w-3xl">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                Wheat Crop Roadmap
+                {tx('title')}
               </h1>
               <p className="text-xs sm:text-sm text-gray-200 font-medium leading-relaxed">
-                Follow your wheat crop from sowing to harvest. Currently tracking robust growth in the early tillering phase.
+                {tx('description')}
               </p>
             </div>
 
@@ -247,11 +116,11 @@ export function CropRoadmapPage() {
         {/* 3. GROWTH PROGRESS + TODAY'S ADVICE (HORIZONTAL 2-CARD SECTION) */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
-          {/* LEFT CARD: Growth Progress (6 cols) */}
+          {/* LEFT CARD: {tx('progress')} (6 cols) */}
           <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 p-6 shadow-2xs space-y-5 flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-extrabold text-[#173f31]">
-                Growth Progress
+                {tx('progress')}
               </h2>
               <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200/80">
                 Day 48 / 120
@@ -261,13 +130,13 @@ export function CropRoadmapPage() {
             {/* Stage Labels Row */}
             <div className="flex items-center justify-between text-xs font-extrabold text-[#173f31]">
               <span className="flex items-center gap-1 text-emerald-700">
-                <CheckCircle2 size={14} /> Seed
+                <CheckCircle2 size={14} /> {tx('seed')}
               </span>
               <span className="flex items-center gap-1 text-[#173f31] font-black">
-                <Sprout size={14} className="text-emerald-600" /> Tillering
+                <Sprout size={14} className="text-emerald-600" /> {tx('tillering')}
               </span>
               <span className="text-gray-400 font-bold">
-                Harvest
+                {tx('harvest')}
               </span>
             </div>
 
@@ -279,20 +148,20 @@ export function CropRoadmapPage() {
             {/* Bordered Light-Green Info Box */}
             <div className="bg-emerald-50/90 rounded-2xl border border-emerald-200/90 p-4 text-xs font-medium text-emerald-950 leading-relaxed space-y-1">
               <span className="font-extrabold text-[#173f31] block">
-                Current stage: Tillering.
+                {tx('currentStage')}
               </span>
               <span>
-                Focus on nutrient management to encourage healthy shoots.
+                {tx('focus')}
               </span>
             </div>
           </div>
 
-          {/* RIGHT CARD: Today's Advice (6 cols) */}
+          {/* RIGHT CARD: {tx('advice')} (6 cols) */}
           <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 p-6 shadow-2xs space-y-4 flex flex-col justify-between">
             <div className="flex items-center gap-2 text-[#173f31]">
               <Lightbulb size={20} className="text-amber-500 fill-amber-400" />
               <h2 className="text-lg font-extrabold">
-                Today's Advice
+                {tx('advice')}
               </h2>
             </div>
 
@@ -304,9 +173,9 @@ export function CropRoadmapPage() {
                 <div className="p-2 w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
                   <CloudRain size={16} />
                 </div>
-                <h4 className="text-xs font-extrabold text-[#173f31]">Weather</h4>
+                <h4 className="text-xs font-extrabold text-[#173f31]">{tx('weather')}</h4>
                 <p className="text-[11px] text-gray-600 font-medium leading-tight">
-                  Rain expected this evening. Avoid irrigation today to prevent waterlogging.
+                  {tx('weatherAdvice')}
                 </p>
               </div>
 
@@ -315,9 +184,9 @@ export function CropRoadmapPage() {
                 <div className="p-2 w-8 h-8 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
                   <Droplets size={16} />
                 </div>
-                <h4 className="text-xs font-extrabold text-[#173f31]">Water</h4>
+                <h4 className="text-xs font-extrabold text-[#173f31]">{tx('water')}</h4>
                 <p className="text-[11px] text-gray-600 font-medium leading-tight">
-                  Check soil moisture in sector 4. Roots need oxygen during this critical tillering phase.
+                  {tx('waterAdvice')}
                 </p>
               </div>
 
@@ -326,9 +195,9 @@ export function CropRoadmapPage() {
                 <div className="p-2 w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
                   <Bug size={16} />
                 </div>
-                <h4 className="text-xs font-extrabold text-[#173f31]">Crop</h4>
+                <h4 className="text-xs font-extrabold text-[#173f31]">{tx('crop')}</h4>
                 <p className="text-[11px] text-gray-600 font-medium leading-tight">
-                  Inspect for broadleaf weeds. Early intervention prevents yield reduction.
+                  {tx('cropAdvice')}
                 </p>
               </div>
 
@@ -337,10 +206,10 @@ export function CropRoadmapPage() {
 
         </section>
 
-        {/* 4. FULL GROWTH CYCLE (FULL-WIDTH STAGE TIMELINE CARD) */}
+        {/* 4. {tx('fullCycle')} (FULL-WIDTH STAGE TIMELINE CARD) */}
         <section className="bg-white rounded-3xl border border-gray-200/90 p-6 shadow-2xs space-y-5">
           <span className="text-xs font-extrabold text-gray-400 uppercase tracking-wider block">
-            FULL GROWTH CYCLE
+            {tx('fullCycle')}
           </span>
 
           {/* Horizontal Stage Timeline */}
@@ -376,7 +245,7 @@ export function CropRoadmapPage() {
                           : 'font-medium text-gray-400'
                       }`}
                     >
-                      {stage.name}
+                      {tx(stage.key)}
                     </span>
                   </div>
                 );
@@ -392,7 +261,7 @@ export function CropRoadmapPage() {
           {/* LEFT COLUMN: STEP-BY-STEP SEQUENCE (7-8 cols) */}
           <div className="lg:col-span-8 bg-white rounded-3xl border border-gray-200/90 p-6 shadow-2xs space-y-6">
             <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-              Step-by-Step Sequence
+              {tx('steps')}
             </h2>
 
             {/* Vertical Timeline Container */}
@@ -487,8 +356,8 @@ export function CropRoadmapPage() {
                     <Droplets size={20} />
                   </div>
                   <div>
-                    <h4 className="text-sm font-extrabold text-[#173f31]">Log Irrigation</h4>
-                    <span className="text-xs text-gray-500 font-medium">Record water usage</span>
+                    <h4 className="text-sm font-extrabold text-[#173f31]">{tx('irrigation')}</h4>
+                    <span className="text-xs text-gray-500 font-medium">{tx('irrigationText')}</span>
                   </div>
                 </div>
                 <ChevronRight size={18} className="text-gray-400" />
@@ -504,8 +373,8 @@ export function CropRoadmapPage() {
                     <FlaskConical size={20} />
                   </div>
                   <div>
-                    <h4 className="text-sm font-extrabold text-[#173f31]">Add Fertilizer</h4>
-                    <span className="text-xs text-gray-500 font-medium">Update nutrient logs</span>
+                    <h4 className="text-sm font-extrabold text-[#173f31]">{tx('fertilizer')}</h4>
+                    <span className="text-xs text-gray-500 font-medium">{tx('fertilizerText')}</span>
                   </div>
                 </div>
                 <ChevronRight size={18} className="text-gray-400" />
@@ -529,7 +398,7 @@ export function CropRoadmapPage() {
                 className="w-full py-3 px-4 rounded-xl bg-white hover:bg-emerald-50 text-[#173f31] text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer pt-2"
               >
                 <Camera size={16} />
-                <span>Check My Crop</span>
+                <span>{tx('check')}</span>
               </button>
             </div>
 

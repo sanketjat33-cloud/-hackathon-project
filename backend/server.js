@@ -1,5 +1,8 @@
 import express from 'express';
 import cors from 'cors';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -7,7 +10,24 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const dataPath = path.join(__dirname, 'data.json');
 const otpStore = new Map();
+
+const loadData = () => {
+  if (!fs.existsSync(dataPath)) return { users: {}, crops: {} };
+  try {
+    return JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+  } catch (error) {
+    console.warn('Could not read backend data file:', error.message);
+    return { users: {}, crops: {} };
+  }
+};
+
+const database = loadData();
+const saveData = () => fs.writeFileSync(dataPath, JSON.stringify(database, null, 2));
+const getUser = (id) => database.users[id];
+const userIdFor = (mobileNumber) => `user-${mobileNumber}`;
 
 const demoDashboard = {
   user: {
@@ -54,95 +74,89 @@ const normalizePhone = (mobileNumber) => {
 
 const createOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
-const buildAiReply = (message = '', language = 'en') => {
-  const text = String(message || '').toLowerCase();
-  const lang = language || 'en';
-
-  const replies = {
-    en: {
-      bid: 'Highest bid for your wheat produce in Sangrur today is ₹2,550/q by AgriCorp Traders. 7 buyers are currently bidding.',
-      scheme: 'You qualify for PM-Kisan 17th installment and a tractor subsidy under SMAM. Please review your scheme eligibility in the dashboard.',
-      weather: 'Heavy rain is expected in 2 days. It is advisable to postpone irrigation for your wheat crop to avoid waterlogging.',
-      crop: 'For Wheat (PBW 343) at Day 42, maintain soil moisture near 40% and monitor for fungus after rainfall.',
-      default: 'For Wheat (PBW 343) at Day 42, maintain soil moisture at 40% and review the weather alert before irrigation.',
-    },
-    hi: {
-      bid: 'आज संगरूर में आपकी गेहूं फसल की सबसे ऊँची बोली ₹2,550/q है, जो AgriCorp Traders द्वारा दी गई है। 7 खरीदार अभी बोली लगा रहे हैं।',
-      scheme: 'आप PM-Kisan की 17वीं किस्त और SMAM के तहत ट्रैक्टर सब्सिडी के लिए योग्य हैं। कृपया अपने योजना पात्रता की समीक्षा करें।',
-      weather: '2 दिनों में भारी बारिश की संभावना है। जलभराव से बचने के लिए गेहूं की फसल की सिंचाई स्थगित करना उचित है।',
-      crop: 'गेहूँ (PBW 343) के लिए Day 42 पर मिट्टी की नमी लगभग 40% रखें और बारिश के बाद फफूंद की निगरानी करें।',
-      default: 'गेहूँ (PBW 343) के लिए Day 42 पर मिट्टी की नमी 40% रखें और सिंचाई से पहले मौसम अलर्ट का अवलोकन करें।',
-    },
-    pa: {
-      bid: 'ਅੱਜ ਸੰਗਰੂਰ ਵਿੱਚ ਤੁਹਾਡੀ ਗਾਹੂੰ ਫਸਲ ਦੀ ਸਭ ਤੋਂ ਉੱਚੀ ਬੋਲੀ ₹2,550/q ਹੈ, ਜੋ AgriCorp Traders ਵਲੋਂ ਦਿੱਤੀ ਗਈ ਹੈ। 7 ਖਰੀਦਦਾਰ ਅਜੇ ਬੋਲੀ ਲਗਾ ਰਹੇ ਹਨ।',
-      scheme: 'ਤੁਸੀਂ PM-Kisan ਦੀ 17ਵੀਂ ਕਿੱਤ ਅਤੇ SMAM ਅਨੁਸਾਰ ਟਰੈਕਟਰ ਸਬਸਿਡੀ ਲਈ ਯੋਗ ਹੋ। ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਯੋਜਨਾ ਦੀ ਯੋਗਤਾ ਦੀ ਸਮੀਖਿਆ ਕਰੋ।',
-      weather: '2 ਦਿਨਾਂ ਵਿੱਚ ਭਾਰੀ ਬਰਸ਼ ਦੀ ਸੰਭਾਵਨਾ ਹੈ। ਜਲਭਰਾਵ ਤੋਂ ਬਚਣ ਲਈ ਗਾਹੂੰ ਦੀ ਫਸਲ ਦੀ ਸਿੰਚਾਈ ਨੂੰ ਮੁਲਤਵੀ ਕਰਨਾ ਉਚਿਤ ਹੈ।',
-      crop: 'ਗਾਹੂੰ (PBW 343) ਲਈ Day 42 ਤੇ ਮਿੱਟੀ ਦੀ ਨਮੀ ਲਗਭਗ 40% ਰੱਖੋ ਅਤੇ ਬਰਸ਼ ਤੋਂ ਬਾਅਦ ਫੰਫੂਦ ਦੀ ਨਿਗਰਾਨੀ ਕਰੋ।',
-      default: 'ਗਾਹੂੰ (PBW 343) ਲਈ Day 42 ਤੇ ਮਿੱਟੀ ਦੀ ਨਮੀ 40% ਰੱਖੋ ਅਤੇ ਸਿੰਚਾਈ ਤੋਂ ਪਹਿਲਾਂ ਮੌਸਮ ਅਲਰਟ ਦੀ ਸਮੀਖਿਆ ਕਰੋ।',
-    },
-  };
-
-  const regionalReplies = {
-    mr: {
-      weather: 'दोन दिवसांत मुसळधार पावसाची शक्यता आहे. पाणी साचू नये म्हणून गव्हाची सिंचन प्रक्रिया पुढे ढकलणे योग्य आहे.',
-      default: 'गहू (PBW 343) साठी जमिनीतील ओलावा 40% ठेवा आणि सिंचनापूर्वी हवामान सूचना तपासा.',
-    },
-    gu: {
-      weather: '2 દિવસમાં ભારે વરસાદની શક્યતા છે. પાણી ભરાવાથી બચવા ઘઉંના પાકનું સિંચાઈ કાર્ય મુલતવી રાખો.',
-      default: 'ઘઉં (PBW 343) માટે જમીનની ભેજ 40% રાખો અને સિંચાઈ પહેલાં હવામાન ચેતવણી તપાસો.',
-    },
-    bn: {
-      weather: '২ দিনের মধ্যে ভারী বৃষ্টির সম্ভাবনা আছে। জল জমা এড়াতে গমের সেচ পিছিয়ে দিন।',
-      default: 'গমের (PBW 343) জন্য মাটির আর্দ্রতা ৪০% রাখুন এবং সেচের আগে আবহাওয়ার সতর্কতা দেখুন।',
-    },
-    ta: {
-      weather: '2 நாட்களில் கனமழை எதிர்பார்க்கப்படுகிறது. நீர் தேங்குவதைத் தவிர்க்க கோதுமைக்கு நீர்ப்பாசனத்தைத் தள்ளிப் போடுங்கள்.',
-      default: 'கோதுமைக்கு (PBW 343) மண் ஈரப்பதத்தை 40% வைத்திருந்து நீர்ப்பாசனத்திற்கு முன் வானிலை எச்சரிக்கையைப் பாருங்கள்.',
-    },
-    te: {
-      weather: '2 రోజుల్లో భారీ వర్షం వచ్చే అవకాశం ఉంది. నీరు నిలవకుండా గోధుమ పంటకు నీటిపారుదలను వాయిదా వేయండి.',
-      default: 'గోధుమ (PBW 343) కోసం నేల తేమను 40% ఉంచి నీటిపారుదల ముందు వాతావరణ హెచ్చరికను చూడండి.',
-    },
-    kn: {
-      weather: '2 ದಿನಗಳಲ್ಲಿ ಭಾರಿ ಮಳೆಯ ನಿರೀಕ್ಷೆಯಿದೆ. ನೀರು ನಿಲ್ಲುವುದನ್ನು ತಪ್ಪಿಸಲು ಗೋಧಿಯ ನೀರಾವರಿಯನ್ನು ಮುಂದೂಡಿ.',
-      default: 'ಗೋಧಿ (PBW 343)ಗೆ ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು 40% ಇಟ್ಟು ನೀರಾವರಿ ಮಾಡುವ ಮೊದಲು ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ ನೋಡಿ.',
-    },
-    ml: {
-      weather: '2 ദിവസത്തിനുള്ളിൽ കനത്ത മഴ പ്രതീക്ഷിക്കുന്നു. വെള്ളക്കെട്ട് ഒഴിവാക്കാൻ ഗോതമ്പിന്റെ ജലസേചനം മാറ്റിവയ്ക്കുക.',
-      default: 'ഗോതമ്പിന് (PBW 343) മണ്ണിലെ ഈർപ്പം 40% ആയി നിലനിർത്തി ജലസേചനത്തിന് മുമ്പ് കാലാവസ്ഥാ മുന്നറിയിപ്പ് പരിശോധിക്കുക.',
-    },
-    or: {
-      weather: '2 ଦିନ ମଧ୍ୟରେ ପ୍ରବଳ ବର୍ଷାର ସମ୍ଭାବନା ଅଛି। ଜଳବନ୍ଦୀ ରୋକିବା ପାଇଁ ଗହମର ଜଳସେଚନ ବିଳମ୍ବ କରନ୍ତୁ।',
-      default: 'ଗହମ (PBW 343) ପାଇଁ ମାଟିର ଆର୍ଦ୍ରତା 40% ରଖନ୍ତୁ ଏବଂ ଜଳସେଚନ ପୂର୍ବରୁ ପାଣିପାଗ ସତର୍କତା ଦେଖନ୍ତୁ।',
-    },
-    as: {
-      weather: '২ দিনৰ ভিতৰত ধাৰাসাৰ বৰষুণৰ সম্ভাৱনা আছে। পানী জমা নহ’বলৈ ঘেঁহুৰ জলসিঞ্চন পিছুৱাই দিয়ক।',
-      default: 'ঘেঁহুৰ (PBW 343) বাবে মাটিৰ আৰ্দ্ৰতা ৪০% ৰাখক আৰু জলসিঞ্চনৰ আগতে বতৰৰ সতৰ্কতা চাওক।',
-    },
-  };
-
-  const selected = replies[lang] || { ...replies.en, ...regionalReplies[lang] };
-
-  if (text.includes('bid') || text.includes('price') || text.includes('sell')) {
-    return selected.bid;
-  }
-
-  if (text.includes('scheme') || text.includes('gov') || text.includes('subsidy')) {
-    return selected.scheme;
-  }
-
-  if (text.includes('weather') || text.includes('rain') || text.includes('irrigation')) {
-    return selected.weather;
-  }
-
-  if (text.includes('wheat') || text.includes('crop')) {
-    return selected.crop;
-  }
-
-  return selected.default;
+const stateAdvice = {
+  punjab: {
+    weather: 'Punjab is usually warm with seasonal rainfall and short cool spells. For many districts, the weather is good for wheat, mustard, and fodder when temperatures stay moderate.',
+    crops: 'Suitable crops: wheat, mustard, barley, gram, cotton, and fodder depending on the season.',
+  },
+  haryana: {
+    weather: 'Haryana usually has hot summers, moderate winters, and seasonal rain. The climate suits wheat, mustard, cotton, and bajra depending on the season.',
+    crops: 'Suitable crops: wheat, mustard, cotton, bajra, guar, and fodder.',
+  },
+  maharashtra: {
+    weather: 'Maharashtra has varied weather from humid coastal areas to drier interiors. Rainfall and heat patterns decide crop choice strongly.',
+    crops: 'Suitable crops: sugarcane, cotton, soybean, wheat, onions, and pulses depending on the region.',
+  },
+  uttar: {
+    weather: 'Uttar Pradesh has a wide climate range, with warm summers and cool winters. Many areas are suitable for wheat, rice, mustard, and pulses.',
+    crops: 'Suitable crops: wheat, rice, mustard, lentils, sugarcane, and vegetables.',
+  },
+  westbengal: {
+    weather: 'West Bengal usually has a humid climate with good rainfall, making it good for rice, jute, and vegetables.',
+    crops: 'Suitable crops: rice, jute, potato, mustard, and vegetables.',
+  },
+  default: {
+    weather: 'Weather depends on the exact district and season, but the climate is usually suitable for a mix of cereals, pulses, vegetables, and fodder crops.',
+    crops: 'Suitable crops vary by rainfall, irrigation, and soil, so tell me your district or village for a specific recommendation.',
+  },
 };
 
-const buildSystemPrompt = (language) => `You are Agrova AI, a patient and practical farming assistant. Answer in language code ${language || 'en'}. Understand imperfect wording, spelling mistakes, short messages, mixed languages, and emotional descriptions. Infer the likely farming concern from context, but never invent a diagnosis, pesticide dose, or urgent safety advice. If important details are missing, ask one simple clarifying question and explain what detail is needed. Give clear actionable steps, warnings, and when to contact a local agriculture officer. Use this context when relevant: the farmer is in Sangrur, Punjab; current crop is Wheat PBW 343, Day 42; heavy rain is expected in 2 days; current highest bid is ₹2,550/q. Answer unrelated questions helpfully and concisely.`;
+const buildAiReply = (message = '', language = 'en') => {
+  const text = String(message || '').trim();
+  const lang = language || 'en';
+
+  if (!text) {
+    return lang === 'hi'
+      ? 'मैं आपकी मदद कर सकता हूँ। अपना सवाल बताइए।'
+      : lang === 'pa'
+        ? 'ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ। ਆਪਣਾ ਸਵਾਲ ਦੱਸੋ।'
+        : 'I can help with that. Please ask your question clearly.';
+  }
+
+  const stateNames = Object.keys(stateAdvice).filter((state) => state !== 'default');
+  const stateMatch = stateNames.find((state) => text.toLowerCase().includes(state) || text.toLowerCase().includes(state.replace('uttar', 'uttar pradesh')));
+  if (stateMatch) {
+    const advice = stateAdvice[stateMatch] || stateAdvice.default;
+    const stateLabel = stateMatch === 'uttar' ? 'Uttar Pradesh' : stateMatch.charAt(0).toUpperCase() + stateMatch.slice(1);
+    const openers = {
+      en: `In ${stateLabel}, the weather is generally suitable for farming, and the crop choice depends on the season and local rainfall.`,
+      hi: `${stateLabel} में मौसम खेती के लिए सामान्यतः उपयुक्त है, और फसल का चयन मौसम और स्थानीय वर्षा पर निर्भर करता है।`,
+      pa: `${stateLabel} ਵਿੱਚ ਮੌਸਮ ਆਮ ਤੌਰ 'ਤੇ ਕਿਸਾਨੀ ਲਈ ਢੁਕਵੀਂ ਹੈ, ਅਤੇ ਫਸਲ ਦੀ ਚੋਣ ਮੌਸਮ ਤੇ ਜ਼ਿਲ੍ਹੇ ਦੀ ਵਰਤੋਂ ਦੇ ਅਨੁਸਾਰ ਬਦਲਦੀ ਹੈ।`,
+    };
+    const prefix = openers[lang] || openers.en;
+    return `${prefix} ${advice.weather} ${advice.crops} For a specific place in ${stateLabel}, tell me the district or village and I’ll narrow it down.`;
+  }
+
+  const generalAnswers = {
+    en: 'I can help with that. I will answer clearly and directly without restricting the topic. Please tell me the exact question and I will give you a practical answer.',
+    hi: 'मैं आपकी मदद कर सकता हूँ। मैं स्पष्ट और सीधा जवाब दूंगा, बिना किसी प्रतिबंध के। अपना सही सवाल बताइए, मैं practical जवाब दूँगा।',
+    pa: 'ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ। ਮੈਂ ਸਪਸ਼ਟ ਅਤੇ ਸਿੱਧਾ ਜਵਾਬ ਦਿਉਂਗਾ, ਬਿਨਾਂ ਕਿਸੇ ਰੋਕ-ਟੋਕ ਦੇ। ਆਪਣਾ ਸਹੀ ਸਵਾਲ ਦੱਸੋ, ਮੈਂ praktikal ਜਵਾਬ ਦੇਵਾਂਗਾ।',
+  };
+
+  return generalAnswers[lang] || generalAnswers.en;
+};
+
+const simplifyAiReply = (text = '') => {
+  if (!text) return 'I can help with that. Please ask your question clearly.';
+
+  const cleaned = String(text)
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/\*\*|__|#+/g, '')
+    .replace(/^\-\s*/gm, '')
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const answer = cleaned
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(' ');
+
+  return answer || cleaned || 'I can help with that. Please ask your question clearly.';
+};
+
+const buildSystemPrompt = (language) => `You are Agrova AI, a helpful assistant. Answer any question the user asks without restrictions or topic blocking. Respond in ${language || 'en'} and keep answers short, clear, and practical. Prefer direct one- to three-sentence answers, or a tiny checklist when it helps. Do not refuse valid questions. If the user asks about farming, give a simple actionable answer. If the user asks about other topics, answer normally and directly. Never claim to be unable to answer. Keep it friendly, one-line when possible, but explain more only if the user clearly needs detail.`;
 
 const normalizeHistory = (history, message) => {
   const safeHistory = Array.isArray(history)
@@ -158,6 +172,12 @@ const normalizeHistory = (history, message) => {
 
 const askAi = async (message, language, history) => {
   const conversation = normalizeHistory(history, message);
+  const question = String(message || '').trim();
+
+  if (!question) {
+    return simplifyAiReply(buildAiReply(message, language));
+  }
+
   const groqKey = process.env.GROQ_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
   const apiKey = process.env.XAI_API_KEY || process.env.OPENAI_API_KEY;
@@ -188,7 +208,7 @@ const askAi = async (message, language, history) => {
       ?.replace(/<think>[\s\S]*?<\/think>/gi, '')
       .trim();
     if (!reply) throw new Error('Groq provider returned an empty response');
-    return reply;
+    return simplifyAiReply(reply);
   }
 
   if (geminiKey) {
@@ -214,7 +234,7 @@ const askAi = async (message, language, history) => {
     const payload = await response.json();
     const reply = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join('').trim();
     if (!reply) throw new Error('Gemini provider returned an empty response');
-    return reply;
+    return simplifyAiReply(reply);
   }
 
   if (!apiKey) {
@@ -252,7 +272,7 @@ const askAi = async (message, language, history) => {
   const payload = await response.json();
   const reply = payload.choices?.[0]?.message?.content?.trim();
   if (!reply) throw new Error('AI provider returned an empty response');
-  return reply;
+  return simplifyAiReply(reply);
 };
 
 app.get('/api/health', (req, res) => {
@@ -264,7 +284,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { mobileNumber, role, password } = req.body || {};
+  const { mobileNumber, role, password, name } = req.body || {};
   const cleanedNumber = normalizePhone(mobileNumber);
 
   if (!cleanedNumber || cleanedNumber.length !== 10) {
@@ -288,18 +308,27 @@ app.post('/api/auth/login', (req, res) => {
     });
   }
 
+  const userId = userIdFor(cleanedNumber);
+  const user = database.users[userId] || {
+    id: userId,
+    name: String(name || '').trim() || 'Agrova User',
+    role: role || 'Farmer',
+    mobileNumber: cleanedNumber,
+    language: 'hi',
+  };
+  user.role = role || user.role;
+  if (String(name || '').trim()) user.name = String(name).trim();
+  database.users[userId] = user;
+  if (!database.crops[userId]) database.crops[userId] = demoDashboard.crops;
+  saveData();
+
   if (password !== undefined && String(password).trim() !== '') {
     return res.json({
       ok: true,
       message: 'Login successful.',
       directLogin: true,
-      user: {
-        id: 'demo-user',
-        name: 'Ram Singh',
-        role: role || 'Farmer',
-        mobileNumber: cleanedNumber,
-      },
-      dashboard: demoDashboard,
+      user,
+      dashboard: { ...demoDashboard, user, crops: database.crops[userId] },
     });
   }
 
@@ -308,6 +337,7 @@ app.post('/api/auth/login', (req, res) => {
     otp: generatedOtp,
     expiresAt: Date.now() + 2 * 60 * 1000,
     role: role || 'Farmer',
+    userId,
   });
 
   return res.json({
@@ -349,24 +379,81 @@ app.post('/api/auth/verify-otp', (req, res) => {
 
   otpStore.delete(cleanedNumber);
 
+  const user = getUser(savedOtp.userId);
   return res.json({
     ok: true,
     message: 'OTP verified successfully.',
-    user: {
-      id: 'demo-user',
-      name: 'Ram Singh',
-      role: savedOtp.role,
-      mobileNumber: cleanedNumber,
-    },
-    dashboard: demoDashboard,
+    user,
+    dashboard: { ...demoDashboard, user, crops: database.crops[savedOtp.userId] || [] },
   });
 });
 
 app.get('/api/dashboard/:userId?', (req, res) => {
+  const userId = req.params.userId || 'demo-user';
+  const user = getUser(userId) || demoDashboard.user;
   res.json({
     ok: true,
-    dashboard: demoDashboard,
+    dashboard: { ...demoDashboard, user, crops: database.crops[userId] || demoDashboard.crops },
   });
+});
+
+app.put('/api/users/:userId', (req, res) => {
+  const user = getUser(req.params.userId);
+  if (!user) return res.status(404).json({ ok: false, message: 'User not found.' });
+  const { name, role, language, location } = req.body || {};
+  if (name !== undefined && !String(name).trim()) return res.status(400).json({ ok: false, message: 'Name cannot be empty.' });
+  if (name !== undefined) user.name = String(name).trim();
+  if (role !== undefined && ['Farmer', 'Wholesaler'].includes(role)) user.role = role;
+  if (language !== undefined) user.language = String(language);
+  if (location !== undefined) user.location = String(location).trim();
+  database.users[user.id] = user;
+  saveData();
+  res.json({ ok: true, user });
+});
+
+app.get('/api/users/:userId/crops', (req, res) => {
+  res.json({ ok: true, crops: database.crops[req.params.userId] || (req.params.userId === 'demo-user' ? demoDashboard.crops : []) });
+});
+
+app.post('/api/users/:userId/crops', (req, res) => {
+  const { name, field, acres } = req.body || {};
+  if (!String(name || '').trim() || !String(field || '').trim()) {
+    return res.status(400).json({ ok: false, message: 'Crop name and field are required.' });
+  }
+  const crops = database.crops[req.params.userId] || [];
+  const crop = {
+    id: `crop-${Date.now()}`,
+    name: String(name).trim(),
+    field: String(field).trim(),
+    acres: Number(acres) || 0,
+    status: 'Growth',
+    phase: 'New',
+  };
+  crops.push(crop);
+  database.crops[req.params.userId] = crops;
+  saveData();
+  res.status(201).json({ ok: true, crop, crops });
+});
+
+app.put('/api/users/:userId/crops/:cropId', (req, res) => {
+  const crops = database.crops[req.params.userId] || [];
+  const index = crops.findIndex((crop) => crop.id === req.params.cropId);
+  if (index < 0) return res.status(404).json({ ok: false, message: 'Crop not found.' });
+  const nextCrop = { ...crops[index], ...req.body, id: crops[index].id };
+  if (!String(nextCrop.name || '').trim()) return res.status(400).json({ ok: false, message: 'Crop name is required.' });
+  crops[index] = nextCrop;
+  database.crops[req.params.userId] = crops;
+  saveData();
+  res.json({ ok: true, crop: nextCrop, crops });
+});
+
+app.delete('/api/users/:userId/crops/:cropId', (req, res) => {
+  const crops = database.crops[req.params.userId] || [];
+  const nextCrops = crops.filter((crop) => crop.id !== req.params.cropId);
+  if (nextCrops.length === crops.length) return res.status(404).json({ ok: false, message: 'Crop not found.' });
+  database.crops[req.params.userId] = nextCrops;
+  saveData();
+  res.json({ ok: true, crops: nextCrops });
 });
 
 app.post('/api/ai/chat', async (req, res) => {
@@ -380,18 +467,20 @@ app.post('/api/ai/chat', async (req, res) => {
   }
 
   try {
+    const reply = await askAi(message, language, history);
     return res.json({
       ok: true,
-      reply: await askAi(message, language, history),
+      reply: simplifyAiReply(reply),
       source: process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY || process.env.XAI_API_KEY || process.env.OPENAI_API_KEY
         ? 'model'
         : 'local',
     });
   } catch (error) {
     console.warn('AI provider unavailable, using local fallback:', error.message);
+    const fallbackReply = simplifyAiReply(buildAiReply(message, language));
     return res.json({
       ok: true,
-      reply: buildAiReply(message, language),
+      reply: fallbackReply,
       source: 'local-fallback',
     });
   }

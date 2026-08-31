@@ -29,6 +29,22 @@ export const api = {
     body: JSON.stringify(payload),
   }),
   getDashboard: (userId = 'demo-user') => request(`/dashboard/${userId}`),
+  updateUser: (userId, payload) => request(`/users/${userId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }),
+  getCrops: (userId) => request(`/users/${userId}/crops`),
+  addCrop: (userId, payload) => request(`/users/${userId}/crops`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  updateCrop: (userId, cropId, payload) => request(`/users/${userId}/crops/${cropId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  }),
+  deleteCrop: (userId, cropId) => request(`/users/${userId}/crops/${cropId}`, {
+    method: 'DELETE',
+  }),
   askAi: (payload) => request('/ai/chat', {
     method: 'POST',
     body: JSON.stringify(payload),

@@ -1,4 +1,6 @@
-import React from 'react';
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
+import React, { useState } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatImg from '../assets/wheat-field.png';
@@ -9,6 +11,8 @@ import chickpeaImg from '../assets/chickpea.jpg';
 import cottonImg from '../assets/cotton.jpg';
 import tomatoImg from '../assets/tomato.jpg';
 import { AIButton } from '../components/AIButton';
+import api from '../services/api';
+import { useLanguage } from '../hooks/useLanguage';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 
 /**
@@ -31,8 +35,12 @@ const cropImageMap = {
  */
 export function SelectedCropPage() {
   const navigate = useNavigate();
+  const tx = usePageText('selectedCrop');
   const location = useLocation();
   const { cropId } = useParams();
+  const { t } = useLanguage();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   // Determine selected crop dynamically from state or URL parameter
   const stateCrop = location.state?.selectedCrop;
@@ -44,11 +52,21 @@ export function SelectedCropPage() {
     image: cropImageMap[paramCropKey]?.image || wheatImg
   };
 
-  const handleContinue = () => {
-    if (paramCropKey === 'wheat') {
-      navigate('/my-crops/wheat');
-    } else {
-      navigate('/my-crops');
+  const handleContinue = async () => {
+    const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id;
+    if (!userId) {
+      navigate('/auth');
+      return;
+    }
+    setSaving(true);
+    setError('');
+    try {
+      const response = await api.addCrop(userId, { name: crop.name, field: 'New Field', acres: 1 });
+      navigate(`/my-crops/${response.crop.id}`);
+    } catch (saveError) {
+      setError(saveError.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -60,45 +78,14 @@ export function SelectedCropPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100">
       
       {/* ==================== 1. MINIMAL TOP HEADER ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[68px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Branding */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Right — User Profile Icon */}
-          <div className="flex items-center gap-2.5">
-            <span className="text-sm font-bold text-[#173f31] hidden sm:inline">
-              Rajesh
-            </span>
-            <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-              <span>RJ</span>
-            </div>
-          </div>
-
-        </div>
-      </header>
+      <AppHeader activeKey="myCrops" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col items-center justify-center space-y-6">
         
         {/* Main Heading */}
         <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight text-center">
-          Your Selected Crop
+          {tx('title')}
         </h1>
 
         {/* 3. CENTERED SELECTED CROP CARD */}
@@ -122,7 +109,7 @@ export function SelectedCropPage() {
             {/* C. Status / Recommendation Badge */}
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-bold border border-emerald-200/80">
               <CheckCircle2 size={13} className="text-emerald-700" />
-              <span>Optimal planting season</span>
+              <span>{tx('season')}</span>
             </div>
           </div>
 
@@ -134,19 +121,20 @@ export function SelectedCropPage() {
               onClick={handleContinue}
               className="w-full py-3.5 px-6 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white font-bold text-sm transition shadow-xs flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>Continue</span>
+              <span>{saving ? t.features.saving : t.common.continue}</span>
               <ArrowRight size={16} />
             </button>
 
-            {/* E. Change Crop Button */}
+            {/* E. {tx('change')} Button */}
             <button
               type="button"
               onClick={handleChangeCrop}
               className="w-full py-3.5 px-6 rounded-xl bg-white border border-gray-200 hover:bg-gray-50 text-[#173f31] font-bold text-sm transition flex items-center justify-center cursor-pointer"
             >
-              Change Crop
+              {tx('change')}
             </button>
           </div>
+          {error && <p className="text-sm font-medium text-red-600">{error}</p>}
 
         </div>
 

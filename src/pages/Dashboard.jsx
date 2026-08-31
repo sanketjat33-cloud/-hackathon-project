@@ -137,7 +137,8 @@ export function DashboardPage() {
       }
     }
 
-    api.getDashboard().then((response) => {
+    const session = JSON.parse(localStorage.getItem('agrova_session') || 'null');
+    api.getDashboard(session?.id || 'demo-user').then((response) => {
       if (response.dashboard) {
         setDashboardData(response.dashboard);
         localStorage.setItem('agrova_dashboard', JSON.stringify(response.dashboard));
@@ -232,21 +233,11 @@ export function DashboardPage() {
                     if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
-                    if (item === 'Government Schemes') {
-                      navigate('/government-schemes');
-                    }
-                    if (item === 'Market') {
-                      navigate('/market');
-                    }
-                    if (item === 'Sell Crop') {
-                      navigate('/sell-crop');
-                    }
-                    if (item === 'Bids') {
-                      navigate('/bids');
-                    }
-                    if (item === 'Crop Roadmap') {
-                      navigate('/crop-roadmap');
-                    }
+                    if (item.key === 'cropRoadmap') navigate('/crop-roadmap');
+                    if (item.key === 'sellCrop') navigate('/sell-crop');
+                    if (item.key === 'bids') navigate('/bids');
+                    if (item.key === 'market') navigate('/market');
+                    if (item.key === 'governmentSchemes') navigate('/government-schemes');
                   }}
                   className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
                     isActive
@@ -391,21 +382,11 @@ export function DashboardPage() {
                     if (item.key === 'myCrops') {
                       navigate('/my-crops');
                     }
-                    if (item === 'Government Schemes') {
-                      navigate('/government-schemes');
-                    }
-                    if (item === 'Market') {
-                      navigate('/market');
-                    }
-                    if (item === 'Sell Crop') {
-                      navigate('/sell-crop');
-                    }
-                    if (item === 'Bids') {
-                      navigate('/bids');
-                    }
-                    if (item === 'Crop Roadmap') {
-                      navigate('/crop-roadmap');
-                    }
+                    if (item.key === 'cropRoadmap') navigate('/crop-roadmap');
+                    if (item.key === 'sellCrop') navigate('/sell-crop');
+                    if (item.key === 'bids') navigate('/bids');
+                    if (item.key === 'market') navigate('/market');
+                    if (item.key === 'governmentSchemes') navigate('/government-schemes');
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
                     isActive
@@ -449,7 +430,7 @@ export function DashboardPage() {
             </div>
             <button
               type="button"
-              onClick={() => navigate('/select-crop')}
+              onClick={() => setActiveModal('new-crop')}
               className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />
@@ -794,7 +775,7 @@ export function DashboardPage() {
 
             <button
               type="button"
-              onClick={() => navigate('/update-progress')}
+              onClick={() => setActiveModal('update-progress')}
               className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
             >
               {t.dashboard.updateProgress}

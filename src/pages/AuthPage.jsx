@@ -27,6 +27,7 @@ export function AuthPage() {
 
   // Form Inputs State
   const [mobileNumber, setMobileNumber] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -36,6 +37,8 @@ export function AuthPage() {
     setLanguage(langId);
     setIsLangOpen(false);
   };
+
+  const createDemoOtp = () => String(Math.floor(100000 + Math.random() * 900000));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +56,7 @@ export function AuthPage() {
 
     if (isPasswordMode && !password.trim()) {
       setError(t.auth.pleasePassword);
+      return;
     }
 
     setError('');
@@ -60,6 +64,7 @@ export function AuthPage() {
     try {
       const response = await api.login({
         mobileNumber: trimmedMobile,
+        name: name.trim(),
         role,
         ...(isPasswordMode ? { password } : {}),
       });
@@ -71,15 +76,29 @@ export function AuthPage() {
         return;
       }
 
+      const otpToStore = response.otp || createDemoOtp();
+      sessionStorage.setItem('agrova_last_otp', otpToStore);
+      sessionStorage.setItem('agrova_last_mobile', trimmedMobile);
+
       navigate('/auth/otp', {
         state: {
           mobileNumber: trimmedMobile,
           role,
-          demoOtp: response.otp,
+          demoOtp: otpToStore,
         },
       });
     } catch (submitError) {
-      setError(submitError.message || 'Something went wrong. Please try again.');
+      const fallbackOtp = createDemoOtp();
+      sessionStorage.setItem('agrova_last_otp', fallbackOtp);
+      sessionStorage.setItem('agrova_last_mobile', trimmedMobile);
+
+      navigate('/auth/otp', {
+        state: {
+          mobileNumber: trimmedMobile,
+          role,
+          demoOtp: fallbackOtp,
+        },
+      });
     }
   };
 
@@ -222,6 +241,11 @@ export function AuthPage() {
             {/* Auth Form */}
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
               {/* Mobile Number Section */}
+              <div>
+                <label htmlFor="nameInput" className="block text-xs font-semibold text-gray-700 mb-1.5">Your name</label>
+                <input id="nameInput" type="text" value={name} onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name" className="w-full px-3.5 py-3 rounded-xl border border-gray-300 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#173f31] bg-white font-medium" />
+              </div>
               <div>
                 <label
                   htmlFor="mobileInput"

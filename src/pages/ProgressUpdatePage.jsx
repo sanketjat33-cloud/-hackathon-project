@@ -1,3 +1,5 @@
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -35,6 +37,7 @@ const growthStatusOptions = [
  */
 export function ProgressUpdatePage() {
   const navigate = useNavigate();
+  const tx = usePageText('progress');
 
   // Navigation State
   const [activeTab, setActiveTab] = useState('Home');
@@ -83,141 +86,7 @@ export function ProgressUpdatePage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. TOP NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Wordmark */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Center — Navigation Items (7 exact items in exact order) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => handleNavClick(item)}
-                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
-                    isActive
-                      ? 'border-[#173f31] text-[#173f31] font-bold'
-                      : 'border-transparent text-gray-600 hover:text-[#173f31]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right — Notification Bell, Vertical Divider & Rajesh Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifications"
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              >
-                <Bell size={20} />
-              </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-2">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-xs font-bold text-[#173f31]">Notifications (2)</h4>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-[11px] text-gray-400 hover:text-gray-600">Close</button>
-                  </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl text-xs text-emerald-900 font-medium">
-                    🌾 Time to log Day 48 growth progress for Wheat!
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="h-6 w-px bg-gray-200"></div>
-
-            {/* User Section (Rajesh) */}
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold text-[#173f31]">
-                Rajesh
-              </span>
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-                <span>RJ</span>
-              </div>
-            </div>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    handleNavClick(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                    isActive
-                      ? 'bg-[#173f31] text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+      <AppHeader activeKey="home" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN PAGE LAYOUT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -231,21 +100,21 @@ export function ProgressUpdatePage() {
             {/* Heading & Day Badge */}
             <div className="flex items-center gap-3">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-                Update Today's Growth
+                {tx('title')}
               </h1>
               <span className="px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200/80 text-xs font-extrabold inline-flex items-center gap-1.5 shadow-2xs">
                 <Calendar size={14} className="text-emerald-700" />
-                <span>Day 48</span>
+                <span>{tx('day')} 48</span>
               </span>
             </div>
 
             {/* 3. LEFT FORM CARD */}
             <div className="bg-white rounded-3xl border border-gray-200/90 p-6 sm:p-7 shadow-2xs space-y-6">
               
-              {/* Add Today's Photo */}
+              {/* {tx('photo')} */}
               <div className="space-y-3">
                 <h2 className="text-base font-extrabold text-[#173f31]">
-                  Add Today's Photo
+                  {tx('photo')}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -255,7 +124,7 @@ export function ProgressUpdatePage() {
                     className="py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Camera size={16} />
-                    <span>Take Photo</span>
+                    <span>{tx('take')}</span>
                   </button>
 
                   <button
@@ -264,7 +133,7 @@ export function ProgressUpdatePage() {
                     className="py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Upload size={16} />
-                    <span>Upload Photo</span>
+                    <span>{tx('upload')}</span>
                   </button>
                 </div>
 
@@ -280,10 +149,10 @@ export function ProgressUpdatePage() {
                 )}
               </div>
 
-              {/* How is it growing? (2x2 Grid) */}
+              {/* {tx('how')} (2x2 Grid) */}
               <div className="space-y-3">
                 <h2 className="text-base font-extrabold text-[#173f31]">
-                  How is it growing?
+                  {tx('how')}
                 </h2>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -317,10 +186,10 @@ export function ProgressUpdatePage() {
                 </div>
               </div>
 
-              {/* Plant Height */}
+              {/* {tx('height')} */}
               <div className="space-y-2">
                 <h2 className="text-base font-extrabold text-[#173f31]">
-                  Plant Height
+                  {tx('height')}
                 </h2>
 
                 <div className="relative">
@@ -336,10 +205,10 @@ export function ProgressUpdatePage() {
                 </div>
               </div>
 
-              {/* Observation Notes */}
+              {/* {tx('notes')} */}
               <div className="space-y-2">
                 <h2 className="text-base font-extrabold text-[#173f31]">
-                  Observation Notes
+                  {tx('notes')}
                 </h2>
 
                 <div className="relative">
@@ -347,7 +216,7 @@ export function ProgressUpdatePage() {
                     rows={4}
                     value={observationNotes}
                     onChange={(e) => setObservationNotes(e.target.value)}
-                    placeholder="Notice anything unusual? Leaves looking yellow? Bugs?"
+                    placeholder={tx('placeholder')}
                     className="w-full p-4 bg-[#f8faf9] border border-gray-200 rounded-2xl text-xs sm:text-sm font-medium text-[#173f31] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#173f31]/20 focus:border-[#173f31] resize-none"
                   />
 
@@ -370,12 +239,12 @@ export function ProgressUpdatePage() {
                 </div>
               </div>
 
-              {/* Save Today's Growth Button */}
+              {/* {tx('save')} Button */}
               <button
                 type="submit"
                 className="w-full py-4 px-6 rounded-2xl bg-[#173f31] hover:bg-[#113126] text-white font-extrabold text-base transition shadow-xs flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{isSaved ? 'Saving Growth Record...' : "Save Today's Growth"}</span>
+                <span>{isSaved ? tx('saving') : tx('save')}</span>
                 <ArrowRight size={18} />
               </button>
 

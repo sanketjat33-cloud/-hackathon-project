@@ -1,3 +1,5 @@
+import { AppHeader } from '../components/AppHeader';
+import usePageText from '../hooks/usePageText';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -23,7 +25,7 @@ import {
 } from 'lucide-react';
 
 /**
- * Government Schemes Catalog Data Structure
+ * {tx('title')} Catalog Data Structure
  */
 const schemesData = [
   {
@@ -113,6 +115,7 @@ const popularQueries = [
  */
 export function GovernmentSchemesPage() {
   const navigate = useNavigate();
+  const tx = usePageText('schemes');
 
   // State Management
   const [activeTab, setActiveTab] = useState('Government Schemes');
@@ -150,141 +153,7 @@ export function GovernmentSchemesPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
-          
-          {/* Left — AGROVA Logo & Wordmark */}
-          <div 
-            className="flex items-center gap-3 flex-shrink-0 cursor-pointer" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <div className="w-10 h-10 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
-              <img
-                src={agrovaLogo}
-                alt="Agrova logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
-              AGROVA
-            </span>
-          </div>
-
-          {/* Center — Navigation Items (7 exact items in exact order) */}
-          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 h-full">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => handleNavClick(item)}
-                  className={`h-full inline-flex items-center px-1 text-xs xl:text-sm font-semibold transition-all cursor-pointer border-b-2 ${
-                    isActive
-                      ? 'border-[#173f31] text-[#173f31] font-bold'
-                      : 'border-transparent text-gray-600 hover:text-[#173f31]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right — Notification Bell, Vertical Divider & Rajesh Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            
-            {/* Notification Bell */}
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Notifications"
-                onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              >
-                <Bell size={20} />
-              </button>
-
-              {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 p-4 space-y-2">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                    <h4 className="text-xs font-bold text-[#173f31]">Notifications (2)</h4>
-                    <button onClick={() => setIsNotifOpen(false)} className="text-[11px] text-gray-400 hover:text-gray-600">Close</button>
-                  </div>
-                  <div className="p-2 bg-emerald-50 rounded-xl text-xs text-emerald-900 font-medium">
-                    🏛️ New installment released for PM-KISAN
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Vertical Divider */}
-            <div className="h-6 w-px bg-gray-200"></div>
-
-            {/* User Section (Rajesh) */}
-            <div className="flex items-center gap-2.5">
-              <span className="text-sm font-bold text-[#173f31]">
-                Rajesh
-              </span>
-              <div className="w-9 h-9 rounded-full bg-[#173f31] text-white flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-emerald-100/80">
-                <span>RJ</span>
-              </div>
-            </div>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-600 hover:text-[#173f31] hover:bg-gray-100 transition cursor-pointer"
-              aria-label="Toggle mobile menu"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-[72px] left-0 w-full bg-white border-b border-gray-200 p-4 shadow-lg z-50 space-y-1">
-            {[
-              'Home',
-              'My Crops',
-              'Crop Roadmap',
-              'Sell Crop',
-              'Bids',
-              'Market',
-              'Government Schemes'
-            ].map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    handleNavClick(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition ${
-                    isActive
-                      ? 'bg-[#173f31] text-white font-bold'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </header>
+      <AppHeader activeKey="governmentSchemes" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -293,10 +162,10 @@ export function GovernmentSchemesPage() {
         <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-extrabold text-[#173f31] tracking-tight">
-              Government Schemes
+              {tx('title')}
             </h1>
             <p className="text-xs sm:text-sm font-medium text-gray-600 max-w-2xl leading-relaxed">
-              Find government schemes that can help you secure your harvest, fund your equipment, and grow your income.
+              {tx('description')}
             </p>
           </div>
 
@@ -307,7 +176,7 @@ export function GovernmentSchemesPage() {
             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold transition cursor-pointer shadow-xs self-start sm:self-auto flex-shrink-0"
           >
             <Sparkles size={16} className="text-emerald-300" />
-            <span>AI Scheme Matcher</span>
+            <span>{tx('matcher')}</span>
           </button>
         </section>
 
@@ -323,7 +192,7 @@ export function GovernmentSchemesPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search schemes by name or category..."
+              placeholder={tx('search')}
               className="w-full pl-11 pr-4 py-3 bg-[#f8faf9] border border-gray-200 rounded-2xl text-xs sm:text-sm text-[#173f31] font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#173f31]/20 focus:border-[#173f31] transition"
             />
           </div>
@@ -408,7 +277,7 @@ export function GovernmentSchemesPage() {
                       onClick={() => alert(`Opening details for ${scheme.title}...`)}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f31] hover:text-emerald-700 transition cursor-pointer"
                     >
-                      <span>View Details</span>
+                      <span>{tx('details')}</span>
                       <ArrowRight size={14} />
                     </button>
                   </div>
@@ -416,12 +285,12 @@ export function GovernmentSchemesPage() {
                   {/* Card Info Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <div className="bg-[#f8faf9] p-3 rounded-2xl border border-gray-200/60 space-y-0.5">
-                      <span className="text-gray-400 font-bold uppercase text-[10px] block">BENEFIT</span>
+                      <span className="text-gray-400 font-bold uppercase text-[10px] block">{tx('benefit')}</span>
                       <span className="font-extrabold text-gray-900 text-sm block">{scheme.benefit}</span>
                     </div>
 
                     <div className="bg-[#f8faf9] p-3 rounded-2xl border border-gray-200/60 space-y-0.5">
-                      <span className="text-gray-400 font-bold uppercase text-[10px] block">WHO CAN APPLY</span>
+                      <span className="text-gray-400 font-bold uppercase text-[10px] block">{tx('eligibility')}</span>
                       <span className="font-extrabold text-gray-900 text-sm block">{scheme.whoCanApply}</span>
                     </div>
                   </div>
@@ -438,7 +307,7 @@ export function GovernmentSchemesPage() {
 
               {filteredSchemes.length === 0 && (
                 <div className="bg-white rounded-3xl border border-gray-200 p-8 text-center space-y-2">
-                  <p className="text-base font-bold text-gray-700">No schemes found matching your search.</p>
+                  <p className="text-base font-bold text-gray-700">{tx('noResults')}</p>
                   <button
                     onClick={() => { setSearchQuery(''); setSelectedCategory('All Schemes'); }}
                     className="text-xs font-bold text-[#173f31] underline cursor-pointer"
@@ -453,7 +322,7 @@ export function GovernmentSchemesPage() {
                 <div className="relative z-10 space-y-2 max-w-lg">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-800/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
                     <Sparkles size={13} />
-                    <span>AI Personalized Matching</span>
+                    <span>{tx('matching')}</span>
                   </div>
                   <h3 className="text-2xl font-extrabold text-white">
                     Not sure what to apply for?
@@ -466,7 +335,7 @@ export function GovernmentSchemesPage() {
                     onClick={() => alert("AI Assessment flow initiated...")}
                     className="mt-2 px-6 py-3 rounded-xl bg-white hover:bg-emerald-50 text-[#173f31] text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer inline-flex items-center gap-2"
                   >
-                    <span>Start Assessment</span>
+                    <span>{tx('assessment')}</span>
                     <ArrowRight size={14} />
                   </button>
                 </div>
@@ -566,7 +435,7 @@ export function GovernmentSchemesPage() {
                   onClick={() => alert("Opening full Application History...")}
                   className="text-xs font-bold text-[#173f31] hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
-                  <span>View Application History</span>
+                  <span>{tx('history')}</span>
                   <ChevronRight size={14} />
                 </button>
               </div>
@@ -590,7 +459,7 @@ export function GovernmentSchemesPage() {
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f31] hover:text-emerald-800 transition cursor-pointer pt-1"
               >
                 <MapPin size={14} className="text-emerald-700" />
-                <span className="underline">Locate nearby CSC</span>
+                <span className="underline">{tx('nearby')}</span>
                 <ArrowRight size={12} />
               </button>
             </div>
