@@ -120,6 +120,7 @@ function SummaryCard({ label, mainValue, subText, isDark = false }) {
  * Reusable Bid Card Component
  */
 function BidCard({ bid, onViewOffer, onAcceptBid }) {
+  const tx = usePageText('bids');
   return (
     <div
       className={`bg-white rounded-3xl border p-5 sm:p-6 shadow-2xs space-y-4 relative transition hover:shadow-md ${
