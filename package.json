@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "node backend/server.js",
     "dev": "vite --host",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview --host",
-    "server": "node --env-file=.env backend/server.js",
+    "server": "node backend/server.js",
     "dev:backend": "node --env-file=.env backend/server.js",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
