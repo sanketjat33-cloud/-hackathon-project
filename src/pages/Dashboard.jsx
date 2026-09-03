@@ -195,12 +195,12 @@ export function DashboardPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative pb-20 font-sans selection:bg-emerald-100">
       
       {/* ==================== 1. HEADER / NAVBAR ==================== */}
-      <header className="w-full bg-white border-b border-gray-200/80 h-[80px] flex items-center sticky top-0 z-40 shadow-2xs">
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-full">
+      <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
+        <div className="max-w-6xl w-full mx-auto px-3 sm:px-5 lg:px-6 flex items-center justify-between h-full">
           
           {/* Left — AGROVA Logo & Wordmark */}
           <div className="flex items-center gap-3.5 flex-shrink-0 cursor-pointer" onClick={() => navigate('/dashboard')}>
-            <div className="w-[52px] h-[52px] sm:w-[54px] sm:h-[54px] rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
+            <div className="w-[52px] h-[52px] sm:w-[54px] sm:h-[54px] rounded-xl bg-[#173f31] text-white flex items-center justify-center flex-shrink-0 overflow-hidden shadow-xs">
               <img
                 src={agrovaLogo}
                 alt="Agrova logo"

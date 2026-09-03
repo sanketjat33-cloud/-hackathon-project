@@ -24,7 +24,7 @@ export function AppHeader({ activeKey, notification }) {
     <header className="w-full bg-white border-b border-gray-200/80 h-[72px] flex items-center sticky top-0 z-40 shadow-2xs">
       <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex items-center justify-between h-full">
         <button type="button" className="flex items-center gap-3 flex-shrink-0 cursor-pointer" onClick={() => navigate('/dashboard')} aria-label="Agrova">
-          <span className="w-[52px] h-[52px] sm:w-[54px] sm:h-[54px] rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 overflow-hidden shadow-xs">
+          <span className="w-[52px] h-[52px] sm:w-[54px] sm:h-[54px] rounded-xl bg-[#173f31] text-white flex items-center justify-center overflow-hidden shadow-xs">
             <img src={agrovaLogo} alt="Agrova logo" className="w-full h-full object-contain" />
           </span>
           <span className="flex flex-col text-left">
