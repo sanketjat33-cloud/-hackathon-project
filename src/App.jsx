@@ -57,6 +57,7 @@ function App() {
         <Route path="/bids" element={<BidsPage />} />
         <Route path="/my-bids" element={<BidsPage />} />
         <Route path="/update-progress" element={<ProgressUpdatePage />} />
+        <Route path="/update-progress/:cropId" element={<ProgressUpdatePage />} />
         <Route path="/progress-update" element={<ProgressUpdatePage />} />
         <Route path="/crop-roadmap" element={<CropRoadmapPage />} />
         <Route path="/roadmap" element={<CropRoadmapPage />} />

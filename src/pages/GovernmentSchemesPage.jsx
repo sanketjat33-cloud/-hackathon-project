@@ -127,6 +127,8 @@ export function GovernmentSchemesPage() {
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [notice, setNotice] = useState('');
   const [applyingScheme, setApplyingScheme] = useState('');
+  const [isMatching, setIsMatching] = useState(false);
+  const [matchResults, setMatchResults] = useState([]);
 
   const handleApply = async (scheme) => {
     const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
@@ -142,6 +144,24 @@ export function GovernmentSchemesPage() {
     }
   };
 
+  const handleSchemeMatch = async () => {
+    setIsMatching(true);
+    setNotice('');
+    try {
+      const response = await api.matchSchemes({
+        crops: ['Wheat (PBW 343)'],
+        location: 'Sangrur, Punjab',
+        farmSize: '3',
+      });
+      setMatchResults(response.recommendations || []);
+      setNotice(response.message || 'Your best matching schemes are ready.');
+    } catch (error) {
+      setNotice(`Could not complete AI matching: ${error.message}`);
+    } finally {
+      setIsMatching(false);
+    }
+  };
+
   // Filter logic
   const filteredSchemes = schemesData.filter((scheme) => {
     const matchesCategory =
@@ -153,6 +173,10 @@ export function GovernmentSchemesPage() {
       scheme.badgeCategory.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesCategory && matchesSearch;
+  }).sort((a, b) => {
+    const aScore = matchResults.find((match) => match.id === a.id)?.score || 0;
+    const bScore = matchResults.find((match) => match.id === b.id)?.score || 0;
+    return bScore - aScore;
   });
 
   const handleNavClick = (tabName) => {
@@ -195,8 +219,7 @@ export function GovernmentSchemesPage() {
           <button
             type="button"
             onClick={() => {
-              setNotice('AI Scheme Matcher is ready. Review the schemes recommended for your farm.');
-              setSelectedCategory('All Schemes');
+              handleSchemeMatch();
             }}
             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold transition cursor-pointer shadow-xs self-start sm:self-auto flex-shrink-0"
           >
@@ -368,13 +391,11 @@ export function GovernmentSchemesPage() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => {
-                      setNotice('AI assessment started. Select a scheme below to review eligibility.');
-                      setSelectedCategory('All Schemes');
-                    }}
-                    className="mt-2 px-6 py-3 rounded-xl bg-white hover:bg-emerald-50 text-[#173f31] text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer inline-flex items-center gap-2"
+                    onClick={handleSchemeMatch}
+                    disabled={isMatching}
+                    className="mt-2 px-6 py-3 rounded-xl bg-white hover:bg-emerald-50 disabled:opacity-60 text-[#173f31] text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer inline-flex items-center gap-2"
                   >
-                    <span>{tx('assessment')}</span>
+                    <span>{isMatching ? 'Matching schemes…' : tx('assessment')}</span>
                     <ArrowRight size={14} />
                   </button>
                 </div>

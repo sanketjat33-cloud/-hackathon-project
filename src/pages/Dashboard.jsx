@@ -83,7 +83,7 @@ export function DashboardPage() {
   const navigate = useNavigate();
 
   const [dashboardData, setDashboardData] = useState({
-    user: { name: 'Ram Singh', role: 'Farmer', location: 'Sangrur, Punjab', season: 'Kharif Season 2026' },
+    user: { name: 'Rajesh', role: 'Farmer', location: 'Sangrur, Punjab', season: 'Kharif Season 2026' },
     stats: { activeCrops: 3, weatherAlert: 'Heavy Rain Expected', activeBids: 5, highestBid: 2550, soilHealth: 'Optimal (pH 6.8)' },
     market: { newBids: 7, highestBid: 2550, buyer: 'AgriCorp WholeSalers Sangrur' },
     ai: { welcome: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?' }
@@ -777,13 +777,22 @@ export function DashboardPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => navigate('/my-crops/wheat-pbw-343')}
-              className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
-            >
-              {t.features?.viewDetails || 'View My Crop'}
-            </button>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => navigate('/my-crops/wheat-pbw-343')}
+                className="px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#173f31] text-xs font-bold transition cursor-pointer"
+              >
+                {t.features?.viewDetails || 'View My Crop'}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/update-progress/wheat-pbw-343')}
+                className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+              >
+                {t.dashboard.updateProgress}
+              </button>
+            </div>
           </div>
 
           {/* Horizontal Timeline Stages */}

@@ -63,6 +63,10 @@ export const api = {
     method: 'POST',
     body: JSON.stringify(payload),
   }),
+  matchSchemes: (payload) => request('/schemes/match', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
   askAi: (payload) => request('/ai/chat', {
     method: 'POST',
     body: JSON.stringify(payload),

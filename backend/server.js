@@ -38,7 +38,7 @@ const userIdFor = (mobileNumber) => `user-${mobileNumber}`;
 const demoDashboard = {
   user: {
     id: 'demo-user',
-    name: 'Ram Singh',
+    name: 'Rajesh',
     role: 'Farmer',
     location: 'Sangrur, Punjab',
     season: 'Kharif Season 2026',
@@ -78,6 +78,14 @@ const marketPrices = [
   { name: 'Mustard', price: 5820, unit: 'Quintal', change: -0.8, market: 'Churu Mandi' },
   { name: 'Maize', price: 2180, unit: 'Quintal', change: 1.2, market: 'Churu Mandi' },
   { name: 'Cotton', price: 7120, unit: 'Quintal', change: 3.1, market: 'Churu Mandi' },
+];
+
+const schemeMatches = [
+  { id: 'pm-kisan', score: 98, reason: 'Income support is available for eligible small and marginal farmers.' },
+  { id: 'pmfby', score: 94, reason: 'Crop insurance can protect your seasonal crop against weather and yield risks.' },
+  { id: 'kcc', score: 88, reason: 'This credit option can help cover crop input and working-capital costs.' },
+  { id: 'sub-mission-agri-mechanization', score: 78, reason: 'Equipment support may reduce machinery costs for farm operations.' },
+  { id: 'certified-seed-subsidy', score: 74, reason: 'Certified seed support can improve crop establishment and productivity.' },
 ];
 
 const normalizePhone = (mobileNumber) => {
@@ -552,6 +560,18 @@ app.post('/api/users/:userId/scheme-applications', (req, res) => {
   database.schemeApplications[req.params.userId] = applications;
   saveData();
   res.status(201).json({ ok: true, application, applications });
+});
+
+app.post('/api/schemes/match', (req, res) => {
+  const { crops = [], location = '', farmSize = '' } = req.body || {};
+  const cropText = Array.isArray(crops) ? crops.join(', ') : String(crops || '');
+  const locationText = String(location || '').trim();
+  const sizeText = String(farmSize || '').trim();
+  const recommendations = schemeMatches.map((match) => ({
+    ...match,
+    profileNote: [cropText && `Based on ${cropText}`, locationText && `for ${locationText}`, sizeText && `with ${sizeText} acres`].filter(Boolean).join(' '),
+  }));
+  res.json({ ok: true, recommendations, message: 'Your best matching schemes are ready.' });
 });
 
 app.post('/api/ai/chat', async (req, res) => {

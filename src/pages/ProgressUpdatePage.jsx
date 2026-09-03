@@ -1,7 +1,7 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatImg from '../assets/wheat-field.png';
 import { AIButton } from '../components/AIButton';
@@ -37,6 +37,7 @@ const growthStatusOptions = [
  */
 export function ProgressUpdatePage() {
   const navigate = useNavigate();
+  const { cropId = 'wheat-pbw-343' } = useParams();
   const tx = usePageText('progress');
   const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
 
@@ -52,6 +53,24 @@ export function ProgressUpdatePage() {
   const [photos, setPhotos] = useState([wheatImg]);
   const [isRecording, setIsRecording] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [recentProgress, setRecentProgress] = useState(null);
+  const [progressHistory, setProgressHistory] = useState([]);
+
+  useEffect(() => {
+    api.getProgress(userId, cropId)
+      .then(({ progress }) => {
+        setProgressHistory(progress || []);
+        const latest = progress?.[progress.length - 1];
+        if (latest) {
+          setRecentProgress(latest);
+          setGrowthStatus(latest.growthStatus || 'Growing Well');
+          setPlantHeight(String(latest.plantHeight || 18));
+          setObservationNotes(latest.observationNotes || '');
+        }
+      })
+      .catch((error) => console.warn('Progress history fetch failed:', error.message));
+  }, [cropId, userId]);
 
   const handleNavClick = (tabName) => {
     setActiveTab(tabName);
@@ -76,15 +95,40 @@ export function ProgressUpdatePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSaved(true);
+    setIsSaved(false);
+    setSaveError('');
     try {
-      await api.saveProgress(userId, { growthStatus, plantHeight, observationNotes, photos });
+      const response = await api.saveProgress(userId, { cropId, growthStatus, plantHeight, observationNotes, photos });
+      setRecentProgress(response.record);
+      setProgressHistory((previous) => [...previous, response.record]);
+      setIsSaved(true);
       navigate('/dashboard');
     } catch (error) {
-      setIsSaved(false);
-      console.warn('Progress save failed:', error.message);
+      setSaveError(error.message);
     }
   };
+
+  const fallbackChartPoints = [
+    { x: 0, y: 110, label: 'Day 40 (15cm)' },
+    { x: 80, y: 90, label: 'Day 42 (16cm)' },
+    { x: 160, y: 70, label: 'Day 44 (17cm)' },
+    { x: 240, y: 50, label: 'Day 46 (17.5cm)' },
+    { x: 320, y: 35, label: 'Day 48 (18cm)' },
+  ];
+  const chartPoints = progressHistory.length
+    ? progressHistory.slice(-6).map((record, index, records) => {
+      const heights = records.map((item) => Number(item.plantHeight) || 0);
+      const minHeight = Math.min(...heights);
+      const maxHeight = Math.max(...heights);
+      const range = maxHeight - minHeight || 1;
+      return {
+        x: records.length === 1 ? 200 : (index / (records.length - 1)) * 400,
+        y: 110 - (((Number(record.plantHeight) || 0) - minHeight) / range) * 90,
+        label: `Update ${progressHistory.length - records.length + index + 1} (${record.plantHeight}cm)`,
+      };
+    })
+    : fallbackChartPoints;
+  const chartPath = chartPoints.map((point, index) => `${index ? 'L' : 'M'} ${point.x},${point.y}`).join(' ');
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
@@ -122,6 +166,7 @@ export function ProgressUpdatePage() {
                 </h2>
 
                 <div className="grid grid-cols-2 gap-3">
+                  {saveError && <p className="text-sm text-red-600">{saveError}</p>}
                   <button
                     type="button"
                     onClick={handleAddPhoto}
@@ -243,6 +288,7 @@ export function ProgressUpdatePage() {
                 </div>
               </div>
 
+              {saveError && <p className="text-sm text-red-600">{saveError}</p>}
               {/* {tx('save')} Button */}
               <button
                 type="submit"
@@ -318,7 +364,7 @@ export function ProgressUpdatePage() {
 
                   {/* Trend Line */}
                   <path
-                    d="M 0,110 L 80,90 L 160,70 L 240,50 L 320,35 L 400,20"
+                    d={chartPath}
                     fill="none"
                     stroke="#10b981"
                     strokeWidth="3"
@@ -326,21 +372,14 @@ export function ProgressUpdatePage() {
                   />
 
                   {/* Data Point Circles */}
-                  <circle cx="0" cy="110" r="4" fill="#173f31" />
-                  <circle cx="80" cy="90" r="4" fill="#173f31" />
-                  <circle cx="160" cy="70" r="4" fill="#173f31" />
-                  <circle cx="240" cy="50" r="4" fill="#173f31" />
-                  <circle cx="320" cy="35" r="4" fill="#173f31" />
-                  <circle cx="400" cy="20" r="5" fill="#173f31" stroke="#ffffff" strokeWidth="2" />
+                  {chartPoints.map((point, index) => (
+                    <circle key={`${point.x}-${point.y}`} cx={point.x} cy={point.y} r={index === chartPoints.length - 1 ? 5 : 4} fill="#173f31" stroke={index === chartPoints.length - 1 ? '#ffffff' : 'none'} strokeWidth="2" />
+                  ))}
                 </svg>
 
                 {/* X-Axis Labels */}
                 <div className="flex items-center justify-between text-[10px] font-bold text-gray-400 pt-2 border-t border-gray-100">
-                  <span>Day 40 (15cm)</span>
-                  <span>Day 42 (16cm)</span>
-                  <span>Day 44 (17cm)</span>
-                  <span>Day 46 (17.5cm)</span>
-                  <span>Day 48 (18cm)</span>
+                  {chartPoints.map((point) => <span key={point.label}>{point.label}</span>)}
                 </div>
               </div>
             </div>

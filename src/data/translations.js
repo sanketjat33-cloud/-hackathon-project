@@ -64,7 +64,7 @@ export const translations = {
       invalidOtp: 'Please enter the complete 6-digit OTP.',
     },
     dashboard: {
-      greeting: 'Namaste, Ram Singh! 🌾',
+      greeting: 'Namaste, Rajesh! 🌾',
       summary: 'Here is your farm summary for Sangrur, Punjab • Kharif Season 2026',
       verified: 'Verified Farmer',
       newCrop: 'New Crop',
@@ -515,7 +515,7 @@ const cropStageTranslations = {
 };
 
 const dashboardGreetingTranslations = {
-  en: { greeting: 'Namaste, Ram Singh! 🌾', summary: 'Here is your farm summary for Sangrur, Punjab • Kharif Season 2026', verified: 'Verified Farmer', newCrop: 'New Crop', cropManagement: 'CROP MANAGEMENT', heroTitle: 'Grow Smarter with Agrova', heroText: 'Get personalized crop guidance based on your specific crop type, location, and real-time weather data.', explore: 'Explore Guidance', actionRequired: 'Action Required Today', actionText: 'Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.' },
+  en: { greeting: 'Namaste, Rajesh! 🌾', summary: 'Here is your farm summary for Sangrur, Punjab • Kharif Season 2026', verified: 'Verified Farmer', newCrop: 'New Crop', cropManagement: 'CROP MANAGEMENT', heroTitle: 'Grow Smarter with Agrova', heroText: 'Get personalized crop guidance based on your specific crop type, location, and real-time weather data.', explore: 'Explore Guidance', actionRequired: 'Action Required Today', actionText: 'Rain expected tomorrow. We recommend avoiding irrigation today to prevent waterlogging for your Wheat crop.' },
   hi: { greeting: 'नमस्ते, राम सिंह! 🌾', summary: 'संगरूर, पंजाब • खरीफ सीज़न 2026 के लिए आपका खेत सारांश', verified: 'सत्यापित किसान', newCrop: 'नई फसल', cropManagement: 'फसल प्रबंधन', heroTitle: 'Agrova के साथ स्मार्ट खेती करें', heroText: 'आपकी फसल, स्थान और वास्तविक मौसम डेटा के अनुसार व्यक्तिगत मार्गदर्शन पाएं।', explore: 'मार्गदर्शन देखें', actionRequired: 'आज कार्रवाई आवश्यक है', actionText: 'कल बारिश की संभावना है। गेहूं की फसल में जलभराव से बचने के लिए आज सिंचाई न करें।' },
   pa: { greeting: 'ਨਮਸਤੇ, ਰਾਮ ਸਿੰਘ! 🌾', summary: 'ਸੰਗਰੂਰ, ਪੰਜਾਬ • ਖਰੀਫ ਸੀਜ਼ਨ 2026 ਲਈ ਤੁਹਾਡਾ ਖੇਤ ਸਾਰांश', verified: 'ਪ੍ਰਮਾਣਕ੍ਰਿਤ ਕਿਸਾਨ', newCrop: 'ਨਵੀਂ ਫਸਲ', cropManagement: 'ਫਸਲ ਪ੍ਰਬੰਧਨ', heroTitle: 'Agrova ਨਾਲ ਸਮਰੱਥ ਖੇਤੀ ਕਰੋ', heroText: 'ਤੁਹਾਡੀ ਫਸਲ, ਸਥਾਨ ਅਤੇ ਲਾਈਵ ਮੌਸਮ ਦੇ ਅੰਕੜਿਆਂ ਅਨੁਸਾਰ ਵਿਅਕਤੀਗਤ ਦਿਸ਼ਾ-ਨਿਰਦੇਸ਼ ਲਵੋ।', explore: 'ਦਿਸ਼ਾ-ਨਿਰਦੇਸ਼ ਵੇਖੋ', actionRequired: 'ਅੱਜ ਕਾਰਵਾਈ ਜ਼ਰੂਰੀ ਹੈ', actionText: 'ਕੱਲ੍ਹ ਮੀਂਹ ਦੀ ਸੰਭਾਵਨਾ ਹੈ। ਕਣਕ ਦੀ ਫਸਲ ਵਿੱਚ ਪਾਣੀ ਭਰਨ ਤੋਂ ਬਚਣ ਲਈ ਅੱਜ ਸਿੰਚਾਈ ਨਾ ਕਰੋ।' },
   mr: { greeting: 'नमस्कार, राम सिंह! 🌾', summary: 'संगरूर, पंजाब • खरीप हंगाम 2026 साठी तुमचा शेत सारांश', verified: 'सत्यापित शेतकरी', newCrop: 'नवीन पीक', cropManagement: 'पीक व्यवस्थापन', heroTitle: 'Agrova सोबत स्मार्ट शेती करा', heroText: 'तुमच्या पिकासाठी वैयक्तिक मार्गदर्शन मिळवा.', explore: 'मार्गदर्शन पहा', actionRequired: 'आज कृती आवश्यक', actionText: 'उद्या पावसाची शक्यता आहे. गव्हात पाणी साचू नये म्हणून आज सिंचन टाळा.' },
