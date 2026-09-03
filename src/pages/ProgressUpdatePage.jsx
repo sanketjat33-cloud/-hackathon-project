@@ -1,7 +1,7 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
 import api from '../services/api';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatImg from '../assets/wheat-field.png';
@@ -57,6 +57,11 @@ export function ProgressUpdatePage() {
   const [saveError, setSaveError] = useState('');
   const [recentProgress, setRecentProgress] = useState(null);
   const [progressHistory, setProgressHistory] = useState([]);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [cameraError, setCameraError] = useState('');
+  const videoRef = useRef(null);
+  const cameraStreamRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     api.getProgress(userId, cropId)
@@ -90,8 +95,61 @@ export function ProgressUpdatePage() {
     }
   };
 
-  const handleAddPhoto = () => {
-    setPhotos([...photos, wheatImg]);
+  useEffect(() => () => {
+    cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+  }, []);
+
+  const handleOpenCamera = async () => {
+    setCameraError('');
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setCameraError('Camera access is not supported by this browser.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      cameraStreamRef.current = stream;
+      setIsCameraOpen(true);
+      requestAnimationFrame(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      });
+    } catch (error) {
+      setCameraError(error.name === 'NotAllowedError'
+        ? 'Camera permission was denied. Allow camera access in your browser settings and try again.'
+        : 'Unable to access the camera. Please check that it is available and try again.');
+    }
+  };
+
+  const handleCloseCamera = () => {
+    cameraStreamRef.current?.getTracks().forEach((track) => track.stop());
+    cameraStreamRef.current = null;
+    setIsCameraOpen(false);
+  };
+
+  const handleCapturePhoto = () => {
+    const video = videoRef.current;
+    if (!video || !video.videoWidth || !video.videoHeight) {
+      setCameraError('Camera is still starting. Please try again in a moment.');
+      return;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    setPhotos((previous) => [...previous, canvas.toDataURL('image/jpeg', 0.85)]);
+    handleCloseCamera();
+  };
+
+  const handlePhotoUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setPhotos((previous) => [...previous, reader.result]);
+    reader.onerror = () => setSaveError('The selected photo could not be read. Please try another image.');
+    reader.readAsDataURL(file);
+    event.target.value = '';
   };
 
   const handleSubmit = async (e) => {
@@ -167,10 +225,12 @@ export function ProgressUpdatePage() {
                 </h2>
 
                 <div className="grid grid-cols-2 gap-3">
-                  {saveError && <p className="text-sm text-red-600">{saveError}</p>}
+                  {(saveError || cameraError) && (
+                    <p className="col-span-2 text-sm text-red-600">{saveError || cameraError}</p>
+                  )}
                   <button
                     type="button"
-                    onClick={handleAddPhoto}
+                    onClick={handleOpenCamera}
                     className="py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Camera size={16} />
@@ -179,13 +239,49 @@ export function ProgressUpdatePage() {
 
                   <button
                     type="button"
-                    onClick={handleAddPhoto}
+                    onClick={() => fileInputRef.current?.click()}
                     className="py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Upload size={16} />
                     <span>{tx('upload')}</span>
                   </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
                 </div>
+
+                {isCameraOpen && (
+                  <div className="rounded-2xl border border-emerald-200 bg-[#173f31] p-3 space-y-3">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full max-h-72 rounded-xl object-cover bg-black"
+                    />
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={handleCapturePhoto}
+                        className="flex-1 py-2.5 rounded-xl bg-white text-[#173f31] text-xs font-bold hover:bg-emerald-50 transition"
+                      >
+                        Capture Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCloseCamera}
+                        className="px-4 py-2.5 rounded-xl border border-white/30 text-white text-xs font-bold hover:bg-white/10 transition"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Photo Previews */}
                 {photos.length > 0 && (
