@@ -193,7 +193,7 @@ export function MyCropsPage() {
       </footer>
 
       {/* Floating AI Assistant Button (Reusing exact Home/Dashboard AIButton component) */}
-      <AIButton onClick={() => navigate('/dashboard')} />
+      <AIButton onClick={() => navigate('/dashboard?ai=1')} />
 
       {/* Add New Crop Modal */}
       {isAddModalOpen && (

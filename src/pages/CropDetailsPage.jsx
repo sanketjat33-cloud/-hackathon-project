@@ -197,7 +197,7 @@ export function CropDetailsPage() {
       </footer>
 
       {/* ==================== 4. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => navigate('/dashboard')} />
+      <AIButton onClick={() => navigate('/dashboard?ai=1')} />
 
     </div>
   );

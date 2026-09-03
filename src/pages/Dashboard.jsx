@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import farmerHero from '../assets/farmer-hero.png';
 import marketplaceImage from '../assets/marketplace-image.png';
@@ -81,6 +81,7 @@ const heroImages = [
  */
 export function DashboardPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [dashboardData, setDashboardData] = useState({
     user: { name: 'Rajesh', role: 'Farmer', location: 'Sangrur, Punjab', season: 'Kharif Season 2026' },
@@ -107,6 +108,13 @@ export function DashboardPage() {
 
   // Active Modal State for Functional Buttons
   const [activeModal, setActiveModal] = useState(null);
+
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('ai') === '1') {
+      setActiveModal('ai');
+      navigate('/dashboard', { replace: true });
+    }
+  }, [location.search, navigate]);
 
   // Hero Section 4-Image Carousel State & Autoplay Effect
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);

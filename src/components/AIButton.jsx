@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../hooks/useLanguage';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * AIButton component for floating Agrova AI assistance.
@@ -10,11 +11,12 @@ import { useLanguage } from '../hooks/useLanguage';
  */
 export function AIButton({ onClick }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={onClick || (() => navigate('/dashboard?ai=1'))}
       aria-label="Ask Agrova AI"
       className={`
         fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40

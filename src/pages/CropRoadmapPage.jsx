@@ -438,7 +438,7 @@ export function CropRoadmapPage() {
       </footer>
 
       {/* ==================== 9. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => navigate('/dashboard')} />
+      <AIButton onClick={() => navigate('/dashboard?ai=1')} />
 
     </div>
   );
