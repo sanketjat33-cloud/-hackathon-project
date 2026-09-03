@@ -149,13 +149,10 @@ export function MyCropsPage() {
               {/* Bottom Light-Gray Button Container */}
               <button
                 type="button"
-                onClick={() => {
-                  setSelectedDetailCrop(crop);
-                  setIsDetailModalOpen(true);
-                }}
+                onClick={() => navigate(`/my-crops/${crop.id}`)}
                 className="w-full py-3 px-4 rounded-2xl bg-gray-100 hover:bg-gray-200/80 text-gray-800 text-xs font-bold transition flex items-center justify-between cursor-pointer group-hover:bg-emerald-50 group-hover:text-[#173f31]"
               >
-                <span>{t.features.viewDetails || tx('details')}</span>
+                <span>View My Crop</span>
                 <ChevronRight size={16} className="text-gray-500 group-hover:text-[#173f31] group-hover:translate-x-0.5 transition-transform" />
               </button>
             </div>
