@@ -1,5 +1,6 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
+import api from '../services/api';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';

@@ -127,8 +127,6 @@ export function GovernmentSchemesPage() {
   const [activeMenuId, setActiveMenuId] = useState(null);
   const [notice, setNotice] = useState('');
   const [applyingScheme, setApplyingScheme] = useState('');
-  const [isMatching, setIsMatching] = useState(false);
-  const [matchResults, setMatchResults] = useState([]);
 
   const handleApply = async (scheme) => {
     const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
@@ -144,23 +142,7 @@ export function GovernmentSchemesPage() {
     }
   };
 
-  const handleSchemeMatch = async () => {
-    setIsMatching(true);
-    setNotice('');
-    try {
-      const response = await api.matchSchemes({
-        crops: ['Wheat (PBW 343)'],
-        location: 'Sangrur, Punjab',
-        farmSize: '3',
-      });
-      setMatchResults(response.recommendations || []);
-      setNotice(response.message || 'Your best matching schemes are ready.');
-    } catch (error) {
-      setNotice(`Could not complete AI matching: ${error.message}`);
-    } finally {
-      setIsMatching(false);
-    }
-  };
+  const handleSchemeMatch = () => navigate('/scheme-matcher');
 
   // Filter logic
   const filteredSchemes = schemesData.filter((scheme) => {
@@ -173,10 +155,6 @@ export function GovernmentSchemesPage() {
       scheme.badgeCategory.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesCategory && matchesSearch;
-  }).sort((a, b) => {
-    const aScore = matchResults.find((match) => match.id === a.id)?.score || 0;
-    const bScore = matchResults.find((match) => match.id === b.id)?.score || 0;
-    return bScore - aScore;
   });
 
   const handleNavClick = (tabName) => {
@@ -392,10 +370,9 @@ export function GovernmentSchemesPage() {
                   <button
                     type="button"
                     onClick={handleSchemeMatch}
-                    disabled={isMatching}
                     className="mt-2 px-6 py-3 rounded-xl bg-white hover:bg-emerald-50 disabled:opacity-60 text-[#173f31] text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer inline-flex items-center gap-2"
                   >
-                    <span>{isMatching ? 'Matching schemes…' : tx('assessment')}</span>
+                    <span>{tx('assessment')}</span>
                     <ArrowRight size={14} />
                   </button>
                 </div>

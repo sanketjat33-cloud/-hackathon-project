@@ -11,6 +11,7 @@ import CropDetailsPage from './pages/CropDetailsPage.jsx';
 import SelectCropPage from './pages/SelectCropPage.jsx';
 import SelectedCropPage from './pages/SelectedCropPage.jsx';
 import GovernmentSchemesPage from './pages/GovernmentSchemesPage.jsx';
+import SchemeMatcherPage from './pages/SchemeMatcherPage.jsx';
 import MarketPage from './pages/MarketPage.jsx';
 import SellCropPage from './pages/SellCropPage.jsx';
 import BidsPage from './pages/BidsPage.jsx';
@@ -51,6 +52,7 @@ function App() {
         <Route path="/my-crops/:cropId" element={<CropDetailsPage />} />
         <Route path="/crops/:cropId" element={<CropDetailsPage />} />
         <Route path="/government-schemes" element={<GovernmentSchemesPage />} />
+        <Route path="/scheme-matcher" element={<SchemeMatcherPage />} />
         <Route path="/market" element={<MarketPage />} />
         <Route path="/sell-crop" element={<SellCropPage />} />
         <Route path="/sell" element={<SellCropPage />} />
