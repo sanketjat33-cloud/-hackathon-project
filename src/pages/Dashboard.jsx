@@ -430,7 +430,7 @@ export function DashboardPage() {
             </div>
             <button
               type="button"
-              onClick={() => setActiveModal('new-crop')}
+              onClick={() => navigate('/select-crop')}
               className="w-full h-9 flex items-center justify-center gap-1.5 px-4 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition cursor-pointer shadow-xs"
             >
               <PlusCircle size={14} className="text-emerald-300 flex-shrink-0" />

@@ -164,7 +164,7 @@ export function MyCropsPage() {
 
           {/* RIGHT CARD: ADD NEW CROP CARD */}
           <div 
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => navigate('/select-crop')}
             className="bg-white rounded-3xl border-2 border-dashed border-gray-300 hover:border-emerald-600 hover:bg-emerald-50/20 transition p-8 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer min-h-[320px] sm:min-h-[340px] group shadow-2xs"
           >
             {/* Plus Icon inside Light-Gray Rounded Square */}
