@@ -4,6 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatField from '../assets/wheat-field.png';
+import riceImg from '../assets/rice.jpg';
+import maizeImg from '../assets/maize.jpg';
+import mustardImg from '../assets/mustard.jpg';
+import chickpeaImg from '../assets/chickpea.jpg';
+import cottonImg from '../assets/cotton.jpg';
+import tomatoImg from '../assets/tomato.jpg';
 import { AIButton } from '../components/AIButton';
 import { useLanguage } from '../hooks/useLanguage';
 import api from '../services/api';
@@ -42,6 +48,7 @@ export function MyCropsPage() {
   const [saveError, setSaveError] = useState('');
   const [saving, setSaving] = useState(false);
   const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
+  const cropImages = { wheat: wheatField, rice: riceImg, paddy: riceImg, maize: maizeImg, mustard: mustardImg, chickpea: chickpeaImg, cotton: cottonImg, tomato: tomatoImg };
   useEffect(() => {
     api.getCrops(userId).then((response) => setCrops(response.crops || [])).catch((error) => {
       console.warn('Crop fetch failed:', error.message);
@@ -119,8 +126,8 @@ export function MyCropsPage() {
             {/* Top Image Portion with Overlay Badge */}
             <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-gray-100">
               <img
-                src={wheatField}
-                alt="Golden wheat field at sunset"
+                src={cropImages[crop.name.toLowerCase().split(' ')[0]] || wheatField}
+                alt={`${crop.name} crop`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               
@@ -189,7 +196,7 @@ export function MyCropsPage() {
       </footer>
 
       {/* Floating AI Assistant Button (Reusing exact Home/Dashboard AIButton component) */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
       {/* Add New Crop Modal */}
       {isAddModalOpen && (

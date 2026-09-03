@@ -1,7 +1,8 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 import agrovaLogo from '../assets/agrova-logo.png';
 import { AIButton } from '../components/AIButton';
 import {
@@ -98,9 +99,24 @@ export function MarketPage() {
   const [isMktOpen, setIsMktOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [cropPrices, setCropPrices] = useState(initialCropPrices);
+
+  useEffect(() => {
+    api.getMarket({ market: selectedMarket })
+      .then(({ prices }) => {
+        if (prices?.length) {
+          setCropPrices(prices.map((item) => ({
+            id: item.name.toLowerCase(), name: item.name, price: `₹${item.price.toLocaleString('en-IN')}`,
+            change: `${item.change >= 0 ? '↑' : '↓'} ${Math.abs(item.change)}%`,
+            percentage: `${item.change >= 0 ? '+' : ''}${item.change}%`, isUp: item.change >= 0,
+          })));
+        }
+      })
+      .catch((error) => console.warn('Market data fetch failed:', error.message));
+  }, [selectedMarket]);
 
   // Filter crop prices based on search input
-  const filteredPrices = initialCropPrices.filter((item) =>
+  const filteredPrices = cropPrices.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -477,11 +493,11 @@ export function MarketPage() {
       <footer className="w-full bg-[#f8faf9] border-t border-gray-200 mt-auto py-6">
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
-            <a href="#privacy" onClick={(e) => { e.preventDefault(); alert("Privacy Policy"); }} className="hover:text-[#173f31]">Privacy Policy</a>
+            <a href="#privacy" className="hover:text-[#173f31]">Privacy Policy</a>
             <span>•</span>
-            <a href="#terms" onClick={(e) => { e.preventDefault(); alert("Terms of Service"); }} className="hover:text-[#173f31]">Terms of Service</a>
+            <a href="#terms" className="hover:text-[#173f31]">Terms of Service</a>
             <span>•</span>
-            <a href="#support" onClick={(e) => { e.preventDefault(); alert("Support"); }} className="hover:text-[#173f31]">Support</a>
+            <a href="#support" className="hover:text-[#173f31]">Support</a>
           </div>
 
           <p className="text-xs text-gray-500 font-medium">
@@ -491,7 +507,7 @@ export function MarketPage() {
       </footer>
 
       {/* ==================== 10. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

@@ -248,7 +248,7 @@ export function SelectCropPage() {
       </footer>
 
       {/* ==================== 8. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

@@ -25,6 +25,12 @@ const loadData = () => {
 };
 
 const database = loadData();
+database.users = database.users || {};
+database.crops = database.crops || {};
+database.listings = database.listings || {};
+database.progress = database.progress || {};
+database.schemeApplications = database.schemeApplications || {};
+database.bids = database.bids || {};
 const saveData = () => fs.writeFileSync(dataPath, JSON.stringify(database, null, 2));
 const getUser = (id) => database.users[id];
 const userIdFor = (mobileNumber) => `user-${mobileNumber}`;
@@ -66,6 +72,13 @@ const demoDashboard = {
     welcome: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?',
   },
 };
+
+const marketPrices = [
+  { name: 'Wheat', price: 2550, unit: 'Quintal', change: 2.4, market: 'Churu Mandi' },
+  { name: 'Mustard', price: 5820, unit: 'Quintal', change: -0.8, market: 'Churu Mandi' },
+  { name: 'Maize', price: 2180, unit: 'Quintal', change: 1.2, market: 'Churu Mandi' },
+  { name: 'Cotton', price: 7120, unit: 'Quintal', change: 3.1, market: 'Churu Mandi' },
+];
 
 const normalizePhone = (mobileNumber) => {
   const cleaned = String(mobileNumber || '').replace(/\D/g, '');
@@ -454,6 +467,91 @@ app.delete('/api/users/:userId/crops/:cropId', (req, res) => {
   database.crops[req.params.userId] = nextCrops;
   saveData();
   res.json({ ok: true, crops: nextCrops });
+});
+
+app.get('/api/market', (req, res) => {
+  const search = String(req.query.search || '').toLowerCase();
+  const market = String(req.query.market || '').toLowerCase();
+  const prices = marketPrices.filter((item) =>
+    (!search || item.name.toLowerCase().includes(search))
+    && (!market || item.market.toLowerCase().includes(market))
+  );
+  res.json({ ok: true, prices, updatedAt: new Date().toISOString() });
+});
+
+app.get('/api/users/:userId/listings', (req, res) => {
+  res.json({ ok: true, listings: database.listings[req.params.userId] || [] });
+});
+
+app.post('/api/users/:userId/listings', (req, res) => {
+  const { crop, quantity, unit, farmingType, quality, price, pickupLocation, photos } = req.body || {};
+  if (!String(crop || '').trim() || !Number(quantity) || Number(quantity) <= 0) {
+    return res.status(400).json({ ok: false, message: 'Crop and a positive quantity are required.' });
+  }
+  const listings = database.listings[req.params.userId] || [];
+  const listing = {
+    id: `listing-${Date.now()}`, crop: String(crop).trim(), quantity: Number(quantity),
+    unit: unit || 'Quintal', farmingType: farmingType || 'Conventional',
+    quality: quality || 'Good', price: Number(String(price || '').replace(/,/g, '')) || 0,
+    pickupLocation: pickupLocation || 'Churu, Rajasthan', photos: Array.isArray(photos) ? photos.length : 0,
+    status: 'Active', createdAt: new Date().toISOString(),
+  };
+  listings.push(listing);
+  database.listings[req.params.userId] = listings;
+  saveData();
+  res.status(201).json({ ok: true, listing, listings });
+});
+
+app.get('/api/users/:userId/bids', (req, res) => {
+  res.json({ ok: true, bids: database.bids[req.params.userId] || [] });
+});
+
+app.post('/api/users/:userId/bids/:bidId/accept', (req, res) => {
+  const bids = database.bids[req.params.userId] || [];
+  const bid = bids.find((item) => item.id === req.params.bidId) || { id: req.params.bidId, status: 'Accepted' };
+  bid.status = 'Accepted';
+  database.bids[req.params.userId] = bids.some((item) => item.id === bid.id) ? bids : [...bids, bid];
+  saveData();
+  res.json({ ok: true, bid, message: 'Bid accepted successfully.' });
+});
+
+app.post('/api/users/:userId/bids/:bidId/contact', (req, res) => {
+  const contacts = database.bidContacts || {};
+  database.bidContacts = contacts;
+  contacts[`${req.params.userId}:${req.params.bidId}`] = { createdAt: new Date().toISOString() };
+  saveData();
+  res.json({ ok: true, message: 'Contact request sent successfully.' });
+});
+
+app.get('/api/users/:userId/progress', (req, res) => {
+  const records = database.progress[req.params.userId] || [];
+  const cropId = req.query.cropId;
+  res.json({ ok: true, progress: cropId ? records.filter((item) => item.cropId === cropId) : records });
+});
+
+app.post('/api/users/:userId/progress', (req, res) => {
+  const { cropId = 'wheat-pbw-343', growthStatus, plantHeight, observationNotes, photos = [] } = req.body || {};
+  const records = database.progress[req.params.userId] || [];
+  const record = {
+    id: `progress-${Date.now()}`, cropId, growthStatus, plantHeight: Number(plantHeight) || 0,
+    observationNotes: String(observationNotes || '').trim(), photos: Array.isArray(photos) ? photos.length : 0,
+    createdAt: new Date().toISOString(),
+  };
+  records.push(record);
+  database.progress[req.params.userId] = records;
+  saveData();
+  res.status(201).json({ ok: true, record });
+});
+
+app.post('/api/users/:userId/scheme-applications', (req, res) => {
+  const { schemeId, schemeTitle } = req.body || {};
+  if (!String(schemeId || '').trim()) return res.status(400).json({ ok: false, message: 'Scheme is required.' });
+  const applications = database.schemeApplications[req.params.userId] || [];
+  const application = { id: `application-${Date.now()}`, schemeId, schemeTitle: schemeTitle || '', status: 'Submitted', createdAt: new Date().toISOString() };
+  applications.push(application);
+  database.schemeApplications[req.params.userId] = applications;
+  saveData();
+  res.status(201).json({ ok: true, application, applications });
 });
 
 app.post('/api/ai/chat', async (req, res) => {

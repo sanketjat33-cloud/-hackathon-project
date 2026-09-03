@@ -16,13 +16,8 @@ export function LanguagePage() {
     const { languageId, setLanguage, t } = useLanguage();
 
     const handleContinue = () => {
-        const currentLang = languages.find(
-            (l) => l.id === languageId
-        );
-
         setLanguage(languageId);
 
-        console.log('Selected language:', currentLang);
 
         navigate('/landing');
     };

@@ -167,20 +167,11 @@ export function OTPPage() {
       const nextOtp = response.otp || demoOtp || String(Math.floor(100000 + Math.random() * 900000));
       sessionStorage.setItem('agrova_last_otp', nextOtp);
       sessionStorage.setItem('agrova_last_mobile', rawMobile);
-      console.log('Resending OTP to:', {
-        mobileNumber: rawMobile,
-        role: role,
-        otp: nextOtp,
-      });
     } catch (error) {
       const nextOtp = String(Math.floor(100000 + Math.random() * 900000));
       sessionStorage.setItem('agrova_last_otp', nextOtp);
       sessionStorage.setItem('agrova_last_mobile', rawMobile);
-      console.log('Resend fallback OTP:', {
-        mobileNumber: rawMobile,
-        role: role,
-        otp: nextOtp,
-      });
+      setError('Could not reach the server. A demo OTP was generated; enter it to continue.');
     }
   };
 

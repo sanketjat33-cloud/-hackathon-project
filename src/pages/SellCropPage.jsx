@@ -64,6 +64,8 @@ export function SellCropPage() {
   const [price, setPrice] = useState('2,450');
   const [isLabTested, setIsLabTested] = useState(false);
   const [photos, setPhotos] = useState([wheatImg, mustardImg, maizeImg]);
+  const [pickupLocation, setPickupLocation] = useState('Churu, Rajasthan');
+  const [notice, setNotice] = useState('');
 
   const currentCropImage = cropOptions.find((c) => c.id === selectedCrop)?.image || wheatImg;
 
@@ -100,7 +102,10 @@ export function SellCropPage() {
     setIsSubmitting(true);
     setSubmitError('');
     try {
-      await api.addCrop(userId, { name: selectedCrop, field: `${quantity} ${unit}`, quality, price, farmingType });
+      await api.createListing(userId, {
+        crop: selectedCrop, quantity, unit, quality, price, farmingType,
+        photos, pickupLocation,
+      });
       navigate('/my-crops');
     } catch (error) {
       setSubmitError(error.message);
@@ -113,7 +118,7 @@ export function SellCropPage() {
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. NAVBAR ==================== */}
-      <AppHeader activeKey="sell" notification={tx('notification')} />
+      <AppHeader activeKey="sellCrop" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -349,7 +354,7 @@ export function SellCropPage() {
                 type="button"
                 onClick={() => {
                   setIsLabTested(!isLabTested);
-                  alert(isLabTested ? "Lab test canceled." : "Lab test request added to your listing!");
+                  setNotice(isLabTested ? 'Lab test request canceled.' : 'Lab test request added to your listing.');
                 }}
                 className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-2xs inline-flex items-center gap-1.5 cursor-pointer"
               >
@@ -401,14 +406,14 @@ export function SellCropPage() {
                     <MapPin size={20} />
                   </div>
                   <div>
-                    <h4 className="text-sm font-extrabold text-[#173f31]">Churu, Rajasthan</h4>
+                    <h4 className="text-sm font-extrabold text-[#173f31]">{pickupLocation}</h4>
                     <span className="text-xs text-gray-500 font-medium">{tx('location')}</span>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => alert("Change pickup location...")}
+                  onClick={() => setPickupLocation((current) => current === 'Churu, Rajasthan' ? 'Sangrur, Punjab' : 'Churu, Rajasthan')}
                   className="text-xs font-bold text-[#173f31] hover:underline cursor-pointer"
                 >
                   Change
@@ -417,7 +422,7 @@ export function SellCropPage() {
             </div>
 
             {/* PRIMARY SUBMIT BUTTON */}
-            {submitError && <p className="text-sm font-medium text-red-600">{submitError}</p>}
+            {(submitError || notice) && <p className={`text-sm font-medium ${submitError ? 'text-red-600' : 'text-emerald-700'}`}>{submitError || notice}</p>}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -528,13 +533,13 @@ export function SellCropPage() {
       <footer className="w-full bg-[#f8faf9] border-t border-gray-200 mt-auto py-6">
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 font-medium">
-            <a href="#about" onClick={(e) => { e.preventDefault(); alert("Agrova Agritech"); }} className="hover:text-[#173f31] font-bold text-[#173f31]">Agrova</a>
+            <a href="#about" className="hover:text-[#173f31] font-bold text-[#173f31]">Agrova</a>
             <span>•</span>
-            <a href="#platform" onClick={(e) => { e.preventDefault(); alert("Platform"); }} className="hover:text-[#173f31]">Platform</a>
+            <a href="#platform" className="hover:text-[#173f31]">Platform</a>
             <span>•</span>
-            <a href="#support" onClick={(e) => { e.preventDefault(); alert("Support"); }} className="hover:text-[#173f31]">Support</a>
+            <a href="#support" className="hover:text-[#173f31]">Support</a>
             <span>•</span>
-            <a href="#terms" onClick={(e) => { e.preventDefault(); alert("Terms"); }} className="hover:text-[#173f31]">Terms</a>
+            <a href="#terms" className="hover:text-[#173f31]">Terms</a>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
@@ -545,7 +550,7 @@ export function SellCropPage() {
       </footer>
 
       {/* ==================== 4. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

@@ -38,6 +38,7 @@ const growthStatusOptions = [
 export function ProgressUpdatePage() {
   const navigate = useNavigate();
   const tx = usePageText('progress');
+  const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
 
   // Navigation State
   const [activeTab, setActiveTab] = useState('Home');
@@ -73,20 +74,23 @@ export function ProgressUpdatePage() {
     setPhotos([...photos, wheatImg]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSaved(true);
-    setTimeout(() => {
-      alert("Today's growth record saved successfully!");
+    try {
+      await api.saveProgress(userId, { growthStatus, plantHeight, observationNotes, photos });
       navigate('/dashboard');
-    }, 1200);
+    } catch (error) {
+      setIsSaved(false);
+      console.warn('Progress save failed:', error.message);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-[#173f31] relative font-sans selection:bg-emerald-100 pb-20">
       
       {/* ==================== 1. TOP NAVBAR ==================== */}
-      <AppHeader activeKey="home" notification={tx('notification')} />
+      <AppHeader activeKey="cropRoadmap" notification={tx('notification')} />
 
       {/* ==================== 2. MAIN PAGE LAYOUT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
@@ -405,7 +409,7 @@ export function ProgressUpdatePage() {
       </footer>
 
       {/* ==================== 9. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

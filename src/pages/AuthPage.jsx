@@ -344,14 +344,22 @@ export function AuthPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => console.log('Register as Farmer selected')}
+                  onClick={() => {
+                    setRole('Farmer');
+                    setIsPasswordMode(false);
+                    setError('');
+                  }}
                   className="py-2.5 px-3 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-emerald-50/70 text-xs font-semibold transition-colors cursor-pointer text-center"
                 >
                   {t.common.registerFarmer}
                 </button>
                 <button
                   type="button"
-                  onClick={() => console.log('Register as Buyer selected')}
+                  onClick={() => {
+                    setRole('Wholesaler');
+                    setIsPasswordMode(false);
+                    setError('');
+                  }}
                   className="py-2.5 px-3 rounded-xl border border-[#173f31] text-[#173f31] hover:bg-emerald-50/70 text-xs font-semibold transition-colors cursor-pointer text-center"
                 >
                   {t.common.registerBuyer}

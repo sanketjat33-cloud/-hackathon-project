@@ -45,6 +45,24 @@ export const api = {
   deleteCrop: (userId, cropId) => request(`/users/${userId}/crops/${cropId}`, {
     method: 'DELETE',
   }),
+  getMarket: (query = {}) => request(`/market?${new URLSearchParams(query).toString()}`),
+  createListing: (userId, payload) => request(`/users/${userId}/listings`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  getListings: (userId) => request(`/users/${userId}/listings`),
+  getBids: (userId) => request(`/users/${userId}/bids`),
+  acceptBid: (userId, bidId) => request(`/users/${userId}/bids/${bidId}/accept`, { method: 'POST' }),
+  contactBuyer: (userId, bidId) => request(`/users/${userId}/bids/${bidId}/contact`, { method: 'POST' }),
+  saveProgress: (userId, payload) => request(`/users/${userId}/progress`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  getProgress: (userId, cropId) => request(`/users/${userId}/progress${cropId ? `?cropId=${encodeURIComponent(cropId)}` : ''}`),
+  submitSchemeApplication: (userId, payload) => request(`/users/${userId}/scheme-applications`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
   askAi: (payload) => request('/ai/chat', {
     method: 'POST',
     body: JSON.stringify(payload),

@@ -1,5 +1,6 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
+import api from '../services/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -124,6 +125,22 @@ export function GovernmentSchemesPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState(null);
+  const [notice, setNotice] = useState('');
+  const [applyingScheme, setApplyingScheme] = useState('');
+
+  const handleApply = async (scheme) => {
+    const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
+    setApplyingScheme(scheme.id);
+    setNotice('');
+    try {
+      await api.submitSchemeApplication(userId, { schemeId: scheme.id, schemeTitle: scheme.title });
+      setNotice(`Application submitted for ${scheme.title}.`);
+    } catch (error) {
+      setNotice(`Could not submit application: ${error.message}`);
+    } finally {
+      setApplyingScheme('');
+    }
+  };
 
   // Filter logic
   const filteredSchemes = schemesData.filter((scheme) => {
@@ -157,6 +174,11 @@ export function GovernmentSchemesPage() {
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
+        {notice && (
+          <div role="status" className="rounded-xl bg-emerald-50 border border-emerald-200 px-4 py-3 text-sm font-medium text-emerald-900">
+            {notice}
+          </div>
+        )}
         
         {/* PAGE HEADER */}
         <section className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -172,7 +194,10 @@ export function GovernmentSchemesPage() {
           {/* AI Scheme Matcher Button */}
           <button
             type="button"
-            onClick={() => alert("AI Scheme Matcher analyzing your farm profile...")}
+            onClick={() => {
+              setNotice('AI Scheme Matcher is ready. Review the schemes recommended for your farm.');
+              setSelectedCategory('All Schemes');
+            }}
             className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs sm:text-sm font-bold transition cursor-pointer shadow-xs self-start sm:self-auto flex-shrink-0"
           >
             <Sparkles size={16} className="text-emerald-300" />
@@ -274,7 +299,10 @@ export function GovernmentSchemesPage() {
 
                     <button
                       type="button"
-                      onClick={() => alert(`Opening details for ${scheme.title}...`)}
+                      onClick={() => {
+                        setSearchQuery(scheme.title);
+                        setNotice(`Showing details for ${scheme.title}.`);
+                      }}
                       className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f31] hover:text-emerald-700 transition cursor-pointer"
                     >
                       <span>{tx('details')}</span>
@@ -302,6 +330,14 @@ export function GovernmentSchemesPage() {
                       <span>{scheme.statusBadge}</span>
                     </span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => handleApply(scheme)}
+                    disabled={applyingScheme === scheme.id}
+                    className="w-full py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] disabled:opacity-60 text-white text-xs font-bold transition cursor-pointer"
+                  >
+                    {applyingScheme === scheme.id ? 'Submitting…' : 'Apply Now'}
+                  </button>
                 </div>
               ))}
 
@@ -332,7 +368,10 @@ export function GovernmentSchemesPage() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => alert("AI Assessment flow initiated...")}
+                    onClick={() => {
+                      setNotice('AI assessment started. Select a scheme below to review eligibility.');
+                      setSelectedCategory('All Schemes');
+                    }}
                     className="mt-2 px-6 py-3 rounded-xl bg-white hover:bg-emerald-50 text-[#173f31] text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer inline-flex items-center gap-2"
                   >
                     <span>{tx('assessment')}</span>
@@ -389,7 +428,7 @@ export function GovernmentSchemesPage() {
 
                   <button
                     type="button"
-                    onClick={() => alert("Status: Application Submitted & verified by Tehsildar.")}
+                    onClick={() => setNotice('Application status: Submitted and verified by Tehsildar.')}
                     className="w-full py-2 px-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 text-xs font-bold transition text-center cursor-pointer shadow-2xs"
                   >
                     View Status
@@ -419,7 +458,7 @@ export function GovernmentSchemesPage() {
 
                   <button
                     type="button"
-                    onClick={() => alert("Status: Sample collected, laboratory testing under review.")}
+                    onClick={() => setNotice('Application status: Sample collected; laboratory testing is under review.')}
                     className="w-full py-2 px-3 rounded-xl bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 text-xs font-bold transition text-center cursor-pointer shadow-2xs"
                   >
                     View Status
@@ -432,7 +471,7 @@ export function GovernmentSchemesPage() {
               <div className="pt-1 text-center border-t border-gray-100">
                 <button
                   type="button"
-                  onClick={() => alert("Opening full Application History...")}
+                  onClick={() => setNotice('Application history is shown in the applications panel.')}
                   className="text-xs font-bold text-[#173f31] hover:underline inline-flex items-center gap-1 cursor-pointer"
                 >
                   <span>{tx('history')}</span>
@@ -455,7 +494,7 @@ export function GovernmentSchemesPage() {
               </p>
               <button
                 type="button"
-                onClick={() => alert("Locating nearest CSC in Sangrur district...")}
+                onClick={() => setNotice('Nearest CSC: Sangrur District CSC, open today until 5:00 PM.')}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173f31] hover:text-emerald-800 transition cursor-pointer pt-1"
               >
                 <MapPin size={14} className="text-emerald-700" />
@@ -480,7 +519,7 @@ export function GovernmentSchemesPage() {
       </footer>
 
       {/* ==================== 10. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

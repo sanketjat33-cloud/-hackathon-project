@@ -141,7 +141,7 @@ export function SelectedCropPage() {
       </main>
 
       {/* ==================== 4. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

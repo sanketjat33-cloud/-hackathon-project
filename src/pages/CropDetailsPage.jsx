@@ -5,6 +5,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import wheatField from '../assets/wheat-field.png';
+import riceImg from '../assets/rice.jpg';
+import maizeImg from '../assets/maize.jpg';
+import mustardImg from '../assets/mustard.jpg';
+import chickpeaImg from '../assets/chickpea.jpg';
+import cottonImg from '../assets/cotton.jpg';
+import tomatoImg from '../assets/tomato.jpg';
 import { AIButton } from '../components/AIButton';
 import {
   ArrowLeft,
@@ -34,6 +40,7 @@ export function CropDetailsPage() {
   const [activeTab, setActiveTab] = useState('My Crops');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const cropImages = { wheat: wheatField, rice: riceImg, paddy: riceImg, maize: maizeImg, mustard: mustardImg, chickpea: chickpeaImg, cotton: cottonImg, tomato: tomatoImg };
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
@@ -79,8 +86,8 @@ export function CropDetailsPage() {
           {/* Top Wheat Field Image with Title Overlay */}
           <div className="relative h-60 sm:h-72 w-full rounded-2xl overflow-hidden bg-gray-100">
             <img
-              src={wheatField}
-              alt="Golden wheat field at sunset"
+              src={cropImages[(crop?.name || 'wheat').toLowerCase().split(' ')[0]] || wheatField}
+              alt={`${crop?.name || 'Wheat'} crop`}
               className="w-full h-full object-cover"
             />
             {/* Subtle Gradient Overlay for Text Legibility */}
@@ -152,7 +159,7 @@ export function CropDetailsPage() {
           <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
             <button
               type="button"
-              onClick={() => alert("{tx('change')} flow initiated.")}
+              onClick={() => navigate(`/select-crop?replace=${encodeURIComponent(cropId || '')}`)}
               className="w-full sm:w-auto flex-1 py-3.5 px-6 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white font-bold text-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >
               <Pencil size={18} />
@@ -190,7 +197,7 @@ export function CropDetailsPage() {
       </footer>
 
       {/* ==================== 4. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

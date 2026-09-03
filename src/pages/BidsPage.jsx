@@ -1,6 +1,7 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
-import React, { useState } from 'react';
+import api from '../services/api';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
 import { AIButton } from '../components/AIButton';
@@ -230,6 +231,15 @@ export function BidsPage() {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [viewingBid, setViewingBid] = useState(null);
   const [confirmingBid, setConfirmingBid] = useState(null);
+  const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
+  const [actionError, setActionError] = useState('');
+  const [bids, setBids] = useState(mockBidsData);
+
+  useEffect(() => {
+    api.getBids(userId).then(({ bids: savedBids }) => {
+      if (savedBids?.length) setBids(savedBids);
+    }).catch((error) => console.warn('Bid fetch failed:', error.message));
+  }, [userId]);
 
   const handleNavClick = (tabName) => {
     setActiveTab(tabName);
@@ -256,6 +266,7 @@ export function BidsPage() {
 
       {/* ==================== 2. MAIN CONTENT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
+        {actionError && <p className="text-sm font-medium text-red-600">{actionError}</p>}
         
         {/* PAGE HEADER */}
         <section className="space-y-2">
@@ -299,7 +310,7 @@ export function BidsPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-              Active Offers ({mockBidsData.length})
+              Active Offers ({bids.length})
             </h2>
             <span className="text-xs font-bold text-gray-500">
               Sorted by highest price
@@ -307,7 +318,7 @@ export function BidsPage() {
           </div>
 
           <div className="space-y-4">
-            {mockBidsData.map((bid) => (
+            {bids.map((bid) => (
               <BidCard
                 key={bid.id}
                 bid={bid}
@@ -366,8 +377,7 @@ export function BidsPage() {
               <div className="pt-2 flex items-center gap-3">
                 <button
                   onClick={() => {
-                    alert(`Contact request sent to ${viewingBid.buyerName}`);
-                    setViewingBid(null);
+                    api.contactBuyer(userId, viewingBid.id).then(() => setViewingBid(null)).catch((error) => setActionError(error.message));
                   }}
                   className="flex-1 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold transition cursor-pointer"
                 >
@@ -415,8 +425,9 @@ export function BidsPage() {
               </button>
               <button
                 onClick={() => {
-                  alert(`Deal Confirmed with ${confirmingBid.buyerName}! A pickup slot has been reserved for ${confirmingBid.pickupDate}.`);
-                  setConfirmingBid(null);
+                   api.acceptBid(userId, confirmingBid.id)
+                     .then(() => setConfirmingBid(null))
+                     .catch((error) => setActionError(error.message));
                 }}
                 className="flex-1 py-3 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white font-bold text-xs transition cursor-pointer shadow-xs"
               >
@@ -431,13 +442,13 @@ export function BidsPage() {
       <footer className="w-full bg-[#f8faf9] border-t border-gray-200 mt-auto py-6">
         <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 font-medium">
-            <a href="#about" onClick={(e) => { e.preventDefault(); alert("Agrova Agritech"); }} className="hover:text-[#173f31] font-bold text-[#173f31]">Agrova</a>
+            <a href="#about" className="hover:text-[#173f31] font-bold text-[#173f31]">Agrova</a>
             <span>•</span>
-            <a href="#platform" onClick={(e) => { e.preventDefault(); alert("Platform"); }} className="hover:text-[#173f31]">Platform</a>
+            <a href="#platform" className="hover:text-[#173f31]">Platform</a>
             <span>•</span>
-            <a href="#support" onClick={(e) => { e.preventDefault(); alert("Support"); }} className="hover:text-[#173f31]">Support</a>
+            <a href="#support" className="hover:text-[#173f31]">Support</a>
             <span>•</span>
-            <a href="#terms" onClick={(e) => { e.preventDefault(); alert("Terms"); }} className="hover:text-[#173f31]">Terms</a>
+            <a href="#terms" className="hover:text-[#173f31]">Terms</a>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-gray-500 font-medium">
@@ -447,7 +458,7 @@ export function BidsPage() {
       </footer>
 
       {/* ==================== 6. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

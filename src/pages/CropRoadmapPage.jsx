@@ -1,5 +1,6 @@
 import { AppHeader } from '../components/AppHeader';
 import usePageText from '../hooks/usePageText';
+import api from '../services/api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import agrovaLogo from '../assets/agrova-logo.png';
@@ -46,6 +47,17 @@ export function CropRoadmapPage() {
   const [activeTab, setActiveTab] = useState('Crop Roadmap');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [actionStatus, setActionStatus] = useState('');
+
+  const saveQuickAction = async (observationNotes) => {
+    const userId = JSON.parse(localStorage.getItem('agrova_session') || 'null')?.id || 'demo-user';
+    try {
+      await api.saveProgress(userId, { cropId: 'wheat-pbw-343', growthStatus: 'Growing Well', observationNotes });
+      setActionStatus('Progress log saved successfully.');
+    } catch (error) {
+      setActionStatus(`Could not save progress: ${error.message}`);
+    }
+  };
 
   const handleNavClick = (tabName) => {
     setActiveTab(tabName);
@@ -74,6 +86,7 @@ export function CropRoadmapPage() {
 
       {/* ==================== 2. MAIN PAGE LAYOUT ==================== */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-7">
+        {actionStatus && <p role="status" className="text-sm font-medium text-emerald-800">{actionStatus}</p>}
         
         {/* HERO CROP ROADMAP CARD */}
         <section className="relative w-full h-72 sm:h-80 rounded-3xl overflow-hidden shadow-md group">
@@ -348,7 +361,7 @@ export function CropRoadmapPage() {
 
               {/* Action 1: Log Irrigation */}
               <div 
-                onClick={() => alert("Log Irrigation modal opened!")}
+                onClick={() => saveQuickAction('Irrigation logged from crop roadmap.')}
                 className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs hover:shadow-md transition cursor-pointer flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
@@ -365,7 +378,7 @@ export function CropRoadmapPage() {
 
               {/* Action 2: Add Fertilizer */}
               <div 
-                onClick={() => alert("Add Fertilizer modal opened!")}
+                onClick={() => saveQuickAction('Fertilizer application logged from crop roadmap.')}
                 className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs hover:shadow-md transition cursor-pointer flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
@@ -394,7 +407,7 @@ export function CropRoadmapPage() {
               </p>
               <button
                 type="button"
-                onClick={() => alert("Opening Agrova AI Camera Crop Diagnostic...")}
+                onClick={() => navigate('/update-progress')}
                 className="w-full py-3 px-4 rounded-xl bg-white hover:bg-emerald-50 text-[#173f31] text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer pt-2"
               >
                 <Camera size={16} />
@@ -425,7 +438,7 @@ export function CropRoadmapPage() {
       </footer>
 
       {/* ==================== 9. FLOATING AI BUTTON ==================== */}
-      <AIButton onClick={() => alert("Agrova Voice & AI Assistant Activated!")} />
+      <AIButton onClick={() => navigate('/dashboard')} />
 
     </div>
   );

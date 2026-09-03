@@ -200,7 +200,7 @@ export function DashboardPage() {
           
           {/* Left — AGROVA Logo & Wordmark */}
           <div className="flex items-center gap-3.5 flex-shrink-0 cursor-pointer" onClick={() => navigate('/dashboard')}>
-            <div className="w-12 h-12 rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
+            <div className="w-[52px] h-[52px] sm:w-[54px] sm:h-[54px] rounded-xl bg-[#173f31] text-white flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-xs">
               <img
                 src={agrovaLogo}
                 alt="Agrova logo"
@@ -208,7 +208,7 @@ export function DashboardPage() {
               />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-2xl font-extrabold tracking-wider text-[#173f31] uppercase leading-none">
+              <span className="text-[24px] sm:text-[26px] font-extrabold tracking-wider text-[#173f31] uppercase leading-tight">
                 AGROVA
               </span>
               <span className="hidden xl:inline text-[11px] font-medium text-gray-500 leading-tight mt-1">
@@ -761,9 +761,13 @@ export function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-extrabold text-[#173f31] tracking-tight">
-                  {t.dashboard.wheat}
-                </h2>
+                <button
+                  type="button"
+                  onClick={() => navigate('/my-crops/wheat-pbw-343')}
+                  className="text-xl font-extrabold text-[#173f31] tracking-tight hover:text-emerald-700 transition cursor-pointer text-left"
+                >
+                  {t.features?.viewDetails || 'View My Crop'}
+                </button>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
                   {t.status.qualityVerified}
                 </span>
@@ -775,10 +779,10 @@ export function DashboardPage() {
 
             <button
               type="button"
-              onClick={() => setActiveModal('update-progress')}
+              onClick={() => navigate('/my-crops/wheat-pbw-343')}
               className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
             >
-              {t.dashboard.updateProgress}
+              {t.features?.viewDetails || 'View My Crop'}
             </button>
           </div>
 
