@@ -62,7 +62,7 @@ export function SelectedCropPage() {
     setError('');
     try {
       const response = await api.addCrop(userId, { name: crop.name, field: 'New Field', acres: 1 });
-      navigate(`/my-crops/${response.crop.id}`);
+      navigate('/dashboard');
     } catch (saveError) {
       setError(saveError.message);
     } finally {

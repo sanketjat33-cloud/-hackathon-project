@@ -89,6 +89,12 @@ export function DashboardPage() {
     market: { newBids: 7, highestBid: 2550, buyer: 'AgriCorp WholeSalers Sangrur' },
     ai: { welcome: 'Namaste Rajesh ji! I am Agrova AI, your farming assistant. How can I help your farm today?' }
   });
+  const activeCrop = dashboardData.crops?.[dashboardData.crops.length - 1] || {
+    id: 'wheat-pbw-343',
+    name: 'Wheat PBW 343',
+    acres: 3,
+    field: 'North Field',
+  };
 
   // Selected Language State
   const { languageId: selectedLanguage, setLanguage, t } = useLanguage();
@@ -543,7 +549,7 @@ export function DashboardPage() {
                     {t.dashboard.activeCrops}
                   </p>
                   <p className="text-2xl font-extrabold text-[#173f31] mt-1">
-                    3
+                    {dashboardData.crops?.length || 3}
                   </p>
                   <p className="text-xs text-emerald-700 font-bold mt-1">
                     ↗ {t.status.lookingGood}
@@ -771,7 +777,7 @@ export function DashboardPage() {
               <div className="flex items-center gap-3">
                 <button
                   type="button"
-                  onClick={() => navigate('/my-crops/wheat-pbw-343')}
+                  onClick={() => navigate(`/my-crops/${activeCrop.id}`)}
                   className="text-xl font-extrabold text-[#173f31] tracking-tight hover:text-emerald-700 transition cursor-pointer text-left"
                 >
                   {t.features?.viewDetails || 'View My Crop'}
@@ -781,21 +787,21 @@ export function DashboardPage() {
                 </span>
               </div>
               <p className="text-xs text-gray-500 font-medium mt-1">
-                {t.status.plantedOn} • 3 {t.status.acres}
+                {activeCrop.name} • {activeCrop.acres || 1} {t.status.acres}
               </p>
             </div>
 
             <div className="flex items-center gap-2 self-start sm:self-auto">
               <button
                 type="button"
-                onClick={() => navigate('/my-crops/wheat-pbw-343')}
+                onClick={() => navigate(`/my-crops/${activeCrop.id}`)}
                 className="px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-[#173f31] text-xs font-bold transition cursor-pointer"
               >
                 {t.features?.viewDetails || 'View My Crop'}
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/update-progress/wheat-pbw-343')}
+                onClick={() => navigate(`/update-progress/${activeCrop.id}`)}
                 className="px-4 py-2.5 rounded-xl bg-[#173f31] hover:bg-[#113126] text-white text-xs font-bold transition shadow-xs cursor-pointer"
               >
                 {t.dashboard.updateProgress}
